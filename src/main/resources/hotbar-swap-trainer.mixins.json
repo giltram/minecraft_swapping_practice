@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.hotbarswaptrainer.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ServerPlayerRecoveryMixin",
+    "ServerPlayNetworkHandlerMixin",
+    "PlayerManagerMixin",
+    "PlayerProtectionMixin",
+    "ItemPickupProtectionMixin",
+    "ExperiencePickupProtectionMixin",
+    "HungerProtectionMixin",
+    "LivingProtectionMixin",
+    "PersistentProjectilePickupProtectionMixin"
+  ],
+  "client": ["client.MinecraftClientMixin", "client.ClientPlayerInteractionManagerMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

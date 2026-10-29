@@ -1,0 +1,1046 @@
+{
+  "checkpoint": "2026-10-29",
+  "status": "production normal suite, RUNNING crash/reload, four inventory-module cuts, POSIX I/O failures and repeated replay passed; manual acceptance remains",
+  "productionModSha256": "64c643dff049d6fd1e59dfedff61f2aa41384fb9064255c6893ac962150adfc7",
+  "build": {
+    "command": "scripts/gradle-jdk8.sh --offline build smokeJar resolvedArtifacts",
+    "result": "passed",
+    "testTask": "up-to-date; reused executed reports"
+  },
+  "junit": {
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "files": 52,
+    "packages": 12,
+    "edges": 25,
+    "result": "passed"
+  },
+  "productionRuntime": {
+    "development": false,
+    "game": "1.16.1",
+    "loader": "net.fabricmc:fabric-loader:0.9.3+build.207",
+    "java": "openjdk version \"1.8.0_512\"\nOpenJDK Runtime Environment Corretto-8.512.09.1 (build 1.8.0_512-b09)\nOpenJDK 64-Bit Server VM Corretto-8.512.09.1 (build 25.512-b09, mixed mode)",
+    "javaArchitecture": "/Users/wezy/Documents/code/mc_swapping_practice/.toolchains/amazon-corretto-8.jdk/Contents/Home/bin/java: Mach-O 64-bit executable x86_64",
+    "mode": "normal-crash"
+  },
+  "latestProductionEvents": [
+    {
+      "event": "boot",
+      "detail": "normal-crash"
+    },
+    {
+      "event": "screen",
+      "detail": "class_442: Title Screen"
+    },
+    {
+      "event": "world-opened",
+      "detail": "/Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke"
+    },
+    {
+      "event": "screen",
+      "detail": "class_405: Worlds using Experimental Settings are not supported"
+    },
+    {
+      "event": "screen",
+      "detail": "class_3928: "
+    },
+    {
+      "event": "baseline",
+      "detail": "41 distinct stack values and selected hotbar slot 6 saved"
+    },
+    {
+      "event": "begin",
+      "detail": "SINGLE_ITEM goal=3 stage=0"
+    },
+    {
+      "event": "screen",
+      "detail": "none"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=false, selected=6, initialMatches=false"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=3 attempt=1 onGround=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=f9e25362-b44b-3989-b0f6-1be8b6921892 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=f9e25362-b44b-3989-b0f6-1be8b6921892 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=f9e25362-b44b-3989-b0f6-1be8b6921892 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=f9e25362-b44b-3989-b0f6-1be8b6921892 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=2, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=f9e25362-b44b-3989-b0f6-1be8b6921892 message=Success"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=0f958c33-01f4-3a81-b414-1f6215960b0c message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=0f958c33-01f4-3a81-b414-1f6215960b0c message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=0f958c33-01f4-3a81-b414-1f6215960b0c message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=0f958c33-01f4-3a81-b414-1f6215960b0c message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=7, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=0f958c33-01f4-3a81-b414-1f6215960b0c message=Success"
+    },
+    {
+      "event": "screen",
+      "detail": "class_408: "
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=7, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=9cca8d8e-0cc2-3425-81d3-157540082d2e message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=false, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=false, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=false, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=class_408, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    }
+  ],
+  "normalExitDiskReadback": [
+    {
+      "path": "run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "inventoryMatchesBaseline": true,
+      "selectedSlotMatchesBaseline": true,
+      "playerMatchesBaseline": true,
+      "recoveryMarkerAbsent": true,
+      "populatedSlots": 41,
+      "selectedSlot": 6
+    },
+    {
+      "path": "run-production/saves/hst-smoke/level.dat",
+      "inventoryMatchesBaseline": true,
+      "selectedSlotMatchesBaseline": true,
+      "playerMatchesBaseline": true,
+      "recoveryMarkerAbsent": true,
+      "populatedSlots": 41,
+      "selectedSlot": 6
+    }
+  ],
+  "normalExitSaveSha256": {
+    "run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "dd02e607f5cb2ed4103eeb27a83111cd066355e95576af7e599dd01176958dcf",
+    "run-production/saves/hst-smoke/level.dat": "648dff1dc21ae3fd2f20b37bfaf0cb20df282613c2c4bfe0cfc4113b3f010287"
+  },
+  "pending": [
+    "physical/rebound/scroll input and GUI checks",
+    "remaining protection/disconnect/shutdown phase matrix",
+    "actual mid-write and SessionManager.stop fault injections",
+    "game-load corruption cases beyond existing unit tests"
+  ],
+  "productionNormalAndRecoveryEvents": [
+    {
+      "event": "boot",
+      "detail": "normal-crash"
+    },
+    {
+      "event": "screen",
+      "detail": "class_442: Title Screen"
+    },
+    {
+      "event": "world-opened",
+      "detail": "/Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke"
+    },
+    {
+      "event": "screen",
+      "detail": "class_405: Worlds using Experimental Settings are not supported"
+    },
+    {
+      "event": "screen",
+      "detail": "class_3928: "
+    },
+    {
+      "event": "screen",
+      "detail": "none"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=false, selected=6, initialMatches=false"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "baseline",
+      "detail": "41 distinct stack values and selected hotbar slot 6 saved"
+    },
+    {
+      "event": "begin",
+      "detail": "SINGLE_ITEM goal=3 stage=0"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=3 attempt=1 onGround=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=6e7bbb21-e610-35c6-9436-0f6783f470ef message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=6e7bbb21-e610-35c6-9436-0f6783f470ef message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=6e7bbb21-e610-35c6-9436-0f6783f470ef message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=6e7bbb21-e610-35c6-9436-0f6783f470ef message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=4, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=6e7bbb21-e610-35c6-9436-0f6783f470ef message=Success"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=4, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=ffe3049c-c54e-3217-9ede-ec86bd48837a message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=ffe3049c-c54e-3217-9ede-ec86bd48837a message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=ffe3049c-c54e-3217-9ede-ec86bd48837a message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=ffe3049c-c54e-3217-9ede-ec86bd48837a message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=3, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=ffe3049c-c54e-3217-9ede-ec86bd48837a message=Success"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=d6cf940c-7c5d-3731-9d89-a7fdc6aacc54 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=d6cf940c-7c5d-3731-9d89-a7fdc6aacc54 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=d6cf940c-7c5d-3731-9d89-a7fdc6aacc54 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=d6cf940c-7c5d-3731-9d89-a7fdc6aacc54 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=3, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=d6cf940c-7c5d-3731-9d89-a7fdc6aacc54 message=Success"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=0 successes=3 restored all 41 slots/selection"
+    },
+    {
+      "event": "begin",
+      "detail": "FULL_INVENTORY goal=3 stage=1"
+    },
+    {
+      "event": "start-request",
+      "detail": "FULL_INVENTORY goal=3 attempt=2 onGround=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "start-request",
+      "detail": "FULL_INVENTORY goal=3 attempt=3 onGround=true"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=a688f9f3-0ab8-3355-8ee7-f51b260b07f8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=a688f9f3-0ab8-3355-8ee7-f51b260b07f8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=a688f9f3-0ab8-3355-8ee7-f51b260b07f8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=a688f9f3-0ab8-3355-8ee7-f51b260b07f8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=4, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=a688f9f3-0ab8-3355-8ee7-f51b260b07f8 message=Success"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=d90d0afd-63be-3706-b227-192b010b8c5e message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=d90d0afd-63be-3706-b227-192b010b8c5e message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=d90d0afd-63be-3706-b227-192b010b8c5e message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=d90d0afd-63be-3706-b227-192b010b8c5e message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=3, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=d90d0afd-63be-3706-b227-192b010b8c5e message=Success"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=d34fd727-2cad-3d42-89a4-cd4da68f2a9d message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=d34fd727-2cad-3d42-89a4-cd4da68f2a9d message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=d34fd727-2cad-3d42-89a4-cd4da68f2a9d message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=d34fd727-2cad-3d42-89a4-cd4da68f2a9d message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=d34fd727-2cad-3d42-89a4-cd4da68f2a9d message=Success"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=1 successes=3 restored all 41 slots/selection"
+    },
+    {
+      "event": "begin",
+      "detail": "SINGLE_ITEM goal=1 stage=2"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=1 attempt=4 onGround=true"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=1 attempt=5 onGround=true"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=6184ad47-6495-30f8-be09-ffb745fced23 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=6184ad47-6495-30f8-be09-ffb745fced23 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=6184ad47-6495-30f8-be09-ffb745fced23 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=6184ad47-6495-30f8-be09-ffb745fced23 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "INVALID task=6184ad47-6495-30f8-be09-ffb745fced23 message=Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "invalid",
+      "detail": "Only hotbar selection and Swap Hands are allowed"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=8969c893-8d23-33eb-8ab9-4f5d8367cbf8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=8969c893-8d23-33eb-8ab9-4f5d8367cbf8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=8969c893-8d23-33eb-8ab9-4f5d8367cbf8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=8969c893-8d23-33eb-8ab9-4f5d8367cbf8 message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=5, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=8969c893-8d23-33eb-8ab9-4f5d8367cbf8 message=Success"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=2 successes=1 restored all 41 slots/selection"
+    },
+    {
+      "event": "begin",
+      "detail": "SINGLE_ITEM goal=0 stage=3"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=0 attempt=6 onGround=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=0b0d83cc-e9df-3ab8-add1-5af645615dae message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=0b0d83cc-e9df-3ab8-add1-5af645615dae message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=0b0d83cc-e9df-3ab8-add1-5af645615dae message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=0b0d83cc-e9df-3ab8-add1-5af645615dae message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=2, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=0b0d83cc-e9df-3ab8-add1-5af645615dae message=Success"
+    },
+    {
+      "event": "phase",
+      "detail": "PREPARING task=095e3cae-e783-3090-b688-056a8ba0ec3b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=095e3cae-e783-3090-b688-056a8ba0ec3b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=095e3cae-e783-3090-b688-056a8ba0ec3b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=095e3cae-e783-3090-b688-056a8ba0ec3b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=7, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "SUCCESS task=095e3cae-e783-3090-b688-056a8ba0ec3b message=Success"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=3 successes=2 restored all 41 slots/selection"
+    },
+    {
+      "event": "normal-passed",
+      "detail": "Single3, Full3, forbidden-drop replacement, unlimited-stop, no-op, same-batch swaps and complete restoration passed; sent tasks=9"
+    },
+    {
+      "event": "begin",
+      "detail": "SINGLE_ITEM goal=1 stage=4"
+    },
+    {
+      "event": "start-request",
+      "detail": "SINGLE_ITEM goal=1 attempt=7 onGround=true"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=6, initialMatches=false"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=false"
+    },
+    {
+      "event": "phase",
+      "detail": "COUNTDOWN task=6970c500-3b3a-3dc5-9ce3-85d50bc5220b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "client-state",
+      "detail": "focused=true, paused=false, screen=none, swapHeld=false, onGround=true, selected=0, initialMatches=true"
+    },
+    {
+      "event": "phase",
+      "detail": "GO task=6970c500-3b3a-3dc5-9ce3-85d50bc5220b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "phase",
+      "detail": "RUNNING task=6970c500-3b3a-3dc5-9ce3-85d50bc5220b message=Release Swap Hands and return to the game"
+    },
+    {
+      "event": "crash-ready",
+      "detail": "Both authoritative files contain training inventory and the active original snapshot"
+    },
+    {
+      "event": "boot",
+      "detail": "recover"
+    },
+    {
+      "event": "screen",
+      "detail": "class_442: Title Screen"
+    },
+    {
+      "event": "world-opened",
+      "detail": "/Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke"
+    },
+    {
+      "event": "screen",
+      "detail": "class_405: Worlds using Experimental Settings are not supported"
+    },
+    {
+      "event": "screen",
+      "detail": "class_3928: "
+    },
+    {
+      "event": "passed",
+      "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files"
+    }
+  ],
+  "productionResults": {
+    "normal": {
+      "mode": "normal",
+      "status": "passed",
+      "detail": "Single3, Full3, forbidden-drop replacement, unlimited-stop, no-op, same-batch swaps and complete restoration passed; sent tasks=9",
+      "elapsedSeconds": 62.446407167
+    },
+    "crash": {
+      "mode": "crash",
+      "status": "ready",
+      "detail": "Runtime.halt(91) after confirmed training save",
+      "elapsedSeconds": 65.52677475
+    },
+    "recover": {
+      "mode": "recover",
+      "status": "passed",
+      "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+      "elapsedSeconds": 24.562036208
+    }
+  },
+  "processExitCodes": {
+    "normal-crash": 91,
+    "recover": 0
+  },
+  "postRecoverySaveSha256": {
+    "run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "8ec541d170ee556f0ee462010db4fce635f552d4432f7d4cb92340be642c75ea",
+    "run-production/saves/hst-smoke/level.dat": "c368432d47d2929f5a5315b7a97690857aeae16ef6fb9b06abe6c093842c08e1"
+  },
+  "inventoryCrashCuts": {
+    "status": "passed",
+    "scope": "Direct inventory-module crash cuts",
+    "pairs": [
+      {
+        "cut": {
+          "mode": "cut-backup",
+          "exitCode": 91,
+          "result": {
+            "mode": "cut-backup",
+            "status": "ready",
+            "detail": "Confirmed baseline plus active backup in both files",
+            "elapsedSeconds": 15.241482834
+          }
+        },
+        "recover": {
+          "mode": "recover",
+          "exitCode": 0,
+          "result": {
+            "mode": "recover",
+            "status": "passed",
+            "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+            "elapsedSeconds": 15.780443791
+          }
+        },
+        "crashSaveSha256": {
+          "level.dat": "e2eaf50ce9591c5d992801a1f9b681b8e8ced280b9ab168d75debdbea71182da",
+          "baseline.nbt": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "74e3142b55238538adabe87d1a57b130cdea342ec50ac0fa1006324edd145b16"
+        },
+        "preparedBoundary": {
+          "mode": "cut-backup",
+          "status": "ready",
+          "scope": "Direct inventory-module boundary, not a SessionManager.stop injection",
+          "detail": "Confirmed baseline plus active backup in both files",
+          "player": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "memoryMatchesBaseline": true,
+          "diskMatchesBaseline": true,
+          "activeRecovery": true,
+          "sha256": {
+            "uuid-player-before-halt.dat": "74e3142b55238538adabe87d1a57b130cdea342ec50ac0fa1006324edd145b16",
+            "host-level-before-halt.dat": "e2eaf50ce9591c5d992801a1f9b681b8e8ced280b9ab168d75debdbea71182da",
+            "state-before-halt.nbt": "cec568110e0cd8e22b1536e40f9ec22c79ac7b0b8ce6fb6251dbef5e5c3a9c69"
+          }
+        }
+      },
+      {
+        "cut": {
+          "mode": "cut-setup",
+          "exitCode": 91,
+          "result": {
+            "mode": "cut-setup",
+            "status": "ready",
+            "detail": "Training inventory in memory; confirmed baseline plus active backup remains in both files",
+            "elapsedSeconds": 16.029248916
+          }
+        },
+        "recover": {
+          "mode": "recover",
+          "exitCode": 0,
+          "result": {
+            "mode": "recover",
+            "status": "passed",
+            "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+            "elapsedSeconds": 16.335325
+          }
+        },
+        "crashSaveSha256": {
+          "level.dat": "ad376c2a5842a1270f0e45fc0f8f07c15a79826cc3d892799a45872c88655ee9",
+          "baseline.nbt": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "d0a64d80235f631a6b4852efa5aabab1760ca5d83f2e96a121b8d85effe2a141"
+        },
+        "preparedBoundary": {
+          "mode": "cut-setup",
+          "status": "ready",
+          "scope": "Direct inventory-module boundary, not a SessionManager.stop injection",
+          "detail": "Training inventory in memory; confirmed baseline plus active backup remains in both files",
+          "player": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "memoryMatchesBaseline": false,
+          "diskMatchesBaseline": true,
+          "activeRecovery": true,
+          "sha256": {
+            "uuid-player-before-halt.dat": "d0a64d80235f631a6b4852efa5aabab1760ca5d83f2e96a121b8d85effe2a141",
+            "host-level-before-halt.dat": "ad376c2a5842a1270f0e45fc0f8f07c15a79826cc3d892799a45872c88655ee9",
+            "state-before-halt.nbt": "df1e53b43d94176be71138130665bfa58e8f75998848971eae92d0d7ca7df8d2"
+          }
+        }
+      },
+      {
+        "cut": {
+          "mode": "cut-restored",
+          "exitCode": 91,
+          "result": {
+            "mode": "cut-restored",
+            "status": "ready",
+            "detail": "Original replayed in memory with active record retained; confirmed training plus active backup remains in both files",
+            "elapsedSeconds": 16.373145958
+          }
+        },
+        "recover": {
+          "mode": "recover",
+          "exitCode": 0,
+          "result": {
+            "mode": "recover",
+            "status": "passed",
+            "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+            "elapsedSeconds": 15.195561667
+          }
+        },
+        "crashSaveSha256": {
+          "level.dat": "8bbc84093c3f58dae8295ea72f326bb334e31b439e7e7cfce5fe4c408dfd6a5d",
+          "baseline.nbt": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "21b51b6bfe6ebcd02804410ed9c8dbd3b0bb8a4a04b470de9066e7834e2e2d13"
+        },
+        "preparedBoundary": {
+          "mode": "cut-restored",
+          "status": "ready",
+          "scope": "Direct inventory-module boundary, not a SessionManager.stop injection",
+          "detail": "Original replayed in memory with active record retained; confirmed training plus active backup remains in both files",
+          "player": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "memoryMatchesBaseline": true,
+          "diskMatchesBaseline": false,
+          "activeRecovery": true,
+          "sha256": {
+            "uuid-player-before-halt.dat": "21b51b6bfe6ebcd02804410ed9c8dbd3b0bb8a4a04b470de9066e7834e2e2d13",
+            "host-level-before-halt.dat": "8bbc84093c3f58dae8295ea72f326bb334e31b439e7e7cfce5fe4c408dfd6a5d",
+            "state-before-halt.nbt": "314ffe930915d3ee0b67468d16b46b58022bbe1f7e3ea854229632e36dc46e98"
+          }
+        }
+      },
+      {
+        "cut": {
+          "mode": "cut-cleared",
+          "exitCode": 91,
+          "result": {
+            "mode": "cut-cleared",
+            "status": "ready",
+            "detail": "Actual restore completed; original inventory and cleared recovery confirmed in both files",
+            "elapsedSeconds": 15.568139459
+          }
+        },
+        "recover": {
+          "mode": "recover",
+          "exitCode": 0,
+          "result": {
+            "mode": "recover",
+            "status": "passed",
+            "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+            "elapsedSeconds": 15.555630292
+          }
+        },
+        "crashSaveSha256": {
+          "level.dat": "3a872413ec12ee858fe5b679934ae4dc534cd60785fea832a203730890c824e2",
+          "baseline.nbt": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "85d9b17e65489ebe120136dffe031d430346acff35931a6e3c4322ed6699366f"
+        },
+        "preparedBoundary": {
+          "mode": "cut-cleared",
+          "status": "ready",
+          "scope": "Direct inventory-module boundary, not a SessionManager.stop injection",
+          "detail": "Actual restore completed; original inventory and cleared recovery confirmed in both files",
+          "player": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "memoryMatchesBaseline": true,
+          "diskMatchesBaseline": true,
+          "activeRecovery": false,
+          "sha256": {
+            "uuid-player-before-halt.dat": "85d9b17e65489ebe120136dffe031d430346acff35931a6e3c4322ed6699366f",
+            "host-level-before-halt.dat": "3a872413ec12ee858fe5b679934ae4dc534cd60785fea832a203730890c824e2",
+            "state-before-halt.nbt": "62f54a3317c7f50524d6663c199c81ddaeb7247e89a35cdbc858cd2be67efb48"
+          }
+        }
+      }
+    ]
+  },
+  "inventoryCrashCutsEvidenceDirectory": "run-production/smoke/inventory-cuts/20261029T061315.087514Z",
+  "faultAcceptance": {
+    "scope": "Direct inventory transactions in the owned smoke world; real POSIX write failures",
+    "checks": [
+      {
+        "name": "active replay twice and confirmed clear",
+        "status": "passed",
+        "detail": "Both authoritative paths match the original 41 slots and selection"
+      },
+      {
+        "name": "failed initial backup: UUID playerdata directory",
+        "status": "passed",
+        "detail": "java.io.IOException: Recovery readback mismatch: /Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat; permissions reset, exact restoration and cleared records confirmed"
+      },
+      {
+        "name": "failed clear commit: UUID playerdata directory",
+        "status": "passed",
+        "detail": "java.io.IOException: Recovery readback mismatch: /Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat; permissions reset, exact restoration and cleared records confirmed"
+      },
+      {
+        "name": "failed initial backup: host level.dat directory",
+        "status": "passed",
+        "detail": "java.io.IOException: Recovery readback mismatch: /Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke/level.dat; permissions reset, exact restoration and cleared records confirmed"
+      },
+      {
+        "name": "failed clear commit: host level.dat directory",
+        "status": "passed",
+        "detail": "java.io.IOException: Recovery readback mismatch: /Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke/level.dat; permissions reset, exact restoration and cleared records confirmed"
+      }
+    ],
+    "status": "passed",
+    "finalSaveSha256": {
+      "84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "f07226e3153d7f0b5b1f2ed3cfdb131812d5907d271b5664df723e8ffa8b6e18",
+      "level.dat": "1b1f91bb4f750d8fa8a7d02ce937d905da7891ffb6743fd6b2f877772f4a2ad9"
+    }
+  },
+  "faultResult": {
+    "mode": "faults",
+    "status": "passed",
+    "detail": "Active replay twice, real UUID/host write failures before setup and during clear, retained recovery guards and successful retries passed",
+    "elapsedSeconds": 15.168176791
+  },
+  "finalBuild": {
+    "command": "scripts/gradle-jdk8.sh --offline build smokeJar",
+    "result": "passed",
+    "classMajorVersions": [
+      52
+    ],
+    "smokeClassesInProduction": false,
+    "testTask": "up-to-date"
+  },
+  "finalFaultRecheck": {
+    "exitCode": 0,
+    "events": [
+      {
+        "event": "boot",
+        "detail": "faults"
+      },
+      {
+        "event": "screen",
+        "detail": "class_442: Title Screen"
+      },
+      {
+        "event": "world-opened",
+        "detail": "/Users/wezy/Documents/code/mc_swapping_practice/run-production/saves/hst-smoke"
+      },
+      {
+        "event": "screen",
+        "detail": "class_405: Worlds using Experimental Settings are not supported"
+      },
+      {
+        "event": "owned-world-confirmed",
+        "detail": "Continue loading the verified disposable world; keep erase-cache disabled"
+      },
+      {
+        "event": "screen",
+        "detail": "class_3928: "
+      },
+      {
+        "event": "baseline",
+        "detail": "41 distinct stack values and selected hotbar slot 6 saved"
+      },
+      {
+        "event": "passed",
+        "detail": "Active replay twice, real UUID/host write failures before setup and during clear, retained recovery guards and successful retries passed"
+      }
+    ],
+    "result": {
+      "mode": "faults",
+      "status": "passed",
+      "detail": "Active replay twice, real UUID/host write failures before setup and during clear, retained recovery guards and successful retries passed",
+      "elapsedSeconds": 15.168176791
+    },
+    "smokeModSha256": "d8a46f28b85f084f5423abf216884d2753b26746047dbfb7187c9d35e8649bdf"
+  },
+  "finalState": "All launched test clients exited; owned save restored and permissions reset; ordinary-world gate retained."
+}

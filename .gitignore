@@ -1,0 +1,12 @@
+.gradle/
+.gradle-home/
+.toolchains/
+build/
+run/
+run-production/
+run-profile-editor-ui*/
+run-layout-ui/
+logs/
+*.log
+__pycache__/
+.DS_Store

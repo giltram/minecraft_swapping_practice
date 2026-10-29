@@ -1,0 +1,50 @@
+# Optional game smoke driver
+
+`src/smoke` is a separate development mod. It is excluded from production and has no effect unless the Java property `hotbarswaptrainer.smoke` is explicitly set. It must never be bundled in the released trainer jar.
+
+Build its Java sources against the main development output and the exact same named Minecraft/Fabric runtime, and package `src/smoke/resources/fabric.mod.json` in a separate smoke jar. Add that jar only to the isolated development run's `mods/` directory. Launch with Intel JDK8/Rosetta and the original 1.16.1 native libraries on Apple Silicon.
+
+An independent production Fabric launch needs a separately remapped smoke artifact (named → intermediary), just as it needs the production trainer's `remapJar` output. Do not load the named development smoke jar unchanged in that runtime. Reflection in the driver targets only the trainer's own state/result fields; Minecraft references remain ordinary remappable calls.
+
+Use a fixed offline player name, for example `--username SmokePlayer`, for every run. The driver creates or reloads only `run/saves/hst-smoke`. It refuses any existing directory without the exact `.hst-smoke-owned` marker. The first creation uses an ordinary vanilla superflat test world; it does not edit another save or delete anything.
+
+After verifying that marker and requesting its own existing `hst-smoke` world, the driver can automatically continue vanilla's experimental-world warning. It accepts only `BackupPromptScreen` with translation key `selectWorld.backupQuestion.experimental` and presses the `selectWorld.backupJoinSkipButton` button. It leaves erase-cache disabled. Other screens and world requests are not automatically confirmed.
+
+Modes, passed as JVM properties:
+
+- `-Dhotbarswaptrainer.smoke=normal`: seeds all41 inventory slots with distinct counts/NBT and selection6, writes a baseline, then runs Single3, Full3, a forbidden-drop invalid/replacement task and unlimited training stopped after two successes. It queues the task witnesses as real vanilla selected-slot/swap packets, deliberately in one batch, then adds a trailing swap to test frozen success. It injects one empty/empty no-op and checks its count. Each session must restore the complete baseline and pass both authoritative save readbacks.
+- `-Dhotbarswaptrainer.smoke=normal-crash`: runs the complete normal suite first and writes its passing result without quitting. It then starts one final Single Item task and performs the same confirmed-save halt as `crash` at RUNNING. Use `recover` on the following launch. This combines normal verification and the crash setup into one launch/focus interaction; it does not skip either result or restoration check.
+- `-Dhotbarswaptrainer.smoke=crash`: seeds/saves a fresh baseline, enters RUNNING using the normal client READY/rendered-GO handshake, confirms the saved training inventory and active recovery record in UUID playerdata plus host level.dat, records `result-crash.json` with status `ready`, then deliberately halts the process with exit91. This is an intentional process crash; ordinary shutdown restoration does not run.
+- `-Dhotbarswaptrainer.smoke=recover`: reopens that exact owned save and player, checks the real load-time recovery/clear-active commit against the pre-crash baseline, and confirms both authoritative files.
+- `-Dhotbarswaptrainer.smoke=faults`: seeds the owned world's 41-slot baseline, then calls the inventory module directly on the server thread through `FaultAcceptance`. It checks replay of the same active recovery record twice, confirms restoration/clear in both save paths, and exercises four failure/retry cases: denied writes to UUID playerdata or the host level.dat directory, each during initial backup and during clear-active restoration. The implementation removes POSIX directory write permissions, proves that a real file creation fails, requires the save operation to fail, checks exact baseline inventory plus retained valid recovery data and a blocked swap, restores the original permissions in `finally`, and retries restoration with both disk readbacks. It refuses symlinked world/playerdata paths and any pre-existing active transaction. This mode exercises persistence without a training session or READY/rendered-GO handshake; it disables pause-on-lost-focus in the isolated test process so it can run without game focus.
+- `-Dhotbarswaptrainer.smoke=cut-backup`, `cut-setup`, `cut-restored` or `cut-cleared`: seeds the same complete baseline, prepares the explicit inventory-module boundary described below through `InventoryCrashCut`, writes checked memory/disk evidence and a `ready` result, then deliberately halts with exit91. Reopen with `recover` after each cut.
+
+On the first client tick, `recover`, `faults` and `cut-*` disable pause-on-lost-focus in this isolated process. Options are available by that tick; the driver does not write an options file here. These persistence-only modes can run in the background and make no READY/GO or input-timing claim. Normal/crash modes retain genuine focus and rendered-GO requirements.
+
+The game window must be focused and HUD visible for normal/crash modes' real READY/GO acknowledgments. START is sent through the actual custom C2S protocol from client END tick after the client inventory/selection matches the baseline and the client is on the ground, just like a real P press. A pending start retries at most once per second while those conditions hold until the server observes an accepted session. This preserves order with restore updates and vanilla held-slot echoes across consecutive sessions and waits for a newly joined world to settle. The smoke driver does not spoof focus, consume key queues, replace the normal handshake or mutate inventory while solving tasks. Initial test seeding occurs only before a transaction in its owned disposable save. The normal test uses reflection only to read private task/state/results; this deliberately avoids adding verification APIs to production. Its swaps share one client queue batch, but the driver does not independently record exact server tick IDs; a passing result must not be described as proof that every swap executed in the same server tick.
+
+Results are in `run/smoke/events.jsonl`, `baseline.nbt`, and `result-<mode>.json`. Event breadcrumbs include start attempts, task/phase changes and client focus, screen, held-key, grounded state, selection and initial-inventory match changes; preparation timeouts can therefore be distinguished from task or restoration failures. Failure preserves the game/save for inspection. Success quits normally by default; use `-Dhotbarswaptrainer.smoke.exit=false` to keep the successful client open for visual inspection. A crash mode `ready` result is not a recovery pass; only the subsequent `recover` pass is evidence of restoration.
+
+Fault mode also writes `fault-checks.json`, retained raw `fault-*.nbt` records for the exercised cases and final save hashes. Its replay check is a direct inventory-module call, not a second process crash/reload. These are implemented acceptance mechanisms; consult [testing.md](testing.md) for actual executed results. `result-faults.json` must freshly report `passed` and all five report checks must pass before claiming this mode succeeded. Match results to the latest events boot segment and file modification times, because earlier result files can remain after a later incomplete launch.
+
+## Inventory crash cuts
+
+Each cut calls the inventory module directly on the server thread. It is **not** an injection into `SessionManager.stop`, nor evidence of every shutdown/session phase. Baseline below includes all 41 inventory slots and the original selection; disk means both UUID playerdata and host level.dat.
+
+| Mode | Inventory in memory before halt | Confirmed disk inventory before halt | Recovery record |
+| --- | --- | --- | --- |
+| `cut-backup` | Baseline | Baseline | Active in memory and both files |
+| `cut-setup` | Training | Baseline | Active in memory and both files |
+| `cut-restored` | Baseline, replayed through `restoreLoaded` | Training | Active in memory and both files |
+| `cut-cleared` | Baseline, after actual `InventoryService.restore` | Baseline | Cleared in memory and both files |
+
+Before halting, the driver checks the expected memory state, saved player UUID, inventory/selection and recovery record in both files. It writes `<mode>-checks.json`, copies the exact saved files to `smoke/<mode>/`, and saves `state-before-halt.nbt` containing baseline, memory inventory/recovery and both saved player tags. Copy hashes are checked against the current save files. A `ready` result means the cut was prepared, not that recovery passed. The following `recover` launch must freshly pass; for `cut-cleared`, this confirms the cleared commit loads the baseline without another active replay.
+
+`python3 scripts/run-inventory-cuts.py` runs all four cut/recover pairs sequentially through the independent production launcher after an owned world exists and other test clients have stopped. It requires cut exit91/`ready` and recover exit0/`passed`, checks each result's freshness, and preserves logs, launch manifests, baseline, pre-recovery save files/hashes and prepared-cut evidence under `run-production/smoke/inventory-cuts/<UTC-run-id>/<mode>/` before launching recovery. The run's `report.json` records each pair and is `passed` only after all four pairs complete. Interrupted or failed runs retain their report/evidence; actual execution results belong in [testing.md](testing.md).
+
+Normal and direct inventory modes alone do not replace the remaining lifecycle/fault
+suite. Use `scripts/run-remaining-acceptance.py` with the independent production
+launcher; see [production-smoke.md](production-smoke.md) and `src/smoke/README.md`.
+After the client exits, `scripts/verify-owned-smoke-save.py` checks both saved
+inventories independently of Minecraft. Physical/rebound/scroll input and visual
+acceptance remain on the [human checklist](manual-acceptance.md).

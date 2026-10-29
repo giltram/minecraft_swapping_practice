@@ -1,0 +1,97 @@
+buildscript {
+    // Mercury's JDT 3.15.0 uses open Eclipse ranges. Use its Eclipse 4.9 release set;
+    // modern range resolutions require Java 17/21 and cannot run in this JDK 8 build.
+    configurations.classpath.resolutionStrategy.force(
+        'org.eclipse.platform:org.eclipse.core.resources:3.13.100',
+        'org.eclipse.platform:org.eclipse.core.runtime:3.15.0',
+        'org.eclipse.platform:org.eclipse.core.filesystem:1.7.200',
+        'org.eclipse.platform:org.eclipse.text:3.7.0',
+        'org.eclipse.platform:org.eclipse.core.commands:3.9.200',
+        'org.eclipse.platform:org.eclipse.osgi:3.13.100',
+        'org.eclipse.platform:org.eclipse.equinox.common:3.10.100',
+        'org.eclipse.platform:org.eclipse.core.jobs:3.10.100',
+        'org.eclipse.platform:org.eclipse.equinox.registry:3.8.100',
+        'org.eclipse.platform:org.eclipse.equinox.preferences:3.7.200',
+        'org.eclipse.platform:org.eclipse.core.contenttype:3.7.100',
+        'org.eclipse.platform:org.eclipse.equinox.app:1.3.600',
+        'org.eclipse.platform:org.eclipse.core.expressions:3.6.200'
+    )
+}
+
+plugins {
+    id 'fabric-loom' version '0.4.33'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories { mavenCentral() }
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    testImplementation 'junit:junit:4.13.2'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand(version: project.version) }
+}
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+test { testLogging { events 'failed', 'skipped'; exceptionFormat 'full' } }
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+// Separate, opt-in development mod; never included in the production jar.
+sourceSets {
+    smoke {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+task smokeJar(type: Jar, dependsOn: smokeClasses) {
+    archiveName = 'hotbar-swap-trainer-smoke.jar'
+    destinationDir = file("${buildDir}/smoke")
+    from sourceSets.smoke.output
+}
+task installSmokeMod(type: Copy, dependsOn: smokeJar) {
+    from smokeJar
+    into 'run/mods'
+}
+if (project.hasProperty('smoke')) {
+    runClient.dependsOn installSmokeMod
+    runClient.systemProperty 'hotbarswaptrainer.smoke', project.property('smoke')
+    runClient.systemProperty 'hotbarswaptrainer.smoke.exit', project.findProperty('smokeExit') ?: 'true'
+    runClient.args '--username', 'SmokePlayer'
+}
+
+// Keep a reviewable record of all historically resolved artifacts, including Loom's snapshot.
+task resolvedArtifacts {
+    doLast {
+        def rows = []
+        // Loom's 'minecraft' configuration is a virtual input coordinate, not a Maven artifact.
+        // Record the classpaths actually used by compilation, testing and the client instead.
+        def configs = ['compileClasspath', 'runtimeClasspath', 'testRuntimeClasspath', 'annotationProcessor']
+                .collect { configurations.getByName(it) } + [buildscript.configurations.classpath]
+        configs.each { configuration ->
+            configuration.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+                def digest = java.security.MessageDigest.getInstance('SHA-256')
+                artifact.file.withInputStream { stream ->
+                    byte[] buffer = new byte[65536]
+                    int size
+                    while ((size = stream.read(buffer)) > 0) digest.update(buffer, 0, size)
+                }
+                rows << "${artifact.moduleVersion.id}\t${artifact.file.name}\t${digest.digest().encodeHex()}"
+            }
+        }
+        buildDir.mkdirs()
+        file("${buildDir}/resolved-artifacts.tsv").text = rows.unique().sort().join('\n') + '\n'
+    }
+}

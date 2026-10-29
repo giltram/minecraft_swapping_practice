@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.hotbarswaptrainer.smoke.mixin",
+  "plugin": "dev.hotbarswaptrainer.smoke.AcceptanceMixinPlugin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": ["CompressedSaveCutMixin", "SessionLifecycleMixin", "RestoreBoundaryMixin"],
+  "injectors": {"defaultRequire": 1}
+}

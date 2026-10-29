@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "hotbar-swap-trainer",
+  "version": "${version}",
+  "name": "Hotbar Swap Trainer",
+  "description": "Single-player hotbar and offhand swap practice for Minecraft 1.16.1.",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.hotbarswaptrainer.TrainerMod"],
+    "client": ["dev.hotbarswaptrainer.client.TrainerClient"]
+  },
+  "mixins": ["hotbar-swap-trainer.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.9.3",
+    "fabric": "*",
+    "fabric-networking-v0": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-command-api-v1": "*",
+    "minecraft": "1.16.1"
+  }
+}

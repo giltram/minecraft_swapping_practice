@@ -1,0 +1,20 @@
+pluginManagement {
+    // Resolve the pinned historical plugin through one documented HTTP compatibility patch.
+    def compatibility = new GroovyClassLoader(getClass().classLoader)
+            .parseClass(file('build-support/LoomCompatibility.groovy')).newInstance()
+    def localRepository = compatibility.prepare(settingsDir, gradle.gradleUserHomeDir, gradle.startParameter.offline)
+    repositories {
+        maven { url = localRepository.toURI() }
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == 'fabric-loom') {
+                if (requested.version != '0.4.33') throw new GradleException('Review LoomCompatibility before changing Loom')
+                useModule('net.fabricmc:fabric-loom:0.4.33-hst1')
+            }
+        }
+    }
+}
+rootProject.name = 'hotbar-swap-trainer'

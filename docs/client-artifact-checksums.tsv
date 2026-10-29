@@ -1,0 +1,12 @@
+artifact	upstream-sha1	local-sha256	note
+minecraft-1.16.1-client.jar	c9abbe8ee4fa490751ca70635340b7cf00db83ff	1863e04698693f32ea6c314862063d315880e39c558c20bb068c1fd94d4c4d73	Loom ZIP normalization; every entry matches upstream bytes
+minecraft-1.16.1-server.jar	a412fd69db1f81db3f511c1463fd304675244077	4cc00bd988422f50a6939f7e2f026cf2746bca4e789dffabde8e3b784d72c5ef	Loom ZIP normalization; every entry matches upstream bytes
+1.16-asset-index.json	f3c4aa96e12951cd2781b3e1c0e8ab82bf719cf2	ae9f833a1d267824f5c55d0a233fc9e960ce383da43e219d261a8062d3af399a	verified official index
+org/lwjgl/lwjgl/3.2.1/lwjgl-3.2.1-natives-macos.jar	5a4c271d150906858d475603dcb9479453c60555	2d1bf3fc87692aa7d275994157c650883765d205d5af12ce47d8c28700ae5e28	verified original native jar
+org/lwjgl/lwjgl-jemalloc/3.2.1/lwjgl-jemalloc-3.2.1-natives-macos.jar	439ab9d0264167a949cc7bcce673704322baaf50	59f18f35eb0d22f224fadd52519281aa9f8b0f463dc679c291f7535a08a90c91	verified original native jar
+org/lwjgl/lwjgl-openal/3.2.1/lwjgl-openal-3.2.1-natives-macos.jar	9357ebfc82a0d6f64e17093dd963219367cd6fa2	4104dc3fcd172d384b41bc1af0cbe7dcbd0764ad9b5c4deab429743bb2a0a98c	verified original native jar
+org/lwjgl/lwjgl-opengl/3.2.1/lwjgl-opengl-3.2.1-natives-macos.jar	dca9ad9e59a87172144d531e08ef7f6988073db0	93812ed3787930283f33acfd2ba92df2f6677bf9124ea02f8068a919f038f504	verified original native jar
+org/lwjgl/lwjgl-glfw/3.2.1/lwjgl-glfw-3.2.1-natives-macos.jar	72fe6dab6110a5a1cd4833f11840eef7b2eadce5	a767d443a7a5f9d27d063535182b84c6c84cc6f0aade8d99f47152fb64c40f40	verified original native jar
+org/lwjgl/lwjgl-stb/3.2.1/lwjgl-stb-3.2.1-natives-macos.jar	1f5615c952451c30afafba4a6e3ba4e1cd9e7f5c	24ce1e828515a0df49a527db9ca0867668988f8cc847b1ed8358678b40449975	verified original native jar
+org/lwjgl/lwjgl-tinyfd/3.2.1/lwjgl-tinyfd-3.2.1-natives-macos.jar	759c2fd9cc5c6ce0b5b7af77ac8200483b7fb660	701525beee96e84356cac074fa33462b54ae5763c645684ffcf55ff7469a16ab	verified original native jar
+ca/weblite/java-objc-bridge/1.0.0/java-objc-bridge-1.0.0-natives-osx.jar	08befab4894d55875f33c3d300f4f71e6e828f64	b490a92062fc482c04f50395d7bbbd3dff22c32eaab45f04478f14d1501af6fa	verified original native jar

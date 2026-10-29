@@ -1,0 +1,1365 @@
+{
+  "date": "2026-10-29",
+  "status": "automatable M1 remaining acceptance passed",
+  "manualAcceptance": "pending: physical/rebound/scroll input, focus/pause UI behavior, GUI scales/readability",
+  "ordinaryWorldGate": "retained",
+  "productionModSha256": "64c643dff049d6fd1e59dfedff61f2aa41384fb9064255c6893ac962150adfc7",
+  "classMajorVersions": [
+    52
+  ],
+  "smokeClassesInProduction": false,
+  "build": {
+    "command": "scripts/gradle-jdk8.sh --offline build smokeJar resolvedArtifacts",
+    "status": "passed",
+    "testTask": "up-to-date after fresh rerun"
+  },
+  "freshUnitTestRun": {
+    "command": "scripts/gradle-jdk8.sh --offline test --rerun-tasks",
+    "status": "passed",
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "status": "passed",
+    "javaFiles": 52,
+    "packages": 12,
+    "directedDependencies": 25,
+    "cycles": false
+  },
+  "caseCount": 25,
+  "protectionChecks": [
+    {
+      "name": "inventory pickup/crafting slot",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "container quick transfer",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "creative inventory insertion",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "pick inventory",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "craft recipe request",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "screen button",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "book update",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "use item",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "entity attack",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "entity interaction",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "block use/place",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "command whitespace bypass",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "DROP_ITEM",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "DROP_ALL_ITEMS",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "START_DESTROY_BLOCK",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "STOP_DESTROY_BLOCK",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "ABORT_DESTROY_BLOCK",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "RELEASE_USE_ITEM",
+      "status": "passed",
+      "detail": "Actual handler invalidated, preserved inventory/terrain, zero successes and exact restore"
+    },
+    {
+      "name": "passive protection at PREPARING",
+      "status": "passed",
+      "detail": "Item/XP/arrow/trident, lethal damage/heal/food/effects/equipment and anchored movement with camera rotation"
+    },
+    {
+      "name": "passive protection at COUNTDOWN",
+      "status": "passed",
+      "detail": "Item/XP/arrow/trident, lethal damage/heal/food/effects/equipment and anchored movement with camera rotation"
+    },
+    {
+      "name": "passive protection at RUNNING",
+      "status": "passed",
+      "detail": "Item/XP/arrow/trident, lethal damage/heal/food/effects/equipment and anchored movement with camera rotation"
+    },
+    {
+      "name": "passive protection at SUCCESS",
+      "status": "passed",
+      "detail": "Item/XP/arrow/trident, lethal damage/heal/food/effects/equipment and anchored movement with camera rotation"
+    },
+    {
+      "name": "actual START I/O failure: playerdata",
+      "status": "passed",
+      "detail": "Automatic rollback confirmed the original/cleared state in both saved files; baseline unchanged, permissions reset and final restoration confirmed"
+    },
+    {
+      "name": "actual SessionManager.stop I/O failure: playerdata",
+      "status": "passed",
+      "detail": "ERROR_LOCKED retained exact backup, blocked swaps, permissions reset and stop retry committed both saves"
+    },
+    {
+      "name": "actual START I/O failure: .",
+      "status": "passed",
+      "detail": "Automatic rollback confirmed the original/cleared state in both saved files; baseline unchanged, permissions reset and final restoration confirmed"
+    },
+    {
+      "name": "actual SessionManager.stop I/O failure: .",
+      "status": "passed",
+      "detail": "ERROR_LOCKED retained exact backup, blocked swaps, permissions reset and stop retry committed both saves"
+    },
+    {
+      "name": "ordinary behavior after restoration",
+      "status": "passed",
+      "detail": "Vanilla swap, item/XP/arrow/trident pickup, status ticks and healing work after guards release; exact baseline re-saved"
+    }
+  ],
+  "phaseChecks": [
+    {
+      "name": "swap at PREPARING",
+      "status": "passed",
+      "detail": "Blocked actual vanilla handler; success stays frozen; exact restore"
+    },
+    {
+      "name": "swap at COUNTDOWN",
+      "status": "passed",
+      "detail": "Blocked actual vanilla handler; success stays frozen; exact restore"
+    },
+    {
+      "name": "swap at SUCCESS",
+      "status": "passed",
+      "detail": "Blocked actual vanilla handler; success stays frozen; exact restore"
+    },
+    {
+      "name": "INTERRUPT protocol at PREPARING",
+      "status": "passed",
+      "detail": "Server invalidation/preparation gate; no physical focus claim"
+    },
+    {
+      "name": "INTERRUPT protocol at COUNTDOWN",
+      "status": "passed",
+      "detail": "Server invalidation/preparation gate; no physical focus claim"
+    },
+    {
+      "name": "INTERRUPT protocol at RUNNING",
+      "status": "passed",
+      "detail": "Server invalidation/preparation gate; no physical focus claim"
+    },
+    {
+      "name": "screen through feedback into next task",
+      "status": "passed",
+      "detail": "Actual server screen blocks READY until close; no subjective GUI/readability claim"
+    },
+    {
+      "name": "dimension travel",
+      "status": "passed",
+      "detail": "Actual changeDimension hook blocked travel without loading terrain"
+    }
+  ],
+  "cases": {
+    "accept-protection": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T073800.251014Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T073800.251014Z/accept-protection",
+      "mode": "accept-protection",
+      "exitCode": 0,
+      "evidence": {
+        "mode": "accept-protection",
+        "status": "passed",
+        "detail": "27 protection/lifecycle checks passed; actual vanilla handlers, passive callbacks, START/stop write failures/retries and ordinary behavior",
+        "elapsedSeconds": 16.476480375
+      },
+      "saveSha256": {
+        "level.dat_old": "04b4c5ebf23351d454784db41a66d4b71e2379cc08c6fcbc091c2621cc85d80e",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+        "level.dat": "ea12c8b91411ee52fea04f12d76fc86eea0b3346b8cb65386bacb8ea7f709fc0",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "7ccde5f82c8e26ae2ba56f2086f74519572d2fa4bc9eb3e6cecff3437fa93e4a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "7ccde5f82c8e26ae2ba56f2086f74519572d2fa4bc9eb3e6cecff3437fa93e4a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.592991166
+        },
+        "saveSha256": {
+          "level.dat_old": "f1b2ac320dc524e084403fd92e44c7c59d38bfd4098565722a39344090d6ddad",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+          "level.dat": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "1a0cb98236177a99be2ae47535467f8ab1f9938ae924323606d0eb3321df7523",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "4ccb9f5da49e599ee6f67041a934b009cf2434467f994352d4bb08fb292c9d35",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      }
+    },
+    "accept-exit-disconnect-preparing": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/accept-exit-disconnect-preparing",
+      "mode": "accept-exit-disconnect-preparing",
+      "exitCode": 0,
+      "evidence": {
+        "name": "disconnect at PREPARING",
+        "status": "passed",
+        "detail": "Observed actual lifecycle entry; countdown accelerated only for session setup",
+        "expectedPhase": "PREPARING",
+        "actualPhase": "PREPARING",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "4befd16b5b0726cbe3e21d8e16b405a5787191a82f771081b76274b0fab1e648",
+        "level.dat": "8a1008f86d33e6e624b54d41b9fcac866a107fedfc9012b2e7e4b1d438784d1b",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "f4a0aaaa7bc81719c2c9c254b95c73ee096902b97993a6a0e84ccd96ecc905cc",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "f4a0aaaa7bc81719c2c9c254b95c73ee096902b97993a6a0e84ccd96ecc905cc"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 15.311961834
+        },
+        "saveSha256": {
+          "level.dat_old": "5ca87f993bed73956a69d0c074476b863224059a97daf5b3c05ef5c2f3d85c11",
+          "level.dat": "4d3de45c9761a9452f0bdf874dbb39faecaecde336c6609911555162f37787fb",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9c705fe353f1693e253148b530c63c8430573f7e6efc0b509218e71f5b0959ec",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "472d771f502b87e2b990d201dafb47431193a9743ec6f6443d233f9601d81c26"
+        }
+      }
+    },
+    "accept-exit-disconnect-countdown": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/accept-exit-disconnect-countdown",
+      "mode": "accept-exit-disconnect-countdown",
+      "exitCode": 0,
+      "evidence": {
+        "name": "disconnect at COUNTDOWN",
+        "status": "passed",
+        "detail": "Observed actual lifecycle entry; countdown accelerated only for session setup",
+        "expectedPhase": "COUNTDOWN",
+        "actualPhase": "COUNTDOWN",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "eccb6bb55317ed353ffee5ebcb6cac615403b1ec67dcb6d4b6d996d85a73e5dc",
+        "level.dat": "9d2baff206a5786ef7a4a48595c86e06d3f45d7970c4e3a2ba9d95909ca190b0",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "12a17c0cb437e0e3c269d9e40227a16ed603f62879f80c6c8871d8645f2e0eac",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "12a17c0cb437e0e3c269d9e40227a16ed603f62879f80c6c8871d8645f2e0eac"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.78029125
+        },
+        "saveSha256": {
+          "level.dat_old": "08bc6e6f3c7ed111eee7be68832b119bfb7c4550bb33ebcf750724571ae118bb",
+          "level.dat": "a016242c5364352c6e4c1f3e05625f2b8de56bbfef3a6a0be248724782496ef5",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9c705fe353f1693e253148b530c63c8430573f7e6efc0b509218e71f5b0959ec",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "472d771f502b87e2b990d201dafb47431193a9743ec6f6443d233f9601d81c26"
+        }
+      }
+    },
+    "accept-exit-disconnect-running": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/accept-exit-disconnect-running",
+      "mode": "accept-exit-disconnect-running",
+      "exitCode": 0,
+      "evidence": {
+        "name": "disconnect at RUNNING",
+        "status": "passed",
+        "detail": "Observed actual lifecycle entry; countdown accelerated only for session setup",
+        "expectedPhase": "RUNNING",
+        "actualPhase": "RUNNING",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "cbd0c09ba1db72efa3663a4164023b7075705cb9ba212a68147a1090f36c1943",
+        "level.dat": "b8130cc16aaaf889db614105a1429ec0d258980dcff9646b29eb089ad934c711",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "f4a0aaaa7bc81719c2c9c254b95c73ee096902b97993a6a0e84ccd96ecc905cc",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "f4a0aaaa7bc81719c2c9c254b95c73ee096902b97993a6a0e84ccd96ecc905cc"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 15.687131417
+        },
+        "saveSha256": {
+          "level.dat_old": "e7fd645b09bbe95c3c6d6d146290cfa953a9f8eb1b76c47053c6c7f99335ca76",
+          "level.dat": "adefc1d2e34e178955eb0d65c6fe7e095edaef4a9b9d070678a2850641d1b5f0",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9c705fe353f1693e253148b530c63c8430573f7e6efc0b509218e71f5b0959ec",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "472d771f502b87e2b990d201dafb47431193a9743ec6f6443d233f9601d81c26"
+        }
+      }
+    },
+    "accept-exit-disconnect-success": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T070010.044352Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T070010.044352Z/accept-exit-disconnect-success",
+      "mode": "accept-exit-disconnect-success",
+      "exitCode": 0,
+      "evidence": {
+        "name": "disconnect at SUCCESS",
+        "status": "passed",
+        "detail": "Observed actual lifecycle entry; countdown accelerated only for session setup",
+        "expectedPhase": "SUCCESS",
+        "actualPhase": "SUCCESS",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "baa5eb84b7ce3dc4653263299b679851895e066c2bbce2bdf8e2cf30906db47d",
+        "level.dat": "d77edd24ea41b5bf9856d997b4f9e5f47aa314fe94bc100f2e3a5992cc01c8fe",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "c5c0d3876975d71ab0af2d7dc6f082d8c35b89129f736edfbecfdaace534debf",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "c5c0d3876975d71ab0af2d7dc6f082d8c35b89129f736edfbecfdaace534debf"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.930615333
+        },
+        "saveSha256": {
+          "level.dat_old": "7a484df37fba49f61ac52c20e53c3b2d7f361d98fd5bf0c054f568f5cdcb2b83",
+          "level.dat": "e8e4101d22b236c65cc10d747599048f01e530c0d2e67a6532d86c3ac3be351d",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "ee452c2a4cabe4d902cbaf45276978fb8dcb6ea2294c8c9ab606d34658e85777",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "ac034b82e77bbfeb25328fa0ce0eb09d988072489e2d7d5827febc5f5c71bcb1"
+        }
+      }
+    },
+    "accept-phase-guards": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T070717.012163Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T070717.012163Z/accept-phase-guards",
+      "mode": "accept-phase-guards",
+      "exitCode": 0,
+      "evidence": {
+        "mode": "accept-phase-guards",
+        "status": "passed",
+        "detail": "8 phase/protocol/open-screen/dimension checks passed",
+        "elapsedSeconds": 17.205638416
+      },
+      "saveSha256": {
+        "level.dat_old": "50bf0473e1c0417871970f53a89ca275bdea58543b62b753521a66aabb26ad1a",
+        "level.dat": "d8fd2c4d767375cd07dd87b0339f365b8f5e21f256f03dc5ed5315a7c834c950",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "4c0196e6d02b585dcbdcda86a3939e97f2db831c6bd9dbe86bdc7a6de0866094",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "061adf6b0bbd907657724b5f3da08bfc73eedae25e1b4ab29b7fdabd2360736e"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.184701917
+        },
+        "saveSha256": {
+          "level.dat_old": "9fc4f3b4ca0dc04bef4d1c5a6fe2b22dd8bcbdbba616941df22f9147ab68cdf1",
+          "level.dat": "f399fee72883c9fd6255fc049069d73d29f09d6a62e1ac23ec801cd19831c078",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-lan": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071129.241286Z/report.json",
+      "sourceReportStatus": "failed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071129.241286Z/accept-lan",
+      "mode": "accept-lan",
+      "exitCode": 0,
+      "evidence": {
+        "mode": "accept-lan",
+        "status": "passed",
+        "detail": "Actual LAN publication stopped/restored training; subsequent start rejected",
+        "elapsedSeconds": 19.334104875
+      },
+      "saveSha256": {
+        "level.dat_old": "178ad17a047b829f30ca7ce554eb77c9fc25d4607fd67ca4aba0e4f0c6157d3d",
+        "level.dat": "d456ef8be4a196d6d0d550dc4c8482fc915d337f84b01cfcfe3781bc8290b5c9",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "248ec5dbd390a22e6f641975116ebe36ec6e3792d0b9d80bb720274c66ad9a4c"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 16.260434
+        },
+        "saveSha256": {
+          "level.dat_old": "c9cc62e78ab5a4d73bcacf5f233dfdc7a3908c268c51e1a25514b6724905125e",
+          "level.dat": "6dff5f8cd9659ffb013e93c083e3f0cbafae87081b66452642ac45ab0699ae7c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-exit-shutdown-preparing": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-exit-shutdown-preparing",
+      "mode": "accept-exit-shutdown-preparing",
+      "exitCode": 0,
+      "evidence": {
+        "name": "shutdown at PREPARING",
+        "status": "passed",
+        "detail": "Real client exit requested in the stated phase; vanilla may READY/interrupt before player removal",
+        "expectedPhase": "PREPARING",
+        "actualPhase": "INVALID",
+        "requestPhase": "PREPARING",
+        "requestedExit": "shutdown",
+        "actualLifecycleHook": "disconnect",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "21839efe09ea8f6f23c6b87e0aa7fe9c09b74cb7f7f4e027381b18723f547ac1",
+        "level.dat": "b3b4d4b0c9e31d0880eb2e384ff31fcb8ab99996e59418e4c28bf2ba2d33298a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.542718708
+        },
+        "saveSha256": {
+          "level.dat_old": "908d7b1e205cb1be2125a94589f103d62e1fc8d9a122b4c656a05b2947665f4b",
+          "level.dat": "808ebc0943d1a2b821242c49d2941a72140ebd677b5e792cae8ea1bc45104031",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5"
+        }
+      }
+    },
+    "accept-exit-shutdown-countdown": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-exit-shutdown-countdown",
+      "mode": "accept-exit-shutdown-countdown",
+      "exitCode": 0,
+      "evidence": {
+        "name": "shutdown at COUNTDOWN",
+        "status": "passed",
+        "detail": "Real client exit requested in the stated phase; vanilla may READY/interrupt before player removal",
+        "expectedPhase": "COUNTDOWN",
+        "actualPhase": "INVALID",
+        "requestPhase": "COUNTDOWN",
+        "requestedExit": "shutdown",
+        "actualLifecycleHook": "disconnect",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "3f90f91819627b45f7b8bc95c70e45aaad7e5b8bf59985c510e3f70e0a932350",
+        "level.dat": "83dbdccd1cfff7b3eaa03d9916e010bbf519732d4fd21b0831e95817ed5661fe",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.462924167
+        },
+        "saveSha256": {
+          "level.dat_old": "58050cf6420a5b9bf11860dd213e6e7f3f109c2de4b372fec91ae3fd7351b82f",
+          "level.dat": "5571b44c6231fbb2130c297aad4ff7874c328612a4edcadb4676eebcfdb1a401",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-exit-shutdown-running": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-exit-shutdown-running",
+      "mode": "accept-exit-shutdown-running",
+      "exitCode": 0,
+      "evidence": {
+        "name": "shutdown at RUNNING",
+        "status": "passed",
+        "detail": "Real client exit requested in the stated phase; vanilla may READY/interrupt before player removal",
+        "expectedPhase": "RUNNING",
+        "actualPhase": "INVALID",
+        "requestPhase": "RUNNING",
+        "requestedExit": "shutdown",
+        "actualLifecycleHook": "disconnect",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "c98d550012b37b6746b3553556eef6661aa2903e61d6bf673d7dd516c68e9fbf",
+        "level.dat": "7f1ea128ce14fba2c34d67cdb13fa9a2bbcdc73ec5e4d5b2a4ad0477705db2ea",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "99e9e0c9323b75fd4e0fd660aa4fd5dbe7b4af4e6d90b43a91d8e34e6e8c490a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "99e9e0c9323b75fd4e0fd660aa4fd5dbe7b4af4e6d90b43a91d8e34e6e8c490a"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.008943208
+        },
+        "saveSha256": {
+          "level.dat_old": "aa3f314487d64d8e4019ece0c385defb1697f058ea877829c0a72e0ebfc9fec6",
+          "level.dat": "664b3303deea9a83f932dfffb9ce10870792ee313c5fb0cce3b13ed6f16adf3a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-exit-shutdown-success": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-exit-shutdown-success",
+      "mode": "accept-exit-shutdown-success",
+      "exitCode": 0,
+      "evidence": {
+        "name": "shutdown at SUCCESS",
+        "status": "passed",
+        "detail": "Real client exit requested in the stated phase; vanilla may READY/interrupt before player removal",
+        "expectedPhase": "SUCCESS",
+        "actualPhase": "SUCCESS",
+        "requestPhase": "SUCCESS",
+        "requestedExit": "shutdown",
+        "actualLifecycleHook": "disconnect",
+        "protected": true
+      },
+      "saveSha256": {
+        "level.dat_old": "0a848dc1093dbc9cfcd90c85914dccccafa93c6b34d36f19cde7d90b894f45c5",
+        "level.dat": "83953a154aa77c1366310de2d8451a2f9deb1052646cf960b5e50b77ce88e45a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "99e9e0c9323b75fd4e0fd660aa4fd5dbe7b4af4e6d90b43a91d8e34e6e8c490a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "99e9e0c9323b75fd4e0fd660aa4fd5dbe7b4af4e6d90b43a91d8e34e6e8c490a"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.723342583
+        },
+        "saveSha256": {
+          "level.dat_old": "6e8f0522cfe1e4a0bfb57a51bbee4e79cce54c39c8567317174051e25098ac76",
+          "level.dat": "31903ed9b8664bc4bd9a58d2c812e0620fcf1b6dbc1a2111b7e3bb0591ffeceb",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-schema": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-schema",
+      "mode": "accept-corrupt-schema",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt schema",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "de6af38af69a24fd6be33f43868b2990451c492bfff48292a7e9858d9bdf71d9",
+        "level.dat": "a926249801e36c65a207d5ea8545fbc9da6b10346f609063fa7046a76a72aec2",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "fd78cff851d7a4561c0a5a52e5ec56133abee932c1791e1bd52547ba3d5f31a7",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "e09daa58756a9d72767de7563e0c0d8dbeb839dd0cdc2d8b06c161bb3f353e9b"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt schema load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.405615833
+        },
+        "saveSha256": {
+          "level.dat_old": "6643fb6524a75a63d01f21b43c99b9e826df411340fc7d6d9489b4ab1d8727aa",
+          "level.dat": "8cdd9c99bbf21a54ac9f58720c0289460e3326b492b307153700866882e8938b",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "00b9b2b0aa49f71919917a0dcd9a8cd88f8ccb5bb37d1e2980a9f49d666f0d4a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "9e6b8d10e453e462685b0bc5b5ac46e39cd2e41b78bc144533a55cac84bca78d"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.045422666
+        },
+        "saveSha256": {
+          "level.dat_old": "34ba4b6558a71dc9e048ec61e61e8a2152d0193afc1d4eee5329137f5b1f5cbf",
+          "level.dat": "5758463c623d827304251ce9b9424d8bbc8c2bf4cb1912c54b0ac305cda99a21",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-checksum": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-checksum",
+      "mode": "accept-corrupt-checksum",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt checksum",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "3c4b1dccbd04a069eb12da7ff13a4b4d525a1330cd964cdbc504d18890dabbf6",
+        "level.dat": "e8d2655d5a52c4ec5c0827308268c2ff831f77443b2e5295c33bf8870dba814f",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9e89615eb689a39ebfd22e8b947e863aa4bd178421fb0302e69daba9f1505f0c",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "4917805aa178361843c039e9fc4b1c5e7bc0bb5921ccf54441b1157130bc575f"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt checksum load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.775762667
+        },
+        "saveSha256": {
+          "level.dat_old": "c0e4f02a94457557b0dbc680be27bf146a59169639cf4db5ff7655b2d560b901",
+          "level.dat": "eb1407adab44f40ce2e8e25ccc9f90c65f25eaa277458ae76a1f8c8bf490f57f",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "00b9b2b0aa49f71919917a0dcd9a8cd88f8ccb5bb37d1e2980a9f49d666f0d4a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "9e6b8d10e453e462685b0bc5b5ac46e39cd2e41b78bc144533a55cac84bca78d"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.9970665
+        },
+        "saveSha256": {
+          "level.dat_old": "576090398569abf2a6941d892d0d2b4d1642af7d8445e1475bcbd80801b976f2",
+          "level.dat": "f7bc2a18d3a3c4f3ff9dbc7a2a312e1a419ed059c6180d4483259d4b7f3c3dbe",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-player": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-player",
+      "mode": "accept-corrupt-player",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt player",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "b61a8404f5a2f761a07d5f25ffaac5bd53d3f09a2003fbdcfc910653461fc46c",
+        "level.dat": "ac0d216d74be1dfcbb26541c8a9ac17494f4b4042313c9d69315d17a021c7331",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "68df8332fbecdb40d4f372c2d72c86fc85e1b4d5b835d064cc6fa31fba5ebb40",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "f3dbd6134fc51e172e7d84039e36b28bedb0098876c6415cb55d8d826174f56e"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt player load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.754915416
+        },
+        "saveSha256": {
+          "level.dat_old": "d2a6f63b7d022d0d9e1cf3bc55a6270fa6aeb1e59932f9b0574cf5a4a818493f",
+          "level.dat": "d1efe00ebbcfc41fbb8216b6032d0a5ad6c435b0f82c46eecc674a428cabf80c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "248ec5dbd390a22e6f641975116ebe36ec6e3792d0b9d80bb720274c66ad9a4c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "813dda1bc003a73ee84cd7cddccb096cefba9e3c33966fcd2b297135e36ab4a1"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.712382541
+        },
+        "saveSha256": {
+          "level.dat_old": "804f80ef8d262e7745b60c4e82325bc3e14b1d934418b292ddc3d532c8b3bee6",
+          "level.dat": "7f35c956069c7a603f3d916866be15c7694a64288bfe83389bf09dfad1e400bc",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5"
+        }
+      }
+    },
+    "accept-corrupt-world": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-world",
+      "mode": "accept-corrupt-world",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt world",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "d4699beebb2532ac0acf03782f9e594c1463ed0cd352167065c4180b1b72eecd",
+        "level.dat": "d8d976dc4de664488b0e1e6f76ea471c732398b6ad823ed3bc75495c0201e243",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "d627d69fc0afad5a93bb2931b29a3a29ff8fcc1dcb7de98c3cd41ccca5ad5f19",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "fab0ba9a1c68d3d71285223fbd758da5aa27521dadc7af9e068833de6b124c74"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt world load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.8059545
+        },
+        "saveSha256": {
+          "level.dat_old": "752e30cb6aafe4482ad83336db38467b48e792bc100c3eb782416a5ecd6815ab",
+          "level.dat": "3f8ff461b8db4573459375f7e47cfc3cdb42e8b309a06ddd855cbe21a048ff4c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "4c0196e6d02b585dcbdcda86a3939e97f2db831c6bd9dbe86bdc7a6de0866094",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "061adf6b0bbd907657724b5f3da08bfc73eedae25e1b4ab29b7fdabd2360736e"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.303959375
+        },
+        "saveSha256": {
+          "level.dat_old": "7d7259a5bef2e38d85e0b68c796c860f9e3aff4aee73b38eeee74cf524a61572",
+          "level.dat": "d02ba44c6b17a31d7717a323e0bb0f9631986e3f632c867d32f02d020a30d77a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-truncated": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-truncated",
+      "mode": "accept-corrupt-truncated",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt truncated",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "42ff80022ef8ddc2f79953a21c858931827c0ddefbcecf2dde605f050f9f4ffa",
+        "level.dat": "67a5ae4ee5cb19d92b3c1cc7bb0058d9a6cd9f46076c79f9b508aa234e658616",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9f39ca5d659fd49c8402c14a613a247d38c495439e758cc62553bfe654ea6b9a",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "e70911d75c59ae7f515c57ba7677d5f92c623a7892fb1a9793250d2e45bf4d5b"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt truncated load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 13.443454041
+        },
+        "saveSha256": {
+          "level.dat_old": "66b39ec006b851a9ce4733f445b64e3bb76c7dc330c2481be777d9db57ae2a1c",
+          "level.dat": "18026265ab487d9b6f773304e9deaf361621fe3b5bc74e4ad4640b7056cafe09",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "00b9b2b0aa49f71919917a0dcd9a8cd88f8ccb5bb37d1e2980a9f49d666f0d4a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "9e6b8d10e453e462685b0bc5b5ac46e39cd2e41b78bc144533a55cac84bca78d"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.457941542
+        },
+        "saveSha256": {
+          "level.dat_old": "b2e33990ef11f8dd363391a5859ce2c3b350beeb00c33bfff7bb0a5b58bf1e16",
+          "level.dat": "4159e39fdc49a69204b4a27f6e367a36944bdee2c3ac97e5456f6e72c76e2275",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-snapshot-type": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-snapshot-type",
+      "mode": "accept-corrupt-snapshot-type",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt snapshot-type",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "51e82d486e85e3b06c560dc78a1021c0f9845111447402d317f36c509e8b8b46",
+        "level.dat": "246049a71808fe446ee92d1cca7acd4cd6a406137b664d65740c1feaaee056b7",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "0b798d33e97b5245b4c8b629d2bf4acf713f92b3a10d64df96e6b59da66426e7",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "95c2329e7b795bffff45af17befa21f3c49d3c5e440228dfa8e96725aee18f48"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt snapshot-type load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.546337917
+        },
+        "saveSha256": {
+          "level.dat_old": "84d3f5e1aef1017740d8355d0d2e41f61e076fc5a3bf63239b3ec3af484e4a6d",
+          "level.dat": "3526e6beddacf825dd7e093549d855d380d6fd1669d1cd065254a632a760875d",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "248ec5dbd390a22e6f641975116ebe36ec6e3792d0b9d80bb720274c66ad9a4c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "813dda1bc003a73ee84cd7cddccb096cefba9e3c33966fcd2b297135e36ab4a1"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.981193458
+        },
+        "saveSha256": {
+          "level.dat_old": "4f9922c1bf23b18e7a3487cb14198f87c8e7d86821003023431412ee8c522b08",
+          "level.dat": "22652b3168dec5e1261d0a969e37546d13d8bae0e7b969e1858324169781a002",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5"
+        }
+      }
+    },
+    "accept-corrupt-wrong-type": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-wrong-type",
+      "mode": "accept-corrupt-wrong-type",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt wrong-type",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "1a3e3c83995ad190b0001a67f776f2a9ce1defaba87cf84fd7b0ba667400c06b",
+        "level.dat": "ae8993563ddf0733da95bfd2fa63a688480a8ac4e6ad1a0af966a708c1b8ec64",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "5e5785b4be4aff4ea6c8f01bc10140b5c97282a26aaeff6375decf38d063079d",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "0fcc23218856f8cec81cd0b8453b10dff213e0a141b7a24a0c52b7666373b491"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt wrong-type load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.744124083
+        },
+        "saveSha256": {
+          "level.dat_old": "cf2e15e797a6c50c9fd97441430cdaec0ec0e34c76222391ec784d7332e4c397",
+          "level.dat": "a193555c49c9cb744feaa3cb311c5a4c898dac81ab1a6450cc1f0c10b22f9930",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "9f37d2b86d44e0e4e4220b0af5344196f25cc50598891bceac05f0b95b5738b0",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "3dfeca7b1da982092c888ec2674e78130bfe2cf416aa280bb8673393d75bcc64"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.197537625
+        },
+        "saveSha256": {
+          "level.dat_old": "41d2f06be6b55660233b82750ce26126bebc5ba82d59ae238926c1f9b824503b",
+          "level.dat": "e1310da42f7e5c93028c0ded4b850075a96f6fdbcc565db48b255a52a13bc8c6",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-corrupt-inactive": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-corrupt-inactive",
+      "mode": "accept-corrupt-inactive",
+      "exitCode": 91,
+      "evidence": {
+        "name": "corrupt inactive",
+        "status": "passed",
+        "detail": "Both authoritative saves contain exact malformed raw data; next launch must lock"
+      },
+      "saveSha256": {
+        "level.dat_old": "20c9bd15d41330289876a895d2dbd28b5ad0e37435fb3fa304a03a48ccb93c36",
+        "level.dat": "0a500e8196dfce71fd24abc3c0868d0d8848b10c15d5ad42748a3c5294a951a4",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "ef7c2ab5f1717c011f210cb524554797bca97a1974c7e2a3583af82284cf8f14",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "d85e2db71bfb1e04648e3bae8ca8f3188d7793923a8f337260f4dc049d15dd3e"
+      },
+      "lockedLoad": {
+        "mode": "accept-corrupt-check",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "accept-corrupt-check",
+          "status": "passed",
+          "detail": "Corrupt inactive load/guards/raw preservation and exact repaired recovery passed",
+          "elapsedSeconds": 14.611509084
+        },
+        "saveSha256": {
+          "level.dat_old": "92cdb08c4db7f4b7fb645990f1f64b1e2f127ca5adf7528428e0c6e6e8329914",
+          "level.dat": "d2260bbec5dcea807791149493ff4dd13bdf9eb643ac8e164982a31a27d36d14",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "00b9b2b0aa49f71919917a0dcd9a8cd88f8ccb5bb37d1e2980a9f49d666f0d4a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "9e6b8d10e453e462685b0bc5b5ac46e39cd2e41b78bc144533a55cac84bca78d"
+        }
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.562705042
+        },
+        "saveSha256": {
+          "level.dat_old": "bf516dbfd1a01d4ea449ea2bef443ad30f9849560bb75d608bc4545ca7d494cd",
+          "level.dat": "af9463a83a714bd770918d9354b1abece7b38fc3770bc92c12848bd3d57bbd1e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd"
+        }
+      }
+    },
+    "accept-write-uuid": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-write-uuid",
+      "mode": "accept-write-uuid",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-write-uuid",
+        "status": "passed",
+        "detail": "inside compressed save stream after 32 bytes",
+        "compressedBytesWritten": 32,
+        "actualStopEntered": false,
+        "protectedInMemory": true
+      },
+      "saveSha256": {
+        "level.dat_old": "c3ea5be70dcd67c6ce8d90509ad831ed6f449ae7713a0bea173f4bccd3eb3ff1",
+        "level.dat": "116f26a0f067f8133bec701d09c8e790d6a3ea9fd4f50f77ad57d4d064a01cd8",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "0eb9f43102299a0378faefafaf838499eb063dac751b9dcbd2ff02163f85d57b",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "e0954b72ce450e7f35c5930517bb9c1c61ce429146eea8ec74d0563b85b0f704",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.528951375
+        },
+        "saveSha256": {
+          "level.dat_old": "30cce8457bc012adafa0dc1f7e9ec1ef015f25339adc0569040c31cfc44ef058",
+          "level.dat": "1641613f0a9a950b5085803ae3ad4a58498cd85402640ab0b65d7fda4e8c7745",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      },
+      "archivedPartial32ByteFiles": [
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-write-uuid/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat"
+      ]
+    },
+    "accept-write-host": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-write-host",
+      "mode": "accept-write-host",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-write-host",
+        "status": "passed",
+        "detail": "inside compressed save stream after 32 bytes",
+        "compressedBytesWritten": 32,
+        "actualStopEntered": false,
+        "protectedInMemory": true
+      },
+      "saveSha256": {
+        "level.dat_old": "8e4cee7cf719c87d8b7f63e4c8577729eacebc1c44bd580ba012e44681ffea58",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level.dat": "bee73ad00d5f84b0c438c69c9034f9fe6b08da46ad3d2bc01654e991a9a3f80d",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "17d23ad939d76b4d3dcc9183c1bc55d026b6d4c3f09b5ea92894cf25318378ea",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "17d23ad939d76b4d3dcc9183c1bc55d026b6d4c3f09b5ea92894cf25318378ea",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.158362375
+        },
+        "saveSha256": {
+          "level.dat_old": "f2d582cfbdded6c618c1038b3fd15d19cc904b82648eb4505e3d20d7eb122e92",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level.dat": "6515b13439819b50d0a1f003e8e4b826c27d536d3c59921089c47609f29f334a",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      },
+      "archivedPartial32ByteFiles": [
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-write-host/save/level3510450664535969055.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-write-host/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat"
+      ]
+    },
+    "accept-stop-write-uuid": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-uuid",
+      "mode": "accept-stop-write-uuid",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-stop-write-uuid",
+        "status": "passed",
+        "detail": "inside compressed save stream after 32 bytes",
+        "compressedBytesWritten": 32,
+        "actualStopEntered": true,
+        "protectedInMemory": false
+      },
+      "saveSha256": {
+        "level.dat_old": "3befe3d90672923bd357e3b35beb633661e0a6a6f28119f6f5a2b19f86dee305",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level.dat": "14d9e16dbcf1c35b38e2b098c0614a92e527b37b83f27e70226f2b82aca3742b",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "fddfb0b45c70f4c1b0ee231b5a1b9fd3cc6c57ad701c633a84fe6087031e013d",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "aaa853fcb14b8ec4f41281e30c506c62d9936fe5a9f4adc2ef3f6180ae17f773",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 15.136331667
+        },
+        "saveSha256": {
+          "level.dat_old": "481dc436317e57b28944ea2a14da75530bee9e23cf14618fbc5e03627720f731",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level.dat": "d3190fc125270cffb2416cd2e373562ad65125a3488485898a7d9a1e75349b8f",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      },
+      "archivedPartial32ByteFiles": [
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-uuid/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-uuid/save/level3510450664535969055.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-uuid/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat"
+      ]
+    },
+    "accept-stop-write-host": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-host",
+      "mode": "accept-stop-write-host",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-stop-write-host",
+        "status": "passed",
+        "detail": "inside compressed save stream after 32 bytes",
+        "compressedBytesWritten": 32,
+        "actualStopEntered": true,
+        "protectedInMemory": false
+      },
+      "saveSha256": {
+        "level.dat_old": "38fb604e18e803a8ed861b9934741c10c70447e7e5bed0c11b393bf160b4d665",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+        "level.dat": "f636f1d32ba6a751c86b5aa2a61035c02ec30eb848082b15b8d6914a959ad873",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "071a3dd106d5001a0fd6316094df75728a1aaa82917bb7a012aa3db58c879611",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "695999bb7117230878f62141d930033895560a2975cd1b33380e700088bb3be3",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.642490083
+        },
+        "saveSha256": {
+          "level.dat_old": "3e61671486197fe0c03c37949b0152e7bdeea33e4435301d0d6c7333d024f8a5",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+          "level.dat": "411e01dc0c78a3755cf7087b16ebfc785f5286aefb732f65ee04fc5560c16b9e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      },
+      "archivedPartial32ByteFiles": [
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-host/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-host/save/level3510450664535969055.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-host/save/level5473116353018318403.dat",
+        "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-write-host/save/player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat"
+      ]
+    },
+    "accept-stop-before-clear": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-before-clear",
+      "mode": "accept-stop-before-clear",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-stop-before-clear",
+        "status": "passed",
+        "detail": "actual stop after replacement before clear save",
+        "compressedBytesWritten": 0,
+        "actualStopEntered": true,
+        "protectedInMemory": false
+      },
+      "saveSha256": {
+        "level.dat_old": "885b2dffc06c6f8ba309389b8cfcbfccf44e6b86beb238c92a57d5d5e71615a9",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+        "level.dat": "c7ec596736b1c3b58c7319533449d563a38613e40c5c63b92e4daf6777b6d91d",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "0d4571306b5ecfe4685329ae3c5bea6eaa192340a86b41a1a57c77a0e8dee3b1",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "67cdcae0acb99848fc3023075f9f535ef37cc63dad334964ead2673acd42b788",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 14.723917708
+        },
+        "saveSha256": {
+          "level.dat_old": "6a3dc17ad0dc3c616609b314fa33fdb9144306f100fbb003da76396e5af80c5e",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+          "level.dat": "2b07f6a773e28cdc41f408f77699cb19c2038984b1f79fea29c8e123ca38793c",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "10050f69d63b668e8fffe89aeee962b694f7ed581512735f77ea2bac681d98d4",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "581967bfbdbad8a2f3509094e561a1eb94b2799dc86179043deacbf0777403d5",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      }
+    },
+    "accept-stop-after-clear": {
+      "sourceReport": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/report.json",
+      "sourceReportStatus": "passed",
+      "caseDirectory": "run-production/smoke/remaining-acceptance/20261029T071533.777351Z/accept-stop-after-clear",
+      "mode": "accept-stop-after-clear",
+      "exitCode": 91,
+      "evidence": {
+        "name": "accept-stop-after-clear",
+        "status": "passed",
+        "detail": "actual stop after confirmed clear save",
+        "compressedBytesWritten": 0,
+        "actualStopEntered": true,
+        "protectedInMemory": false
+      },
+      "saveSha256": {
+        "level.dat_old": "2fb1c14d108cf6010b051349d8f15c7e5cb54f3add9b8a854452732c9356f811",
+        "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+        "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+        "level.dat": "48010a276a7a85937abac6bd5b61531daa99f6f159fa16a535a43888d607db40",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "16aa8da2a1b6cabf9ad541ddf8819ce04564a36c5dcc97190ffd8e6628a103f2",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "3ab673248076a5bdf9371bc37386eb5a7bcd4c7cd186a28c1541f167781d6b98",
+        "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+      },
+      "freshReopen": {
+        "mode": "recover",
+        "exitCode": 0,
+        "evidence": {
+          "mode": "recover",
+          "status": "passed",
+          "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+          "elapsedSeconds": 12.70922025
+        },
+        "saveSha256": {
+          "level.dat_old": "4deb98a99f1d362808803dd931c4492d659124e678a9848a38e44361ebdd7ee4",
+          "level3510450664535969055.dat": "db9413abd59dd1fd6510ba92469157a58e10d44223bd1097752340a0d45dd210",
+          "level5473116353018318403.dat": "e46492919dd9f9ab50dd45232de50918e2ca21ea804475b299142e800932888a",
+          "level.dat": "58952b5a7bbfa9160fd7a685b3f5bc3cae7908ca519cf40108225fe9d0e02858",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-2586099473365742731.dat": "93c43db361bccb7abe3ae4bcd7bb18dc28db79e590c527c599dab4dacb6af0fd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat_old": "2a4b3a56f0722bda8b972e2c909371cdcbfe5991e478367f958893c9615b043e",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat": "49c8733b80e8a7fa395e877e59bd6b357d0bc12fbe3f4d5715e3d5299a3c06bd",
+          "player-84b9cedd-49cf-3500-8cca-e5a8f276d1e7-5919336583132292928.dat": "c7339b73555a320cfd690b8384dcee7905889468baec6bbf7215a5a900e6ccf9"
+        }
+      }
+    }
+  },
+  "independentPostExitVerification": {
+    "status": "passed",
+    "method": "Independent typed NBT decoding after process exit",
+    "checks": [
+      {
+        "path": "run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "4ccb9f5da49e599ee6f67041a934b009cf2434467f994352d4bb08fb292c9d35",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "recoveryPresent": false
+      },
+      {
+        "path": "run-production/saves/hst-smoke/level.dat",
+        "sha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "recoveryPresent": false
+      }
+    ],
+    "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+    "permissions": {
+      "run-production/saves/hst-smoke": "0o755",
+      "run-production/saves/hst-smoke/playerdata": "0o755"
+    }
+  },
+  "retainedFailedDriverAttempts": [
+    {
+      "report": "run-production/smoke/remaining-acceptance/20261029T065521.356329Z/report.json",
+      "failure": "Evidence failed: {'name': 'disconnect at SUCCESS', 'status': 'failed', 'detail': 'Observed actual lifecycle entry; countdown accelerated only for session setup', 'expectedPhase': 'SUCCESS', 'actualPhase': 'PREPARING', 'protected': True}"
+    },
+    {
+      "report": "run-production/smoke/remaining-acceptance/20261029T070010.044352Z/report.json",
+      "failure": "No fresh evidence: /Users/wezy/Documents/code/mc_swapping_practice/run-production/smoke/exit-observed.json"
+    },
+    {
+      "report": "run-production/smoke/remaining-acceptance/20261029T070419.631954Z/report.json",
+      "failure": "Driver failed: {'mode': 'accept-protection', 'status': 'failed', 'detail': 'java.lang.IllegalStateException: START did not prepare: IDLE', 'elapsedSeconds': 17.114978958}"
+    },
+    {
+      "report": "run-production/smoke/remaining-acceptance/20261029T070717.012163Z/report.json",
+      "failure": "Driver failed: {'mode': 'accept-lan', 'status': 'failed', 'detail': 'java.lang.NullPointerException', 'elapsedSeconds': 16.829535958}"
+    },
+    {
+      "report": "run-production/smoke/remaining-acceptance/20261029T071129.241286Z/report.json",
+      "failure": "Evidence failed: {'name': 'shutdown at PREPARING', 'status': 'failed', 'detail': 'Observed actual lifecycle entry; countdown accelerated only for session setup', 'expectedPhase': 'PREPARING', 'actualPhase': 'INVALID', 'requestedExit': 'shutdown', 'actualLifecycleHook': 'disconnect', 'protected': True}"
+    }
+  ],
+  "scopeNotes": [
+    "Lifecycle setup supplies READY/GO_ACK and accelerates countdown; physical/rendered input evidence remains separate.",
+    "Client exit records request and cleanup phases independently; vanilla can READY/interrupt while shutting down.",
+    "A source report can end failed after earlier independently passing/reopened entries; only those individual verified entries are selected.",
+    "Actual compressed-write cuts retain 32-byte partial temporary files; stop cuts enter actual SessionManager.stop.",
+    "Corrupt fixtures are deliberately re-signed when isolating schema/binding/snapshot validation; repairs use only archived valid test backups."
+  ],
+  "finalState": "All game test processes exited; exact original inventory/selection and cleared recovery independently verified in both files; permissions reset; failed raw evidence preserved; ordinary-world gate retained."
+}

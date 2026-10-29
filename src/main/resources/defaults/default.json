@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "default",
+  "name": "Stationary basics",
+  "slots": [
+    {"slot": "hotbar1", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:iron_sword", "count": 1}]},
+    {"slot": "hotbar2", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:iron_pickaxe", "count": 1}]},
+    {"slot": "hotbar3", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:iron_axe", "count": 1}]},
+    {"slot": "hotbar4", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:cobblestone", "count": 64}]},
+    {"slot": "hotbar5", "kind": "REQUIRED", "alternatives": [
+      {"item": "minecraft:water_bucket", "count": 1},
+      {"item": "minecraft:potion", "count": 1, "nbt": "{Potion:\"minecraft:fire_resistance\"}", "match": "FIELDS", "matchNbt": "{Potion:\"minecraft:fire_resistance\"}"},
+      {"item": "minecraft:splash_potion", "count": 1, "nbt": "{Potion:\"minecraft:long_fire_resistance\"}", "match": "FIELDS", "matchNbt": "{Potion:\"minecraft:long_fire_resistance\"}"}
+    ]},
+    {"slot": "hotbar6", "kind": "FLEXIBLE", "alternatives": [{"item": "minecraft:torch", "count": 64}]},
+    {"slot": "hotbar7", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:cooked_beef", "count": 64}]},
+    {"slot": "hotbar8", "kind": "OPTIONAL", "alternatives": [{"item": "minecraft:oak_planks", "count": 64}, {"item": "minecraft:cobblestone", "count": 64}]},
+    {"slot": "hotbar9", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:bow", "count": 1}]},
+    {"slot": "offhand", "kind": "REQUIRED", "alternatives": [{"item": "minecraft:shield", "count": 1}]}
+  ]
+}

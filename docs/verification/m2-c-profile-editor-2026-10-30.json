@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "scope": "M2-C only",
+  "status": "passed automated checks; manual checks pending",
+  "unitTests": {
+    "tests": 90,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "buildCommand": "scripts/gradle-jdk8.sh --offline test build",
+  "buildResult": "BUILD SUCCESSFUL; final exact command up-to-date test output from preceding final-source test execution",
+  "boundaries": {
+    "command": "python3 scripts/check-boundaries.py",
+    "result": "passed",
+    "productionJavaFiles": 71,
+    "packages": 12,
+    "directedDependencies": 26
+  },
+  "artifact": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "a4b8bdd366baf1d5d8144d257192f13bcbebbc50b4b067354ba0eb6b8ab24bf0",
+    "javaClassVersion": 52,
+    "smokeClassesExcluded": true
+  },
+  "client": {
+    "game": "1.16.1",
+    "development": false,
+    "runtime": "openjdk version \"1.8.0_512\"\nOpenJDK Runtime Environment Corretto-8.512.09.1 (build 1.8.0_512-b09)\nOpenJDK 64-Bit Server VM Corretto-8.512.09.1 (build 25.512-b09, mixed mode)",
+    "architecture": "/Users/wezy/Documents/code/mc_swapping_practice/.toolchains/amazon-corretto-8.jdk/Contents/Home/bin/java: Mach-O 64-bit executable x86_64",
+    "lwjgl": "3.2.1 original",
+    "runDirectory": "run-profile-editor-ui",
+    "launchManifestSha256": "b87fbb9beb7877fc3aa963da5864da619c6a51d1e91d218902b8209d96337e01",
+    "result": "passed\n30 real-client steps: entry/source binding, offhand/122-candidate scroll, registry picker, focused text/Tab/Enter/Esc, raw quantity/SNBT, actual window resize/GUI scale, rule/exit confirmations, confirmed cancel/reopen, reset, save/reopen, conflict/reload, M2-A draft and slot-order entry. Programmatic input; physical/manual acceptance remains separate.",
+    "programmaticInput": true,
+    "physicalInputAcceptance": false,
+    "screenshots": [
+      {
+        "path": "run-profile-editor-ui/screenshots/01-options.png",
+        "sha256": "47f1e9874435b48b0ac89960e95f7f2aa0f6aa7bead550d9404113b602127451"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/02-picker.png",
+        "sha256": "9bc270a773ee4ef8126002d53ad931551b2fc0f5f8a45654a233645aa7493937"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/03-small-advanced.png",
+        "sha256": "4a96813f7a2ee7579a542e8e2aafcb65cf336ac429a0fde774a3cd0c026cfb49"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/04-validation-error.png",
+        "sha256": "d919ced239647dd3d6cd345ebd7b50d754e60fab12292de18028cb3e675064e1"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/05-unsaved-exit.png",
+        "sha256": "bceaf8ef514d746b723bd0c2795e4cd858b6ebe00fd349da23d231d54874ef81"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/06-saved.png",
+        "sha256": "17d31ece23f598c9ed86992268c56804673a9a879eb7e8155d5c60c18425a5a1"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/07-stale-error.png",
+        "sha256": "57f9a5473ae8646f4e60dc673dbb687312c30bc61f5d1d0bf3df33ae0905d460"
+      },
+      {
+        "path": "run-profile-editor-ui/screenshots/08-slot-order.png",
+        "sha256": "3dbd6c0ccf9a3c3a2cb1452d1986bdab7e3f1b4d2e2ad2d52ec7d987b4acc1f4"
+      }
+    ]
+  },
+  "postExitReadback": {
+    "method": "independent standard-library typed NBT; compare both save paths to owned inactive seed after normal client exit",
+    "checks": [
+      {
+        "path": "run-profile-editor-ui/saves/hst-smoke/level.dat",
+        "sha256": "cc5ce62f673ac07326b044c1313e03958c726a4ae31ac5dca790a4fc9fb9302c",
+        "inventoryUnchanged": true,
+        "selectedSlotUnchanged": true,
+        "recoveryPresent": false
+      },
+      {
+        "path": "run-profile-editor-ui/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "3602dd34dc20e4b35f14836198bda16e04afbd3e96a5a5dfc4824a05ec850d78",
+        "inventoryUnchanged": true,
+        "selectedSlotUnchanged": true,
+        "recoveryPresent": false
+      }
+    ]
+  },
+  "fixture": {
+    "path": "run-profile-editor-ui/config/hotbar-swap-trainer/profiles/explicit-editor-source.json",
+    "sha256": "e200bf5f158ceb7e50852c636cf97217ac1c2ade750117fd703d81434f28e4ac",
+    "savedName": "M2-C UI saved",
+    "sourceFilenameDiffersFromProfileId": true,
+    "offhandCandidateCountAfterCancelResetSave": 1,
+    "backupCount": 1,
+    "backupMatchesOpeningBytes": true
+  },
+  "pending": [
+    "physical keyboard/mouse/wheel and manual tooltip/drag/localization checks",
+    "runtime active/restoring/error-locked/LAN gate transitions and corrupt/duplicate/write-denial presentation",
+    "training after visual save; no new crash/recovery/timing acceptance claimed"
+  ]
+}
