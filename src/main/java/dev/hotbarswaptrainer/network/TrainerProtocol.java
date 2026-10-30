@@ -13,7 +13,7 @@ import java.util.UUID;
 
 /** Versioned, bounded wire contract. Contains no client runtime references. */
 public final class TrainerProtocol {
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     public static final UUID NONE = new UUID(0, 0);
     public static final Identifier REQUEST = new Identifier("hotbar-swap-trainer", "request");
     public static final Identifier VIEW = new Identifier("hotbar-swap-trainer", "view");
@@ -32,9 +32,18 @@ public final class TrainerProtocol {
         public final String profileId;
         public final int goal;
         public final String reason;
+        public final boolean targetHints;
 
         public Request(Action action, UUID sessionId, UUID taskId, long revision,
                        TrainingMode mode, String profileId, int goal, String reason) {
+            this(action, sessionId, taskId, revision, mode, profileId, goal, reason, false);
+        }
+
+        public Request(Action action, UUID sessionId, UUID taskId, long revision,
+                       TrainingMode mode, String profileId, int goal, String reason, boolean hints) {
+            if (goal < 0 || revision < 0 || profileId == null || !profileId.matches("[a-z0-9_.-]{1,128}")
+                    || reason == null || reason.length() > MAX_TEXT) throw new IllegalArgumentException("Invalid request");
+            this.targetHints = hints;
             this.action = action;
             this.sessionId = sessionId;
             this.taskId = taskId;
@@ -47,6 +56,10 @@ public final class TrainerProtocol {
 
         public static Request start(TrainingMode mode, String profileId, int goal) {
             return new Request(Action.START, NONE, NONE, 0, mode, profileId, goal, "");
+        }
+
+        public static Request start(TrainingMode mode, String profileId, int goal, boolean hints) {
+            return new Request(Action.START, NONE, NONE, 0, mode, profileId, goal, "", hints);
         }
 
         public static Request signal(Action action, View view, String reason) {
@@ -137,7 +150,7 @@ public final class TrainerProtocol {
         buf.writeEnumConstant(value.action);
         buf.writeUuid(value.sessionId); buf.writeUuid(value.taskId); buf.writeLong(value.revision);
         buf.writeEnumConstant(value.mode); buf.writeString(value.profileId);
-        buf.writeVarInt(value.goal); buf.writeString(value.reason);
+        buf.writeVarInt(value.goal); buf.writeString(value.reason); buf.writeBoolean(value.targetHints);
     }
 
     public static Request readRequest(PacketByteBuf buf) {
@@ -150,7 +163,9 @@ public final class TrainerProtocol {
         int goal = buf.readVarInt();
         String reason = buf.readString(MAX_TEXT);
         if (goal < 0 || revision < 0) throw new IllegalArgumentException("Invalid request bounds");
-        return new Request(action, session, task, revision, mode, profile, goal, reason);
+        boolean hints = buf.readBoolean();
+        if (buf.isReadable()) throw new IllegalArgumentException("Trailing request data");
+        return new Request(action, session, task, revision, mode, profile, goal, reason, hints);
     }
 
     public static void writeView(PacketByteBuf buf, View v) {

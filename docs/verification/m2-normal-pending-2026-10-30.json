@@ -1,0 +1,30 @@
+{
+  "status": "failed-pending-rerun",
+  "processExit": 143,
+  "exitReason": "Stopped the idle failed test client with SIGTERM after confirming both saved inventories; no intended halt91 was reached",
+  "artifactSha256": "e4c24c96e48a2d40483f53c13cccd1c405b756c8b0a88ee64aa0ff2436fa126e",
+  "passedSessionStages": [
+    {
+      "event": "session-passed",
+      "detail": "stage=0 successes=3 restored all 41 slots/selection"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=1 successes=3 restored all 41 slots/selection"
+    },
+    {
+      "event": "session-passed",
+      "detail": "stage=2 successes=1 restored all 41 slots/selection"
+    }
+  ],
+  "failure": [
+    {
+      "event": "failed",
+      "detail": "java.lang.IllegalStateException: Original 41 slots/selection were not restored at stage 3"
+    }
+  ],
+  "diskVerification": "docs/verification/m2-runtime-save-readback-2026-10-30.json",
+  "diagnosis": "Possible transient vanilla held-slot synchronization; live mismatch cause remains unproven. Bounded diagnostic observation added only to smoke driver and compiled, runtime retest pending.",
+  "blocker": "Native UI reported Mac locked and automatic unlock unavailable; user asked to unlock. No new normal rendered launch attempted while blocked.",
+  "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/normal-failed"
+}

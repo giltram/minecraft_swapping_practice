@@ -1,0 +1,246 @@
+{
+  "status": "implemented-with-required-acceptance-pending",
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "production": {
+    "productionJar": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "e4c24c96e48a2d40483f53c13cccd1c405b756c8b0a88ee64aa0ff2436fa126e",
+    "classVersions": [
+      52
+    ],
+    "refmap": true,
+    "forbiddenEntries": [],
+    "fabricMod": {
+      "schemaVersion": 1,
+      "id": "hotbar-swap-trainer",
+      "version": "0.1.0",
+      "name": "Hotbar Swap Trainer",
+      "description": "Single-player hotbar and offhand swap practice for Minecraft 1.16.1.",
+      "environment": "*",
+      "entrypoints": {
+        "main": [
+          "dev.hotbarswaptrainer.TrainerMod"
+        ],
+        "client": [
+          "dev.hotbarswaptrainer.client.TrainerClient"
+        ]
+      },
+      "mixins": [
+        "hotbar-swap-trainer.mixins.json"
+      ],
+      "depends": {
+        "fabricloader": ">=0.9.3",
+        "fabric": "*",
+        "fabric-networking-v0": "*",
+        "fabric-lifecycle-events-v1": "*",
+        "fabric-command-api-v1": "*",
+        "minecraft": "1.16.1"
+      }
+    },
+    "resources": [
+      "fabric.mod.json",
+      "hotbar-swap-trainer.mixins.json",
+      "hotbar-swap-trainer-refmap.json",
+      "assets/hotbar-swap-trainer/lang/en_us.json",
+      "assets/hotbar-swap-trainer/lang/zh_cn.json",
+      "defaults/default.json"
+    ]
+  },
+  "unitTests": {
+    "tests": 107,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "task": "scripts/gradle-jdk8.sh --offline test build",
+    "testTaskExecuted": true,
+    "artifactTasks": "unchanged production compile/jar/remap outputs reused",
+    "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030"
+  },
+  "boundaries": {
+    "status": "passed",
+    "files": 78,
+    "packages": 12,
+    "directedEdges": 27
+  },
+  "historyRuntime": {
+    "status": "passed",
+    "checks": 8,
+    "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/history-checks.json",
+    "sha256": "75625250e7baea6f833b6abaedf6fcaf7e4f38aaaa67c5d516a5e908caaa7a53"
+  },
+  "m1Matrix": {
+    "status": "passed",
+    "cases": 25,
+    "freshRecoveryProcesses": 25,
+    "extraCorruptLoadProcesses": 8,
+    "launchManifests": 58,
+    "evidence": "run-production/smoke/remaining-acceptance/20261029T165022.138372Z/report.json",
+    "sha256": "3511501ae9eeab6f5760838e695a31034a0f4288c120aa0d2bffb5e67d25be94"
+  },
+  "ui": {
+    "status": "passed",
+    "programmaticStages": 65,
+    "firstResult": "passed\n65 real-client steps: prior M2-C workflow plus history entry, empty history, 3 pages, details/PB, saved long name/hash, hints/hash filters, refresh, corrupt/unknown warnings, small-window scrolling and retained page. Valid OPTIONAL rule, Dirt candidate, count32 and typed NBT saved through screens; actual PREPARING blocks entry; visually saved editor_fixture is reloaded and solved by real server packet handlers, both saved inventories restored, new history generated. Actual profile write denial, duplicate-ID feedback/reload and corrupt-options UI preserve source/drafts. Actual RESTORING, real write-denial ERROR_LOCKED, successful restore retry and LAN transitions block entry/save while retaining draft/source. Options saved for fresh-process reopen. Programmatic input only.",
+    "freshProcessResult": "passed\nFresh production client process restored all four options; 25 history records and PBs survive restart, with 2 preserved damaged-history warnings.",
+    "persistedOptions": {
+      "schemaVersion": 1,
+      "mode": "FULL_INVENTORY",
+      "profile": "default",
+      "goal": 73,
+      "showHints": true
+    },
+    "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/ui-final",
+    "physicalInput": false,
+    "screenshotHashes": {
+      "run-m2-ui-20261030-errors/screenshots/01-options.png": "ea6ef64f34bbff87b3081669e987b0621576d9d737984f6011d3ebc5cbbcdf8a",
+      "run-m2-ui-20261030-errors/screenshots/02-picker.png": "cdccc46576ab0beca1324dbd0e41dc00d943a5741c36a3defcb73de162bddef3",
+      "run-m2-ui-20261030-errors/screenshots/03-small-advanced.png": "90a5fb5a9bf9eb4f0e94765e32b36a88103072161976631db55023c671193937",
+      "run-m2-ui-20261030-errors/screenshots/04-validation-error.png": "5545321c7f42a21642ec7b71368fc63c55952c3b5686ca13c9488f56dc917976",
+      "run-m2-ui-20261030-errors/screenshots/05-unsaved-exit.png": "cef4c6a4313890b7c6fc65b62e77ee625339a598c56ad614bc704ad9aafdc60e",
+      "run-m2-ui-20261030-errors/screenshots/06-saved.png": "1744f4625915781cdf5061ef7632a9d408fd1502d2608afcd4b015c7deb9f038",
+      "run-m2-ui-20261030-errors/screenshots/07-stale-error.png": "e6367ea6efd2bf2625903e39a17e50f7c1e26dfadad2079e185a46dfa31e5446",
+      "run-m2-ui-20261030-errors/screenshots/08-slot-order.png": "070ec4a1745d7c3fa7a37d0290427f424d0711a85f62424f2e079e1ff0153a6d",
+      "run-m2-ui-20261030-errors/screenshots/09-empty-history.png": "6455d5b4970ef54e0a94ff978756a6af880906928571ea0b822da4567940a488",
+      "run-m2-ui-20261030-errors/screenshots/09-history.png": "e5fe74dee3fa044233c0eea01a0b1bb74580f21ec63b314a01b048f8f5730d20",
+      "run-m2-ui-20261030-errors/screenshots/10-history-page2.png": "101d99f34ab16f367bc93bfb650668e0706d350108eb45bb0ec490a707aa3748",
+      "run-m2-ui-20261030-errors/screenshots/11-history-details.png": "1827a90bbf490c1e88471f52b585e1ed948fa3138bc0aee59445ea07d2c7e29f",
+      "run-m2-ui-20261030-errors/screenshots/12-small-history-details.png": "c92647a8894789ffd4f56fdbec476bcfd2fa12dfbd5529890792a160fdac19ef",
+      "run-m2-ui-20261030-errors/screenshots/13-history-filter-warning.png": "d954da5235b0fc90225c5af4474b8c2918944adc2a125c142124fd191ddb606f",
+      "run-m2-ui-20261030-errors/screenshots/14-history-restart.png": "37ddec7b2f85db6c3f0108ffa828b8004619b909eec89b56a52174e15cae4848",
+      "run-m2-ui-20261030-errors/screenshots/15-active-entry-blocked.png": "8d684276e3ccd2f8df88046fb029504b4e657d720a6cc507473aac5f0658428b",
+      "run-m2-ui-20261030-errors/screenshots/16-trained-profile-history.png": "acfa3ac173ed5ade7a51912ffda045ec0299897648b311b58fb1aa0a6e4763f9",
+      "run-m2-ui-20261030-errors/screenshots/17-valid-rule-item-count-nbt-saved.png": "337e699dda251ee4956fee9dd0e6d4082344c67697a84b9fa509dc5f4df383ad",
+      "run-m2-ui-20261030-errors/screenshots/18-restoring-save-blocked.png": "e92257443c3d21226e33c7a56884ac1f0a34989709f442c0a1472c056696b1ca",
+      "run-m2-ui-20261030-errors/screenshots/19-error-locked-save-blocked.png": "421b041deda95eb5fd8bf8aecd26703d764f3e390a406ab982a241b58129fd2d",
+      "run-m2-ui-20261030-errors/screenshots/20-lan-entry-blocked.png": "83592916e61d16e5c3cb32af054ffe98d093b7047b724a77a7dfd590bc18c28c",
+      "run-m2-ui-20261030-errors/screenshots/21-profile-write-denied.png": "b8de59e0919341e9c9471a48c84eee695c243ae13626bc32505c6b64a01757bd",
+      "run-m2-ui-20261030-errors/screenshots/22-profile-duplicate.png": "920e18c2e3972fd3d26a33964432628c6ea2767125da773544d393b033bb99cb",
+      "run-m2-ui-20261030-errors/screenshots/23-corrupt-options-feedback.png": "a71b2d7bc8e4cc2e8ccd4f1e56c51392ce0c2f8316411028a4696ec5ea0506ae"
+    }
+  },
+  "independentReadbacks": [
+    "m2-regression-save-readback-2026-10-30.json",
+    "m2-ui-save-readback-2026-10-30.json",
+    "m2-runtime-save-readback-2026-10-30.json"
+  ],
+  "normalRenderedSmoke": {
+    "status": "passed",
+    "productionJar": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "productionSha256": "e4c24c96e48a2d40483f53c13cccd1c405b756c8b0a88ee64aa0ff2436fa126e",
+    "normal": {
+      "mode": "normal",
+      "status": "passed",
+      "detail": "Single3, Full3, forbidden-drop replacement, unlimited-stop, no-op, same-batch swaps and complete restoration passed; sent tasks=9",
+      "elapsedSeconds": 261.676050458
+    },
+    "crash": {
+      "mode": "crash",
+      "status": "ready",
+      "detail": "Runtime.halt(91) after confirmed training save",
+      "elapsedSeconds": 265.790486917
+    },
+    "normalCrashProcessExit": 91,
+    "recover": {
+      "mode": "recover",
+      "status": "passed",
+      "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+      "elapsedSeconds": 16.590280625
+    },
+    "recoverProcessExit": 0,
+    "strictImmediateRestorationComparison": true,
+    "selectionGracePeriod": false,
+    "stopRequest": [
+      {
+        "event": "stop-request",
+        "detail": "Client END tick; STOP follows prior vanilla input packets"
+      }
+    ],
+    "preRecoverySaves": [
+      {
+        "path": "run-m2-runtime-20261030/saves/hst-smoke/level.dat",
+        "sha256": "a8f4920bcf2466b84de9fe0cc421be7930da8e3c293610e0eea583d8a52ad632",
+        "trainingInventory": true,
+        "activeRecovery": true,
+        "originalSnapshotMatchesAll41": true,
+        "selection": 6
+      },
+      {
+        "path": "run-m2-runtime-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "819ff6267783520f3d76a1960823566873b7e19091017c00ac7f8bb32e174795",
+        "trainingInventory": true,
+        "activeRecovery": true,
+        "originalSnapshotMatchesAll41": true,
+        "selection": 6
+      }
+    ],
+    "postExitReadback": {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-m2-runtime-20261030/smoke/baseline.nbt",
+      "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+      "checks": [
+        {
+          "path": "run-m2-runtime-20261030/saves/hst-smoke/level.dat",
+          "sha256": "e1d866c8cc6595cf875e8662fe23e2595cc334dac68f4badba8a31ba81f87b38",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-runtime-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "b79c302d0aca1494ea25e04b75444b6266583b38725e00734ebc1be908688fc8",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-runtime-20261030/saves/hst-smoke": "0o755",
+        "run-m2-runtime-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/normal-ordered-stop",
+    "earlierFailure": "docs/verification/m2-normal-pending-2026-10-30.json",
+    "driverCorrection": "Unlimited STOP now goes from client END tick through the same connection after prior vanilla input packets, replacing a direct server stop that bypassed their ordering. No production code or artifact changed.",
+    "diagnosticLimit": "The earlier failing live snapshot was not captured, so its exact differing slots/selection cannot be reconstructed. An unlocked intermediate run passed without triggering its selection observer. The final ordered-STOP run removed that observer and passed all four strict comparisons plus halt/recover.",
+    "remainingRequired": "Human physical-input and subjective visual acceptance remain pending; ordinary-world gate stays enabled."
+  },
+  "requiredPending": [
+    "Human physical keyboard/mouse/wheel/rebound-key and focus/pause checks.",
+    "Subjective native-window/GUI-scale/localization and clipped tooltip usability checks."
+  ],
+  "ordinaryWorldGate": "preserved; not unlocked",
+  "rawEvidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030",
+  "historicalNormalAttempt": {
+    "status": "failed-pending-rerun",
+    "processExit": 143,
+    "exitReason": "Stopped the idle failed test client with SIGTERM after confirming both saved inventories; no intended halt91 was reached",
+    "artifactSha256": "e4c24c96e48a2d40483f53c13cccd1c405b756c8b0a88ee64aa0ff2436fa126e",
+    "passedSessionStages": [
+      {
+        "event": "session-passed",
+        "detail": "stage=0 successes=3 restored all 41 slots/selection"
+      },
+      {
+        "event": "session-passed",
+        "detail": "stage=1 successes=3 restored all 41 slots/selection"
+      },
+      {
+        "event": "session-passed",
+        "detail": "stage=2 successes=1 restored all 41 slots/selection"
+      }
+    ],
+    "failure": [
+      {
+        "event": "failed",
+        "detail": "java.lang.IllegalStateException: Original 41 slots/selection were not restored at stage 3"
+      }
+    ],
+    "diskVerification": "docs/verification/m2-runtime-save-readback-2026-10-30.json",
+    "diagnosis": "Possible transient vanilla held-slot synchronization; live mismatch cause remains unproven. Bounded diagnostic observation added only to smoke driver and compiled, runtime retest pending.",
+    "blocker": "Native UI reported Mac locked and automatic unlock unavailable; user asked to unlock. No new normal rendered launch attempted while blocked.",
+    "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/normal-failed"
+  }
+}

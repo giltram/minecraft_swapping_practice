@@ -15,6 +15,20 @@ import static org.junit.Assert.*;
 
 public class TrainerProtocolTest {
     @Test
+    public void declaredHintsAreBoundedFrozenStartValuesAndTrailingDataIsRejected() {
+        for (boolean hints : new boolean[]{false,true}) {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            try {
+                TrainerProtocol.writeRequest(buf, TrainerProtocol.Request.start(TrainingMode.SINGLE_ITEM,"default",1,hints));
+                assertEquals(hints,TrainerProtocol.readRequest(buf).targetHints);
+                buf.clear(); TrainerProtocol.writeRequest(buf,TrainerProtocol.Request.start(TrainingMode.SINGLE_ITEM,"default",1,hints));
+                buf.writeByte(0);
+                try { TrainerProtocol.readRequest(buf); fail(); } catch (IllegalArgumentException expected) { }
+            } finally { buf.release(); }
+        }
+    }
+
+    @Test
     public void viewRoundTripPreservesIdentityInventoryAndCounters() {
         CompoundTag tag = new CompoundTag();
         tag.putString("Potion", "minecraft:long_fire_resistance");

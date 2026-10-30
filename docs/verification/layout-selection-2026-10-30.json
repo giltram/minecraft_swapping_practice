@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-30",
+  "change": "Remove the options Profile control; select training profiles in the Edit item layout list, with a separate exact-source Edit action.",
+  "commandsPassed": [
+    "scripts/gradle-jdk8.sh --offline test build smokeClasses",
+    "scripts/gradle-jdk8.sh --offline smokeJar",
+    "python3 scripts/check-boundaries.py",
+    "python3 scripts/run-profile-editor-ui.py --usability --run-name run-m2-ui-layout-selection-20261030 --launch",
+    "python3 scripts/verify-m2-saves.py --run-name run-m2-ui-layout-selection-20261030"
+  ],
+  "tests": {
+    "tests": 121,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "status": "passed",
+    "javaFiles": 80,
+    "packages": 12,
+    "directedDependencies": 27
+  },
+  "productionJar": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "0b1ec90963c6e9496d516c97c4612f4c654bdac77c2d94206fca56ea0e57006a"
+  },
+  "productionUi": {
+    "exitCode": 0,
+    "result": [
+      "passed",
+      "28 production-client steps: sole layout selector switches/persists training profile, separate Edit opens the exact source, no options Profile control; direct same-page multi-selection and marks, compact headings, left-aligned labelled quantities and Delete, all selected icons/counts, zero selections\u2192EMPTY saved, multiple quantities, no exchange/required distinction/fixed-unlimited buttons, raw inline quantities and SNBT across resize/children, cancel unchanged file, custom removal confirmation, retained advanced pools, conflict/write-denial, 0/positive/invalid training count, hidden idle Ready, finite/unlimited real training and two-save restoration, actual logical320x240. Programmatic input only."
+    ],
+    "manifest": "run-m2-ui-layout-selection-20261030/launch-manifest.json",
+    "manifestSha256": "5fa9c15e22a2a613ba444b799a125a0345252e3dc11a850f496c205ed9bf7b21"
+  },
+  "saveReadback": {
+    "status": "passed",
+    "method": "Independent standard-library typed NBT decoding after process exit",
+    "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+    "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+    "checks": [
+      {
+        "path": "run-m2-ui-layout-selection-20261030/saves/hst-smoke/level.dat",
+        "sha256": "00e5a47bce8018d6ba5dcb98aa3a49a9888fea0ca7e2239c47e4d91a8a3f3aef",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+        "recoveryPresent": false
+      },
+      {
+        "path": "run-m2-ui-layout-selection-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "7e75c9ee040f0eab24e62461cd26655763d3ec6f82fea854dca6065465bae1ff",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+        "recoveryPresent": false
+      }
+    ],
+    "permissions": {
+      "run-m2-ui-layout-selection-20261030/saves/hst-smoke": "0o755",
+      "run-m2-ui-layout-selection-20261030/saves/hst-smoke/playerdata": "0o755"
+    }
+  },
+  "screenshots": [
+    {
+      "path": "docs/verification/layout-selection-2026-10-30/selector.png",
+      "sha256": "aa3e4f81cdf83d46cb31041d15844ec6bb6a19e3214377e762111a90f2d744ef"
+    },
+    {
+      "path": "docs/verification/layout-selection-2026-10-30/options.png",
+      "sha256": "a7bd1a33b551765421addc47c8c32e162b10828b3661ff90ef40dc05b87d1eb5"
+    }
+  ],
+  "limitations": "Programmatic UI input; human mouse/keyboard/readability acceptance was not performed. No recovery fault matrix rerun."
+}

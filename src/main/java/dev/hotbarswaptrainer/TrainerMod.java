@@ -5,7 +5,7 @@ import dev.hotbarswaptrainer.inventory.MinecraftItemCatalog;
 import dev.hotbarswaptrainer.network.ServerPackets;
 import dev.hotbarswaptrainer.profile.ProfileRepository;
 import dev.hotbarswaptrainer.session.SessionManager;
-import dev.hotbarswaptrainer.stats.InMemoryResultStore;
+import dev.hotbarswaptrainer.stats.HistoryStore;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -29,7 +29,7 @@ public final class TrainerMod implements ModInitializer {
                 .resolve("hotbar-swap-trainer/profiles"), new MinecraftItemCatalog());
         try { profiles.installDefaultIfMissing(); }
         catch (Exception failure) { LogManager.getLogger("HotbarSwapTrainer").error("Cannot install default profile", failure); }
-        SESSIONS = new SessionManager(INVENTORY, profiles, new InMemoryResultStore());
+        SESSIONS = new SessionManager(INVENTORY, profiles, new HistoryStore(FabricLoader.getInstance().getConfigDir().resolve("hotbar-swap-trainer/history")));
         ServerPackets.register(SESSIONS::handle);
         ServerTickEvents.END_SERVER_TICK.register(SESSIONS::tick);
         ServerLifecycleEvents.SERVER_STOPPING.register(SESSIONS::shutdown);

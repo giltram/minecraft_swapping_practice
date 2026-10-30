@@ -18,13 +18,15 @@ public class ClientOptionsPersistenceTest {
     @Rule public TemporaryFolder temporary = new TemporaryFolder();
 
     @Test
-    public void acceptedChangesRestoreAllFourOptionsInANewClient() throws Exception {
+    public void acceptedChangesRestoreAllOptionsInANewClient() throws Exception {
         ProfileRepository profiles = profiles();
         addProfile("custom");
         TrainerClient trainer = client(profiles);
         assertFalse(Files.exists(file()));
+        assertFalse(trainer.showSwapCounts());
+        trainer.toggleSwapCounts();
         trainer.cycleMode();
-        trainer.cycleProfile();
+        assertTrue(trainer.selectProfile("custom"));
         assertEquals("custom", trainer.profile());
         assertTrue(trainer.setGoal("2147483647"));
         trainer.toggleHints();
@@ -34,10 +36,14 @@ public class ClientOptionsPersistenceTest {
         assertEquals("custom", restarted.profile());
         assertEquals(Integer.MAX_VALUE, restarted.goal());
         assertTrue(restarted.showHints());
+        assertTrue(restarted.showSwapCounts());
         assertTrue(restarted.optionMessages().isEmpty());
         restarted.toggleHints();
         restarted.setGoal("0");
         assertFalse(client(profiles).showHints());
+        assertTrue(client(profiles).showSwapCounts());
+        restarted.toggleSwapCounts();
+        assertFalse(client(profiles).showSwapCounts());
         assertEquals(0, client(profiles).goal());
     }
 
@@ -73,7 +79,7 @@ public class ClientOptionsPersistenceTest {
         assertFalse(trainer.showHints());
         assertTrue(trainer.optionMessages().toString().contains("saving disabled"));
         trainer.cycleMode();
-        trainer.cycleProfile();
+        assertTrue(trainer.selectProfile("custom"));
         trainer.setGoal("73");
         trainer.toggleHints();
         assertArrayEquals(broken, Files.readAllBytes(file()));
@@ -97,7 +103,7 @@ public class ClientOptionsPersistenceTest {
         assertTrue(trainer.profileAvailable());
         assertTrue(trainer.optionMessages().toString().contains("'removed' unavailable; using 'default'"));
         assertArrayEquals(beforeLoad, Files.readAllBytes(file()));
-        trainer.cycleProfile();
+        assertTrue(trainer.selectProfile("custom"));
         assertEquals("custom", client(profiles).profile());
 
         Files.delete(profileDirectory().resolve("default.json"));
@@ -116,7 +122,7 @@ public class ClientOptionsPersistenceTest {
         trainer.setGoal("73");
         byte[] beforeDeletion = Files.readAllBytes(file());
         Files.delete(profileDirectory().resolve("default.json"));
-        trainer.cycleProfile();
+        assertFalse(trainer.selectProfile("default"));
         assertFalse(trainer.profileAvailable());
         assertTrue(trainer.optionMessages().toString().contains("No valid profiles"));
         trainer.toggleHints();
@@ -125,7 +131,7 @@ public class ClientOptionsPersistenceTest {
         profiles.installDefaultIfMissing();
         addProfile("replacement");
         Files.delete(profileDirectory().resolve("default.json"));
-        trainer.cycleProfile();
+        assertTrue(trainer.selectProfile("replacement"));
         assertTrue(trainer.profileAvailable());
         assertEquals("replacement", trainer.profile());
         assertEquals("replacement", new ClientOptionsStore(file()).load().profile);
@@ -142,13 +148,29 @@ public class ClientOptionsPersistenceTest {
         assertFalse(trainer.profileAvailable());
         assertFalse(Files.exists(file()));
         profiles.installDefaultIfMissing();
-        trainer.cycleProfile();
+        assertTrue(trainer.selectProfile("default"));
         assertTrue(trainer.profileAvailable());
         assertTrue(trainer.optionMessages().isEmpty());
         ClientOptions stored = new ClientOptionsStore(file()).load();
         assertEquals("default", stored.profile);
         assertEquals(73, stored.goal);
         assertTrue(stored.showHints);
+    }
+
+    @Test
+    public void explicitSelectionDoesNotEditLayoutsOrAcceptUnavailableIds() throws Exception {
+        ProfileRepository profiles = profiles();
+        addProfile("custom");
+        TrainerClient trainer = client(profiles);
+        byte[] original = Files.readAllBytes(profileDirectory().resolve("custom.json"));
+        assertTrue(trainer.selectProfile("custom"));
+        byte[] preferences = Files.readAllBytes(file());
+        assertFalse(trainer.selectProfile("missing"));
+        assertEquals("custom", trainer.profile());
+        assertArrayEquals(preferences, Files.readAllBytes(file()));
+        assertArrayEquals(original, Files.readAllBytes(profileDirectory().resolve("custom.json")));
+        assertTrue(trainer.selectProfile("default"));
+        assertEquals("default", client(profiles).profile());
     }
 
     @Test

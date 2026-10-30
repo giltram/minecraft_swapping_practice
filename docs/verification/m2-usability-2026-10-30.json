@@ -1,0 +1,247 @@
+{
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "implementation": "complete",
+  "humanExperienceAcceptance": "pending",
+  "production": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "1e65f8f56cbae00a5d660c9eef3abe35d5cf663e79a424b277cab921a1d424e7",
+    "classes": 121,
+    "classVersions": [
+      52
+    ],
+    "smokeOrAcceptanceClasses": false,
+    "localeKeys": 101
+  },
+  "checks": [
+    {
+      "command": "scripts/gradle-jdk8.sh --offline test build",
+      "status": "passed",
+      "tests": {
+        "tests": 113,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "finalInvocation": "test up-to-date; test actually executed by preceding test build smokeJar on same final production sources",
+      "logs": [
+        {
+          "path": "docs/verification/m2-usability-2026-10-30/build.log",
+          "sha256": "e95b025e12f286525a2146c1816fd282a8807a6e844c454933e106cccf659716"
+        },
+        {
+          "path": "docs/verification/m2-usability-2026-10-30/required-build.log",
+          "sha256": "ad37629dc483e1019b54684ff4bd13fcf9cc5fced3d591c50505cecd1b648cb2"
+        }
+      ]
+    },
+    {
+      "command": "python3 scripts/check-boundaries.py",
+      "status": "passed",
+      "productionJavaFiles": 81,
+      "packages": 12,
+      "directedEdges": 27
+    },
+    {
+      "command": "python3 -m py_compile scripts/run-profile-editor-ui.py",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "firstClient": {
+    "command": "python3 scripts/run-profile-editor-ui.py --usability --run-name run-m2-ui-usability-release-20261030 --launch",
+    "exitCode": 0,
+    "stages": 37,
+    "status": "passed",
+    "result": {
+      "path": "docs/verification/m2-usability-2026-10-30/first-result.txt",
+      "sha256": "86b2e70cad03c0dce8eb8105eacfb7d669adc9f94f38b46badd5a1e438c01158"
+    },
+    "detail": "passed\n37 rendered production steps: item-first flow, quantity/default/Enter, main save, cancel unchanged file, existing alternatives/custom NBT edit, rule/replacement/empty confirmations, raw quantities/SNBT across resize/children, pending selection on return, reset, whole-rule exchanges, conflict/write-denial retained drafts/reload, fixed/unlimited and invalid input, actual finite/unlimited training and two-save restoration, native640x480 scale1/2/4. Programmatic widgets and server handlers, not human experience acceptance.\n",
+    "manifest": {
+      "path": "run-m2-ui-usability-release-20261030/smoke/usability-first-run/launch-manifest.json",
+      "sha256": "9587a2a37160ba3e29dbb971368e8a1478e11a7111f4d372ee4f8f8c05c57296"
+    },
+    "log": {
+      "path": "run-m2-ui-usability-release-20261030/smoke/usability-first-run/client.log",
+      "sha256": "a839a99cef0eb240b42d9a65bb3317a5a16b5addea37fa94f0dd2e55b2036e1d"
+    }
+  },
+  "restartClient": {
+    "command": "python3 scripts/run-profile-editor-ui.py --usability --run-name run-m2-ui-usability-release-20261030 --reopen --launch",
+    "exitCode": 0,
+    "status": "passed",
+    "result": {
+      "path": "docs/verification/m2-usability-2026-10-30/restart-result.txt",
+      "sha256": "d81ea6560ccd006caaf5b65ab4d4814dac50d8aeabf197bd0a9cca9d2ca8582f"
+    },
+    "detail": "passed\nFresh production process: selected profile/unlimited, stone32 and three-item OPTIONAL/custom NBT profile and both histories survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.\n",
+    "manifest": {
+      "path": "run-m2-ui-usability-release-20261030/smoke/reopen-launch-manifest.json",
+      "sha256": "08dc5684fdccf440fa2a271089260a8cb5ba0a2e3419abf4b6efb79a362cb117"
+    },
+    "log": {
+      "path": "run-m2-ui-usability-release-20261030/smoke/usability-restart-client.log",
+      "sha256": "d41647f4c5e2989649404226a9330a51976555dfa7611abda70b40202d3ff7b0"
+    }
+  },
+  "saveReadbacks": [
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-usability-release-20261030/saves/hst-smoke/level.dat",
+          "sha256": "eaca39d4ae1dd7738ed6b9e340a3169850adaf4c4c914916d1ba6ed0eeaa3772",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-usability-release-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "0cf807cfb11b85fb69b1aa0394d6dcfe5cfb9b3c352499cb41f5ca76f16c4c94",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-usability-release-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-usability-release-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-usability-release-20261030/saves/hst-smoke/level.dat",
+          "sha256": "96b55b837cdf9494bda9815adbf84d0efd9831149076cf34849ceb4e6e957f46",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-usability-release-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "a39e9f11a982e73f8d151736a078e18b2ac62fd44bb25cdc1905fbe58bb81082",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-usability-release-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-usability-release-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/main.png",
+      "sha256": "5cbf3701fcaa7f312a22a218b65372bf518ae5e12078e8eb48bfe21ea08cdab9",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u21-chinese-main.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/item-picker.png",
+      "sha256": "3dc7ee6d4a3b88c6047b0073150f175c67a958182aae999e101458f95d03c226",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u22-chinese-picker.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/advanced-collapsed.png",
+      "sha256": "c386d20ec14a469c8500a1ba6bf115377b799af6354ff3557817dc0060a26050",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u06-layout-preview.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/task-count.png",
+      "sha256": "2cfd4631dfe4530a47985da734d0e898a4f6ef7fb6bbc38b1a56defb8c79788d",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u20-chinese-options.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/quantity.png",
+      "sha256": "4051c235466238ea3d56bc1cecc592d6f6d4dc618cea87a440aa18ca2c477cf8",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u05-quantity.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/minimum.png",
+      "sha256": "8dbd669a1fde6c24a8b82c7b6f4c9b807d50ef74552ea5e7f3b969b6d72c18b0",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u15-minimum-main.png",
+      "framebuffer": [
+        1280,
+        960
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-usability-2026-10-30/fixed-one.png",
+      "sha256": "4fc35c941cc0ee6ac415a401fe9ab2e26f3fca69ddf4da1088ba217c1e9c068f",
+      "original": "run-m2-ui-usability-release-20261030/screenshots/u13-fixed-one.png",
+      "framebuffer": [
+        1280,
+        960
+      ],
+      "edited": false
+    }
+  ],
+  "earlierDiagnostics": [
+    {
+      "instance": "run-m2-ui-usability-20261030",
+      "status": "failed",
+      "reason": "Test-only Retina native/window/framebuffer assumption at step33; corrected scale4 logical320x240. Earlier stages included actual finite/unlimited training and successful readback."
+    },
+    {
+      "instance": "run-m2-ui-usability-final-20261030",
+      "status": "passed-35-programmatic-stages",
+      "supersededBy": "opaque form surface and explicit count1 display"
+    },
+    {
+      "instance": "run-m2-ui-usability-verified-20261030",
+      "status": "passed-37-stages-and-restart",
+      "supersededBy": "final explicit count1 display. Earlier loading-fade screenshots were rejected and archived before driver repair."
+    },
+    {
+      "status": "preparation-failed-before-game-launch",
+      "reason": "Missing evidence-only smoke directory when adding restart manifest; launcher now creates it."
+    }
+  ],
+  "limits": [
+    "Programmatic widget events and supplied server READY/GO_ACK/vanilla-handler swaps do not establish physical input, reaction-time or subjective experience acceptance.",
+    "Full earlier M1 crash/fault/LAN matrix was not repeated on this GUI artifact; original safety gate remains.",
+    "Required human mouse/wheel, focus/Tab/Enter/Esc/rebound/held-key, clipped custom-item/potion tooltips and long-name readability checks remain pending."
+  ]
+}

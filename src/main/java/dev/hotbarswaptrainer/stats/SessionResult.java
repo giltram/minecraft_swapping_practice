@@ -11,12 +11,19 @@ import java.util.UUID;
 /** Current-session summary. Zero requested successes means unlimited; zero best means no success. */
 public final class SessionResult {
     private final UUID sessionId;
+    private final SessionMetadata metadata;
     private final TrainingMode mode;
     private final String profileHash;
     private final int requestedSuccesses;
     private final List<TaskResult> tasks;
 
     public SessionResult(UUID sessionId, TrainingMode mode, String profileHash, int requestedSuccesses, List<TaskResult> tasks) {
+        this(sessionId, mode, profileHash, requestedSuccesses, tasks, null);
+    }
+
+    public SessionResult(UUID sessionId, TrainingMode mode, String profileHash, int requestedSuccesses,
+                         List<TaskResult> tasks, SessionMetadata metadata) {
+        this.metadata = metadata;
         if (requestedSuccesses < 0) throw new IllegalArgumentException("Session length cannot be negative");
         this.sessionId = Objects.requireNonNull(sessionId, "sessionId");
         this.mode = Objects.requireNonNull(mode, "mode");
@@ -25,6 +32,7 @@ public final class SessionResult {
         this.tasks = Collections.unmodifiableList(new ArrayList<>(tasks));
     }
 
+    public SessionMetadata getMetadata() { return metadata; }
     public UUID getSessionId() { return sessionId; }
     public TrainingMode getMode() { return mode; }
     public String getProfileHash() { return profileHash; }
@@ -37,7 +45,7 @@ public final class SessionResult {
     }
     public long getTotalNanos() {
         long total = 0;
-        for (TaskResult task : tasks) if (task.getOutcome() == TaskResult.Outcome.SUCCESS) total += task.getElapsedNanos();
+        for (TaskResult task : tasks) if (task.getOutcome() == TaskResult.Outcome.SUCCESS) total = Math.addExact(total, task.getElapsedNanos());
         return total;
     }
     public long getAverageNanos() { return getSuccessCount() == 0 ? 0 : getTotalNanos() / getSuccessCount(); }

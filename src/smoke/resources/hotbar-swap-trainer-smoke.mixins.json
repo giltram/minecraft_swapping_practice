@@ -4,6 +4,6 @@
   "package": "dev.hotbarswaptrainer.smoke.mixin",
   "plugin": "dev.hotbarswaptrainer.smoke.AcceptanceMixinPlugin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["CompressedSaveCutMixin", "SessionLifecycleMixin", "RestoreBoundaryMixin"],
+  "mixins": ["CompressedSaveCutMixin", "SessionLifecycleMixin", "RestoreBoundaryMixin", "HistoryNotificationMixin", "UiRestoreGateMixin"],
   "injectors": {"defaultRequire": 1}
 }

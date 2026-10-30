@@ -331,7 +331,7 @@ def main():
     parser.add_argument("--offline", action="store_true", help="Require all official artifacts in existing project caches")
     parser.add_argument("--java-home", help="Intel JDK8 home; defaults to TRAINER_JAVA_HOME or isolated project toolchain")
     parser.add_argument("--official-client", help="Optional cached unmodified official client jar; its Mojang SHA1 is required")
-    acceptance = ["accept-protection", "accept-phase-guards", "accept-lan", "accept-corrupt-check"]
+    acceptance = ["accept-history", "accept-protection", "accept-phase-guards", "accept-lan", "accept-corrupt-check"]
     acceptance += ["accept-corrupt-" + case for case in
                    ("schema", "checksum", "player", "world", "truncated", "snapshot-type", "wrong-type", "inactive")]
     acceptance += ["accept-exit-" + kind + "-" + phase for kind in ("disconnect", "shutdown")

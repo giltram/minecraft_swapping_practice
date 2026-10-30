@@ -1,79 +1,29 @@
 # M2-C: visual profile editor
 
-## Plan and ownership
+Current usability flow supersedes the earlier M2-C page hierarchy. See
+[m2-usability-plan.md](m2-usability-plan.md) and the current-artifact
+[acceptance record](m2-multiselect-acceptance.md). Earlier results below retain their
+original artifact hashes and do not certify the latest UI.
 
-1. Add O → Edit profile → explicit source-file selection → profile overview →
-   slot/candidate/advanced fields and searchable vanilla item picker. Keep the
-   existing layout editor and M2-A options. No creation, copy or deletion.
-2. A client-only `ProfileEditorSession` owns one repository Edit, selected Path,
-   expected immutable snapshot, raw quantity text and opening baseline. Screens
-   share this object; widget reinitialization, resize and child navigation never
-   recreate the draft. All SNBT text stays in nullable draft fields. Cancel and
-   Reset are in-memory only; destructive rule changes and dirty exits ask first.
-3. Discover with listProfileFiles/load; beginEdit(path, expected) binds identity.
-   Validate raw quantities before validateDraft, then separately assess Single
-   and Full counts through ProfileApplicability (never sampled generation).
-   Save rechecks local/stopped/restored client projection, uses save(Edit), then
-   loads the same path and begins a fresh Edit. Errors retain the draft and require
-   explicit reload after persistence failures. ProfileRepository owns all I/O.
-4. Keep registry search/preview entirely in a client adapter. Use vanilla controls,
-   fonts, item rendering and tooltips. Shared scroll-form geometry gates rendering,
-   clicks and focus; reuse SlotCandidateLayout for the picker grid.
-5. Test lifecycle/defaults/invalid text/save conflicts/gates/scroll hit bounds.
-   Run offline test/build and boundary checks, attempt isolated game UI checks,
-   then record exact results and pending manual acceptance.
 
-Client → task is intentional for ProfileApplicability only (TrainingMode already
-exists in client). No profile → task or common → client dependency is introduced.
-Server START retains its independent reload/freeze; no protocol/recovery changes.
+## Current flow and ownership
 
-## Verification
+O → Edit item layout → exact source selection → main name/hotbar/offhand → slot
+→ searchable multi-select catalogue. No rule or add-item prerequisite. Clicking
+catalogue items toggles membership; all selections are displayed and marked.
+Quantities edit inline, and deselecting the last item becomes EMPTY. One and many
+allowed items share one presentation. Done returns without writing; main Save
+calls the same file-bound ProfileRepository edit handle. Reset/dirty exit and
+conflict/reload retain existing safeguards. No exchange-position action remains.
 
-Implementation is complete within M2-C. The editor does not add profile creation,
-copy/deletion, history/PBs, M3, protocol changes or inventory/recovery/timing changes.
+ProfileEditorSession owns actual allowed items and raw count/SNBT, not an extra
+single-item proposal. Opening and additive edits preserve complete custom NBT and
+OPTIONAL/FLEXIBLE semantics. Destructive custom removal confirms first. Advanced
+rule/NBT controls remain a secondary picker action. O uses one training-count
+field with0=unlimited and omits its routine server IDLE/Ready message. See the
+[current acceptance](m2-multiselect-acceptance.md); prior results below are historical.
 
-## Implemented page flow and semantics
-
-- O retains M2-A preferences and the independent Slot order action. Edit profile
-  opens an explicit file list with broken-file errors; each button captures its
-  listed Path and the immutable value loaded from that file. ID stays read-only.
-- Profile overview edits name and links all ten slots. Slot pages expose all four
-  rule choices, every candidate, add/remove, and candidate item/quantity/advanced
-  fields. The registry picker searches IDs and localized names, uses vanilla
-  icon buttons/tooltips and SlotCandidateLayout wrapping. No player inventory is
-  consulted. Validated normalized templates supply previews; invalid drafts use
-  safe base icons without parsing unchecked SNBT in the renderer.
-- One ProfileEditorSession owns source/expected/Edit, ProfileDraft, raw quantity
-  strings and baseline. Screens retain it through navigation, resize and GUI
-  scale. Input listeners are installed after restoring text. Nullable fields stay
-  null until explicitly edited; {} stays explicit. Each advanced field has a
-  separate Use default action. Blank/invalid quantity text blocks save even when
-  the domain integer still holds its last valid value.
-- Main Save alone writes. Cancel/Esc on a dirty profile, Reset, Reload source,
-  candidate removal and EMPTY conversions with candidates confirm explicitly.
-  Switching to the other rule kinds retains candidates. Child Back/selection
-  only edits the shared draft. Reset uses an in-memory opening/save baseline.
-- Validation shows the backend's path-bearing structural error. Single and Full
-  counts are assessed separately; count feasibility is never labelled guaranteed
-  nontrivial generation. Single-only profiles save. No sampled seeds are used.
-- Entry/save fail closed until the client has IDLE/ERROR acknowledgement and a
-  live local single-player world with LAN closed. The only integrated-server
-  metadata read is its public LAN flag; no mutable server session is accessed.
-  Save checks the gate again immediately before repository.save(Edit).
-- Successful save reloads the same source and begins a fresh Edit, then refreshes
-  options. Invalid input stays editable. Persistence failures retain raw drafts
-  and lock further saving until explicit confirmed reload, including ambiguous
-  I/O outcomes. Reload failure also retains the draft; no same-ID substitute is
-  selected. A successful replacement followed by reopen failure is reported as
-  saved-but-reopen-failed. START still independently reloads/freezes its profile.
-- EditorViewport supplies identical half-open bounds for scissoring, pointer
-  dispatch and tooltip eligibility. Forms, complete error text, ten slots and
-  arbitrary candidate lists scroll above fixed footer controls. Tab reveals the
-  focused control; text input, Enter, Esc and repeat-key lifecycle use vanilla
-  behavior. Native button faces are limited to 200×20, avoiding 1.16.1 atlas
-  seams; wide input fields/paragraphs remain usable.
-
-## Automated checks
+## Earlier M2-C automated checks (historical artifact)
 
 Completed 2026-10-30 (Asia/Shanghai):
 
@@ -99,7 +49,7 @@ bounds and retained-scroll reflow. ProfileItemCatalogTest (1) uses the actual
 vanilla registry for ID/display-name search and safe previews of incomplete and
 deeply nested raw SNBT. Existing M2-A/M2-B and slot-order tests remain green.
 
-## Actual client acceptance and limits
+## Earlier M2-C actual client acceptance and limits (historical artifact)
 
 The opt-in smoke driver is excluded from the production JAR. It runs the actual
 production mod in Minecraft 1.16.1 with Intel JDK8/Rosetta, original LWJGL 3.2.1,
@@ -159,5 +109,5 @@ manual checks:
    in M2-C. Prior M1 results refer to their own artifacts; compilation or this
    editor run does not establish new recovery/timing acceptance.
 
-No further architectural refactor is needed for M2-C. Work stops here; history,
-PBs and M3 remain out of scope.
+This historical M2-C run did not include history/PBs or M3. Current GUI and
+existing M2-D/E verification are linked above; M3 remains unimplemented.

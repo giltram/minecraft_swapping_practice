@@ -1,0 +1,19 @@
+{
+  "beforeResourceOnly": {
+    "jarSha256": "55911a11706b3b205d3fead0556184b5ba7105d4e012b492bdfc0273a13b4a30",
+    "mainMapSha256": "ae1d106e37fccdff8975b67f6e7eed80747b97176599818d6c99a4485297316e",
+    "smokeMapSha256": "70d078486b9787d5ee7d87983c92b332c7269f2350de3ba107b6e32454e9c10c",
+    "mappedShadowField": true
+  },
+  "resourceOnlyAfterSmoke": {
+    "mappedShadowField": true,
+    "compileJavaUpToDate": true,
+    "remapExecuted": true,
+    "mainMapSha256": "ae1d106e37fccdff8975b67f6e7eed80747b97176599818d6c99a4485297316e"
+  },
+  "afterRestore": {
+    "jarSha256": "f1907939041c6568a0587be56f319b6ba3fbc940b31ad0035a2701f57214d65a",
+    "mappedShadowField": true,
+    "localeRestoredExactly": true
+  }
+}

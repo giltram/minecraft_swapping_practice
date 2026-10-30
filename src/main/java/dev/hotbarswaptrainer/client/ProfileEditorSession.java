@@ -5,6 +5,7 @@ import dev.hotbarswaptrainer.profile.LoadoutProfile;
 import dev.hotbarswaptrainer.profile.ProfileDraft;
 import dev.hotbarswaptrainer.profile.ProfileDraftValidation;
 import dev.hotbarswaptrainer.profile.ProfileRepository;
+import dev.hotbarswaptrainer.profile.SlotRule;
 import dev.hotbarswaptrainer.task.ProfileApplicability;
 
 import java.nio.file.Path;
@@ -24,7 +25,11 @@ final class ProfileEditorSession {
     private Baseline baseline;
     private final Map<ProfileDraft.Candidate, String> counts = new IdentityHashMap<>();
     private boolean reloadRequired;
+    enum Feedback { NONE, SAVED, RESET, RELOADED, BLOCKED, RELOAD_REQUIRED, INVALID, SAVE_FAILED, REOPEN_FAILED, RELOAD_FAILED }
+    private Feedback feedback = Feedback.NONE;
+    Feedback feedback() { return feedback; }
     private String message = "";
+    private void feedback(Feedback kind, String detail) { feedback = kind; message = detail; }
 
     ProfileEditorSession(ProfileRepository repository, Path source, LoadoutProfile expected,
                          BooleanSupplier allowed) throws Exception {
@@ -54,10 +59,42 @@ final class ProfileEditorSession {
         // Preserve the last representable domain value; validate() blocks any invalid raw text.
         if (validCount(text)) candidate.setCount(Integer.parseInt(text));
     }
-    private static boolean validCount(String text) {
+    static boolean validCount(String text) {
         if (text == null || !text.matches("[0-9]+")) return false;
         try { return Integer.parseInt(text) > 0; }
         catch (NumberFormatException overflow) { return false; }
+    }
+
+    List<ProfileDraft.Candidate> selectedItems(int index, String itemId) {
+        List<ProfileDraft.Candidate> matches = new ArrayList<>();
+        for (ProfileDraft.Candidate item : draft().getSlots().get(index).getAlternatives())
+            if (itemId.equals(item.getItem())) matches.add(item);
+        return matches;
+    }
+    ProfileDraft.Candidate selectItem(int index, String itemId) {
+        List<ProfileDraft.Candidate> existing = selectedItems(index, itemId);
+        if (!existing.isEmpty()) return existing.get(0);
+        ProfileDraft.Slot slot = draft().getSlots().get(index);
+        ProfileDraft.Candidate item = new ProfileDraft.Candidate(itemId, 1);
+        slot.getAlternatives().add(item);
+        if (slot.getKind() == SlotRule.Kind.EMPTY) slot.setKind(SlotRule.Kind.REQUIRED);
+        return item;
+    }
+    boolean removalNeedsConfirmation(int index, List<ProfileDraft.Candidate> removed) {
+        if (removed.isEmpty()) return false;
+        for (ProfileDraft.Candidate item : removed)
+            if (item.getNbt() != null || item.getMatch() != null || item.getMatchNbt() != null) return true;
+        ProfileDraft.Slot slot = draft().getSlots().get(index);
+        return removed.containsAll(slot.getAlternatives()) && slot.getKind() != SlotRule.Kind.REQUIRED;
+    }
+    void deselectItems(int index, List<ProfileDraft.Candidate> removed) {
+        ProfileDraft.Slot slot = draft().getSlots().get(index);
+        slot.getAlternatives().removeAll(removed);
+        for (ProfileDraft.Candidate item : removed) counts.remove(item);
+        if (slot.getAlternatives().isEmpty()) slot.setKind(SlotRule.Kind.EMPTY);
+    }
+    void setEmpty(int index) {
+        deselectItems(index, new ArrayList<>(draft().getSlots().get(index).getAlternatives()));
     }
 
     String validate() {
@@ -65,7 +102,7 @@ final class ProfileEditorSession {
             List<ProfileDraft.Candidate> candidates = draft().getSlots().get(slot).getAlternatives();
             for (int index = 0; index < candidates.size(); index++) {
                 if (!validCount(count(candidates.get(index)))) return ProfileRepository.slotName(slot)
-                        + " candidate " + (index + 1) + ": quantity must be a positive whole number.";
+                        + " allowed item " + (index + 1) + ": quantity must be a positive whole number.";
             }
         }
         ProfileDraftValidation validation = repository.validateDraft(draft());
@@ -85,18 +122,18 @@ final class ProfileEditorSession {
 
     boolean save() {
         if (!allowed.getAsBoolean()) {
-            message = "Cannot save: wait for local single-player, LAN closed and completed restoration.";
+            feedback(Feedback.BLOCKED, "Cannot save: wait for local single-player, LAN closed and completed restoration.");
             return false;
         }
         try {
             requireAllowed();
-            if (reloadRequired) { message = "Reload this source explicitly before saving again."; return false; }
+            if (reloadRequired) { feedback(Feedback.RELOAD_REQUIRED, "Reload this source explicitly before saving again."); return false; }
             String error = validate();
-            if (!error.isEmpty()) { message = error; return false; }
+            if (!error.isEmpty()) { feedback(Feedback.INVALID, error); return false; }
             requireAllowed();
             repository.save(edit);
         } catch (Exception failure) {
-            message = "Save failed: " + readable(failure);
+            feedback(Feedback.SAVE_FAILED, readable(failure));
             // Includes I/O errors: do not guess whether replacement happened or redirect the source.
             reloadRequired = true;
             return false;
@@ -105,11 +142,11 @@ final class ProfileEditorSession {
             LoadoutProfile saved = repository.load(source);
             if (!saved.getId().equals(expected.getId())) throw new IllegalStateException("Source ID changed after saving");
             replaceEdit(saved);
-            message = "Saved. Reloaded the same source with a fresh edit handle.";
+            feedback(Feedback.SAVED, "Saved.");
             return true;
         } catch (Exception failure) {
             reloadRequired = true;
-            message = "File saved, but reopening failed: " + readable(failure) + ". Reload explicitly.";
+            feedback(Feedback.REOPEN_FAILED, readable(failure));
             return false;
         }
     }
@@ -118,11 +155,11 @@ final class ProfileEditorSession {
         try {
             requireAllowed();
             replaceEdit(repository.load(source));
-            message = "Reloaded selected source; previous draft discarded.";
+            feedback(Feedback.RELOADED, "Reloaded.");
             return true;
         } catch (Exception failure) {
             reloadRequired = true;
-            message = "Reload failed: " + readable(failure);
+            feedback(Feedback.RELOAD_FAILED, readable(failure));
             return false;
         }
     }
@@ -135,7 +172,7 @@ final class ProfileEditorSession {
         baseline = new Baseline(draft());
         reloadRequired = false;
     }
-    void reset() { baseline.restore(draft()); counts.clear(); message = "Draft reset to opening values."; }
+    void reset() { baseline.restore(draft()); counts.clear(); feedback(Feedback.RESET, "Changes reset."); }
     boolean dirty() { return !baseline.signature.equals(signature(draft())); }
     private String signature(ProfileDraft draft) {
         StringBuilder result = new StringBuilder();

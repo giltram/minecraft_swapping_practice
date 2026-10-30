@@ -1,0 +1,2 @@
+passed
+36 production stages: existing usability suite plus compact Avg/Best summary, PB table with only Refresh/Back at minimum and normal sizes, real Single/Full successful records, default-hidden swap count option and RUNNING HUD with counts on/off; both saved inventories restored. Programmatic input only.

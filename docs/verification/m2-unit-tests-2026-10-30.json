@@ -1,0 +1,10 @@
+{
+  "tests": 107,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "task": "scripts/gradle-jdk8.sh --offline test build",
+  "testTaskExecuted": true,
+  "artifactTasks": "unchanged production compile/jar/remap outputs reused",
+  "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030"
+}

@@ -4,7 +4,19 @@
   "version": "1.0.0",
   "name": "Hotbar Swap Trainer development smoke driver",
   "environment": "client",
-  "mixins": ["hotbar-swap-trainer-smoke.mixins.json"],
-  "entrypoints": {"client": ["dev.hotbarswaptrainer.smoke.TrainerSmokeClient", "dev.hotbarswaptrainer.client.ProfileEditorUiSmoke"]},
-  "depends": {"hotbar-swap-trainer": "*", "minecraft": "1.16.1", "fabric": "*"}
+  "mixins": [
+    "hotbar-swap-trainer-smoke.mixins.json"
+  ],
+  "entrypoints": {
+    "client": [
+      "dev.hotbarswaptrainer.smoke.TrainerSmokeClient",
+      "dev.hotbarswaptrainer.client.ProfileEditorUiSmoke",
+      "dev.hotbarswaptrainer.client.UsabilityUiSmoke"
+    ]
+  },
+  "depends": {
+    "hotbar-swap-trainer": "*",
+    "minecraft": "1.16.1",
+    "fabric": "*"
+  }
 }

@@ -1,4 +1,31 @@
-# Milestone 1 verification
+# Verification
+
+## Unified layout selection (2026-10-30)
+
+Options no longer has a Profile button. Edit item layout lists the training
+selection: a name click selects/persists its ID; the adjacent Edit opens the exact
+source without changing that selection. Refresh/reflow never writes preferences.
+
+Offline test/build/smoke compilation passed: 121 tests, zero failures/errors/skips.
+Architecture boundaries passed (80 files, 12 packages, 27 edges, no cycles).
+The isolated production UI run passed 28 programmatic stages, including selection,
+disk persistence, separate editing and finite/unlimited training. Independent
+post-exit decoding verified all 41 slots/selection and absent recovery markers in
+both saved-player files. Screenshots were inspected. No human input acceptance or
+recovery fault-matrix rerun is claimed. [Evidence and artifact hash](verification/layout-selection-2026-10-30.json);
+[layout selector](verification/layout-selection-2026-10-30/selector.png),
+[options without Profile](verification/layout-selection-2026-10-30/options.png).
+
+
+Current configuration copy/layout verification is in
+[m2-copy-layout-acceptance.md](m2-copy-layout-acceptance.md); the preceding complete
+multi-select workflow is recorded in
+[m2-multiselect-acceptance.md](m2-multiselect-acceptance.md). The interface uses one
+training-count field (0=unlimited) and a direct multi-select hotbar/offhand editor.
+Earlier reports below retain their original artifact hashes and dates; references
+to the previous numeric-zero UI or separate slot-order entry describe historical
+runs, not current instructions. Required human experience checks remain pending.
+
 
 This document distinguishes automated checks from game acceptance. A build or a source audit does not prove crash recovery or playable input behavior.
 
@@ -25,7 +52,7 @@ round trips cover 0, 1, 73, 10001 and 2147483647; a negative request is rejected
 `7ee0380c89979abd98ee5cce11ce600474adba2465be3bb609f3f528002a9d8d`.
 
 Actual game UI acceptance is pending: type/delete/paste a count; confirm the
-0/unlimited explanation; reject empty/overflow drafts; press Enter with 1 and
+0=unlimited hint; reject empty/overflow drafts; press Enter with 1 and
 finish exactly one success; check 0 permits manual stop; resize and visit/return
 from the editor while keeping a draft. Prior game acceptance evidence was not
 rerun and belongs to its recorded earlier artifact.
@@ -280,3 +307,32 @@ corrupt/duplicate/write-denial runtime presentation, and training after a saved
 visual edit. Unit/build/automated UI success does not establish these manual or
 recovery/timing scenarios. No daily configuration, real save or bundled default
 was changed. M2-A/M2-B and slot sorting are retained; no history/PB/M3 work follows.
+
+## M2-D/E/F final-artifact verification (2026-10-30)
+
+The implementation, contracts, artifact hash, exact evidence classes and remaining
+required observations are consolidated in [m2-acceptance.md](m2-acceptance.md).
+The final `scripts/gradle-jdk8.sh --offline test build` actually executed **107**
+tests, zero failures/errors/skips; production compilation/remapping reused unchanged
+outputs. `python3 scripts/check-boundaries.py` passed at 78 production files,
+12 packages, 27 directed dependencies. New history tests use only temporary roots.
+The production archive remains Java 8/class52 with required resources/refmap and
+without any smoke/fault/UI driver classes. No native/dependency baseline changed.
+
+D/E implementation success does not establish full M2 acceptance. The current
+production runtime, actual process halt/reopen, rendered UI automation, independent
+NBT readers and still-pending human physical input are reported separately in
+that matrix. Older M1/A/B/C results above retain their original hashes and scope.
+
+The unlocked final normal rendered smoke **passed all four stages**, followed by
+actual halt91 at a confirmed training save and fresh recover0. STOP now travels
+from client END tick on the same connection as preceding vanilla input; the final
+driver retains strict immediate inventory/selection comparison with no grace
+period. Both authoritative saved copies independently match all 41 original
+positions, selection6 and UUID with no recovery marker after exit. See
+[final normal evidence](verification/m2-normal-final-2026-10-30.json).
+The earlier direct-stop failure remains archived, and its exact live mismatch
+cannot be reconstructed; no production change/hash update was made. Along with
+the separate 25-case matrix, 65-stage UI/restart and 8 history checks, automatable
+verification is complete. Required human physical-input/visual acceptance remains
+pending and the ordinary-world gate stays enabled.

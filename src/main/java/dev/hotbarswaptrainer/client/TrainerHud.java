@@ -27,17 +27,13 @@ final class TrainerHud {
         int height = client.getWindow().getScaledHeight();
         TextRenderer font = client.textRenderer;
         String progress = view.completed + "/" + (view.goal == 0 ? "∞" : view.goal);
-        line(matrices, font, modeName(view.mode) + " · " + view.profileId + " · " + progress + " · " + view.phase,
+        line(matrices, font, progress + " · " + view.phase,
                 8, 8, width - 16, 0xFFFFFF);
         line(matrices, font, view.message, 8, 20, width - 16,
                 view.phase.contains("ERROR") || "INVALID".equals(view.phase) ? 0xFF8888 : 0xDDDDBB);
         if (view.isActive() || view.completed > 0) {
-            line(matrices, font, formatSeconds(trainer.session().displayElapsedNanos()) + " s  |  swaps "
-                            + view.swapAttempts + " (effective " + view.effectiveSwaps + ")  |  selections " + view.slotChanges,
-                    8, 32, width - 16, 0xFFFFFF);
-            line(matrices, font, "Mistakes " + (view.noOpSwaps + view.forbiddenActions) + "  (no-op "
-                            + view.noOpSwaps + ", forbidden " + view.forbiddenActions + ")",
-                    8, 44, width - 16, 0xBBBBBB);
+            line(matrices, font, timingLine(trainer.session().displayElapsedNanos(), view.swapAttempts,
+                            view.effectiveSwaps, trainer.showSwapCounts()), 8, 32, width - 16, 0xFFFFFF);
         }
         if (trainer.showHints() && view.target != null && view.isActive()) {
             int targetY = Math.max(78, height - 94);
@@ -76,6 +72,11 @@ final class TrainerHud {
 
     private static void line(MatrixStack matrices, TextRenderer font, String text, int x, int y, int width, int color) {
         font.drawWithShadow(matrices, font.trimToWidth(new LiteralText(text), Math.max(1, width)), x, y, color);
+    }
+
+    static String timingLine(long nanos, int attempts, int effective, boolean showSwapCounts) {
+        return formatSeconds(nanos) + " s" + (showSwapCounts
+                ? "  |  swaps " + attempts + " (effective " + effective + ")" : "");
     }
 
     static String formatSeconds(long nanos) { return String.format(Locale.ROOT, "%.3f", nanos / 1_000_000_000.0); }

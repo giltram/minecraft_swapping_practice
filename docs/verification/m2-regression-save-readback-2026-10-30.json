@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "method": "Independent typed NBT decoding after process exit",
+  "checks": [
+    {
+      "path": "run-production/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "sha256": "7358955c7dd8f08499458c4cc69b943d31705beaf1626661b0aad5e114e5ec0a",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "recoveryPresent": false
+    },
+    {
+      "path": "run-production/saves/hst-smoke/level.dat",
+      "sha256": "d000703f9b8fce6e45c8178ba9edd3346da512aad5c1e239b8d6e2555cceaf01",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "recoveryPresent": false
+    }
+  ],
+  "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+  "permissions": {
+    "run-production/saves/hst-smoke": "0o755",
+    "run-production/saves/hst-smoke/playerdata": "0o755"
+  }
+}

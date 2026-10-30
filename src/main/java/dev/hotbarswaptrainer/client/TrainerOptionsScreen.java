@@ -1,141 +1,61 @@
 package dev.hotbarswaptrainer.client;
 
 import dev.hotbarswaptrainer.network.TrainerProtocol;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 
-/** Training preferences and entry point for reordering profile slots. */
-final class TrainerOptionsScreen extends Screen {
+import static dev.hotbarswaptrainer.client.EditorText.text;
+
+/** Preferences use the existing accepted options; raw training count is screen-local. */
+final class TrainerOptionsScreen extends EditorFormScreen {
     private final TrainerClient trainer;
-    private ButtonWidget startButton;
-    private ButtonWidget layoutButton;
-    private ButtonWidget editorButton;
-    private ButtonWidget profileButton;
-    private TextFieldWidget goalInput;
     private String goalDraft;
-    private boolean validGoal = true;
-
+    private ButtonWidget editorButton, historyButton;
+    private TextFieldWidget goalInput;
     TrainerOptionsScreen(TrainerClient trainer) {
-        super(new LiteralText("Hotbar Swap Trainer"));
-        this.trainer = trainer;
-        goalDraft = Integer.toString(trainer.goal());
+        super(text("options")); this.trainer = trainer; goalDraft = Integer.toString(trainer.goal());
     }
-
-    @Override
-    protected void init() {
-        client.keyboard.enableRepeatEvents(true);
+    @Override protected void buildForm() {
         trainer.refreshProfiles();
-        int x = width / 2 - 100;
-        int y = optionsTop();
-        addButton(new ButtonWidget(x, y, 200, 20, modeLabel(), button -> {
-            trainer.cycleMode(); button.setMessage(modeLabel());
-        }));
-        profileButton = addButton(new ButtonWidget(x, y + 24, 200, 20, profileLabel(), button -> {
-            trainer.cycleProfile(); button.setMessage(profileLabel());
-        }));
-        goalInput = new TextFieldWidget(textRenderer, x + 80, y + 48, 120, 20,
-                new LiteralText("Successful tasks (0 = unlimited)"));
-        // Leave room for out-of-range input so ordinary overflow pastes show an error instead of truncating to a valid count.
-        goalInput.setMaxLength(32);
-        goalInput.setTextPredicate(text -> text.matches("[0-9]*"));
-        goalInput.setChangedListener(text -> {
-            goalDraft = text;
-            validGoal = trainer.setGoal(text);
-            updateButtons();
+        action(text("mode", TrainerHud.modeName(trainer.mode())), () -> { trainer.cycleMode(); rebuild(); });
+        goalInput = field(text("trainingCountHelp"), goalDraft, 64, value -> {
+            goalDraft = value; trainer.setGoal(value); updateButtons();
         });
-        goalInput.setText(goalDraft);
-        addChild(goalInput);
-        setInitialFocus(goalInput);
-        addButton(new ButtonWidget(x, y + 88, 200, 20, hintsLabel(), button -> {
-            trainer.toggleHints(); button.setMessage(hintsLabel());
-        }));
-        layoutButton = addButton(new ButtonWidget(x, y + 112, 98, 20, new LiteralText("Slot order…"), button ->
-                client.openScreen(new TrainerLayoutScreen(this, trainer))));
-        editorButton = addButton(new ButtonWidget(x + 102, y + 112, 98, 20, new LiteralText("Edit profile…"), button -> {
+        dynamicLine(() -> validGoal() ? "" : text("countError"), 0xFF8888);
+        action(text("hints", text(trainer.showHints() ? "on" : "off")), () -> { trainer.toggleHints(); rebuild(); });
+        action(text("swapCounts", text(trainer.showSwapCounts() ? "on" : "off")), () -> { trainer.toggleSwapCounts(); rebuild(); });
+        editorButton = action(text("layout"), () -> {
             if (trainer.canEditProfiles()) client.openScreen(new ProfileSourceScreen(this, trainer));
-        }));
-        startButton = addButton(new ButtonWidget(x, y + 140, 98, 20, new LiteralText("Start"), button -> startTraining()));
-        addButton(new ButtonWidget(x + 102, y + 140, 98, 20, new LiteralText("Done"), button -> client.openScreen(null)));
-        updateButtons();
-    }
-
-    @Override
-    public void tick() {
-        goalInput.tick();
-        updateButtons();
-    }
-
-    private void updateButtons() {
-        if (startButton == null) return;
-        boolean idle = !trainer.session().active() && client.isInSingleplayer();
-        startButton.active = idle && validGoal && trainer.profileAvailable();
-        layoutButton.active = idle && trainer.profileAvailable();
-        editorButton.active = trainer.canEditProfiles();
-        profileButton.setMessage(profileLabel());
-        startButton.setMessage(new LiteralText(trainer.session().active() ? "Restoring…" : "Start"));
-    }
-
-    private void startTraining() {
-        updateButtons();
-        if (!startButton.active) return;
-        client.openScreen(null);
-        trainer.start();
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (goalInput.isFocused() && (keyCode == 257 || keyCode == 335)) {
-            startTraining();
-            return true;
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override public void removed() { client.keyboard.enableRepeatEvents(false); }
-
-    private LiteralText modeLabel() { return new LiteralText("Mode: " + TrainerHud.modeName(trainer.mode())); }
-    private LiteralText profileLabel() {
-        return new LiteralText(trainer.profileAvailable() ? "Profile: " + trainer.profile() : "Profile: none (retry)");
-    }
-    private LiteralText hintsLabel() { return new LiteralText("Target hints: " + (trainer.showHints() ? "ON" : "OFF")); }
-    private int optionsTop() { return Math.max(30, height / 2 - 110); }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-        drawCenteredString(matrices, textRenderer, "Hotbar Swap Trainer", width / 2, 15, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, "Successes:", width / 2 - 100, optionsTop() + 54, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, "0 = unlimited", width / 2 - 100, optionsTop() + 74, 0xDDDDBB);
-        goalInput.render(matrices, mouseX, mouseY, delta);
-        super.render(matrices, mouseX, mouseY, delta);
-        int textY = optionsTop() + 166;
-        textRenderer.drawWithShadow(matrices, textRenderer.trimToWidth(
-                new LiteralText("Profiles: config/hotbar-swap-trainer/profiles/*.json"), width - 24), 12, textY, 0xBBBBBB);
+        });
+        historyButton = action(text("history"), () -> {
+            if (trainer.canEditProfiles()) client.openScreen(new TrainerHistoryScreen(this, trainer.historyBrowser()));
+        });
         TrainerProtocol.View view = trainer.session().get();
-        if (!validGoal) {
-            textRenderer.drawWithShadow(matrices, textRenderer.trimToWidth(
-                    new LiteralText("Enter a whole number from 0 to 2147483647."), width - 24), 12, textY + 16, 0xFF8888);
-        } else if (view != null && !view.message.isEmpty()) {
-            textRenderer.drawWithShadow(matrices, textRenderer.trimToWidth(new LiteralText(view.message), width - 24),
-                    12, textY + 16, view.phase.contains("ERROR") ? 0xFF8888 : 0xDDDDBB);
-        }
-        int messageY = textY + 30;
-        for (String message : trainer.optionMessages()) {
-            // Errors include repair instructions and must remain readable instead of being truncated.
-            while (!message.isEmpty()) {
-                String line = textRenderer.trimToWidth(message, Math.max(1, width - 24));
-                if (line.isEmpty()) break;
-                textRenderer.drawWithShadow(matrices, line, 12, messageY, 0xFFAA88);
-                message = message.substring(line.length());
-                messageY += 10;
-            }
-        }
+        if (showSessionMessage(view)) paragraph(view.message, view.phase.contains("ERROR") ? 0xFF8888 : 0xDDDDBB);
+        for (String message : trainer.optionMessages()) paragraph(message, 0xFFAA88);
+        footer(text("start"), text("done")); updateButtons();
     }
-
-    // Restoration and its server acknowledgement must continue while this selector is open.
-    @Override
-    public boolean isPauseScreen() { return false; }
+    private boolean validGoal() { return TrainerClient.parseGoal(goalDraft) != null; }
+    private void acceptGoal() { if (validGoal()) trainer.setGoal(goalDraft); }
+    static boolean showSessionMessage(TrainerProtocol.View view) {
+        // The server sends IDLE/Ready with catalogue responses; it is not an option or error.
+        return view != null && !view.message.isEmpty() && !("IDLE".equals(view.phase) && "Ready".equals(view.message));
+    }
+    @Override public void tick() { super.tick(); updateButtons(); }
+    private void updateButtons() {
+        if (historyButton == null) return;
+        boolean idle = trainer.canEditProfiles();
+        setFooterActive(0, idle && validGoal() && trainer.profileAvailable());
+        editorButton.active = idle; historyButton.active = idle;
+    }
+    private void startTraining() {
+        if (!trainer.canEditProfiles() || !validGoal() || !trainer.profileAvailable()) return;
+        acceptGoal(); client.openScreen(null); trainer.start();
+    }
+    @Override protected void footerAction(int choice) { if (choice == 0) startTraining(); else onClose(); }
+    @Override public void onClose() { client.openScreen(null); }
+    @Override public boolean keyPressed(int key, int scan, int modifiers) {
+        if (goalInput.isFocused() && (key == 257 || key == 335)) { startTraining(); return true; }
+        return super.keyPressed(key, scan, modifiers);
+    }
 }

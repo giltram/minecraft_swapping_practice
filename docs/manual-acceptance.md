@@ -1,3 +1,14 @@
+# Current configuration GUI manual acceptance
+
+Use the explicitly owned disposable instance described in
+[m2-multiselect-acceptance.md](m2-multiselect-acceptance.md), not a daily config/save.
+Physically repeat slot → select/deselect several icons → inline quantities → Done → main Save; canceled count edits;
+custom removal/rule confirmations; nullable/default/custom SNBT;
+training count0/positive and blank/overflow errors; real wheel/Tab/Enter/Esc and
+vanilla tooltips at native640×480, GUI scale1/2 and both English/Chinese. Judge
+long-name clipping, focus and readability. Programmatic input/screenshots do not
+complete this human experience checklist. Original gameplay checks follow.
+
 # M1 physical input and visual acceptance
 
 Status: pending. Automated lifecycle/fault checks do not replace these observations.
@@ -27,3 +38,27 @@ dry solid ground, and run `/swaptrainer enable-test-world`.
 
 Record pass/fail, key bindings, resolution/GUI scale and any reproducible problem.
 Do not mark this checklist complete based on compilation or automated screenshots.
+
+## M2 physical input and visual acceptance
+
+Still pending. Automatic D/E/F results live in [m2-acceptance.md](m2-acceptance.md).
+Use an independently prepared, owned disposable manual instance with the final
+production JAR and no automated smoke driver; keep the ordinary-world gate.
+
+- Use real O/mouse/keyboard/wheel for all preferences, profile name/rule/candidate/
+  count/NBT edits, nested Back/Cancel/reset/save/reload, and the original slot-order
+  editor. Verify raw drafts survive GUI scale/window changes and cancel writes
+  nothing. Complete training with the saved profile in both modes.
+- Use real history filters/pages/Back/Refresh, long saved names, full-hash details,
+  empty/no-score cases and corruption warnings. Confirm successful-task sum wording
+  and PB grouping make sense. Restart and revisit options/history/PB.
+- At actual native minimum window and several GUI scales/locales, inspect clipping,
+  all long candidate rows, registry search/focus/Tab/Enter/Esc, wheel direction,
+  potion/custom-NBT tooltips and footer hit regions. Programmatic Screen-size
+  screenshots do not replace this judgment.
+- Observe visible entry/save restrictions during active/restoring/error-lock/LAN
+  transitions and retry, including readable config/profile/history error messages.
+  Automated live transition checks are separate evidence, not physical input.
+- Rebound Swap Hands, number/scroll input, hints ON/OFF, focus/pause and early/held
+  input retain the M1 checklist above. Record actual binding, native resolution,
+  GUI scale, locale, final JAR hash and pass/fail.

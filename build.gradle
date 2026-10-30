@@ -95,3 +95,22 @@ task resolvedArtifacts {
         file("${buildDir}/resolved-artifacts.tsv").text = rows.unique().sort().join('\n') + '\n'
     }
 }
+
+// Loom 0.4 sends every source set's Mixin export to one file. A later smoke
+// compile erased main's @Shadow mapping, so a resource-only remap shipped the
+// literal field "player" and crashed before startup. Give each producer its own
+// output; remapJar consumes only main's complete export. See build-support/README.
+afterEvaluate {
+    def trainerLoomExtension = extensions.getByType(net.fabricmc.loom.LoomGradleExtension)
+    [compileJava, compileSmokeJava].each { compiler ->
+        def mixinExport = compiler == compileJava
+                ? trainerLoomExtension.mappingsProvider.mappingsMixinExport
+                : file("${buildDir}/loom-cache/smoke-mixin-map.tiny")
+        compiler.options.compilerArgs.removeAll { it.startsWith('-AoutMapFileNamedIntermediary=') }
+        compiler.options.compilerArgs.add("-AoutMapFileNamedIntermediary=${mixinExport.absolutePath}")
+        // Mixin exports describe all members, not just this invocation's changed sources.
+        compiler.options.incremental = false
+        compiler.outputs.file(mixinExport)
+    }
+    remapJar.inputs.file(trainerLoomExtension.mappingsProvider.mappingsMixinExport)
+}

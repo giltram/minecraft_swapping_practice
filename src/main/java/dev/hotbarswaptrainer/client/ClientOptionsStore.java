@@ -59,6 +59,7 @@ final class ClientOptionsStore {
         json.addProperty("profile", options.profile);
         json.addProperty("goal", options.goal);
         json.addProperty("showHints", options.showHints);
+        json.addProperty("showSwapCounts", options.showSwapCounts);
         byte[] bytes = (new GsonBuilder().setPrettyPrinting().create().toJson(json) + "\n").getBytes(StandardCharsets.UTF_8);
         Files.createDirectories(file.getParent());
         Path pending = Files.createTempFile(file.getParent(), ".client-options-", ".tmp");
@@ -81,6 +82,7 @@ final class ClientOptionsStore {
         Integer schema = null;
         Integer goal = null;
         Boolean showHints = null;
+        boolean showSwapCounts = false; // Existing schema-1 files predate the optional HUD preference.
         Set<String> seen = new HashSet<>();
         try (JsonReader reader = new JsonReader(new StringReader(json))) {
             reader.setLenient(false);
@@ -97,6 +99,10 @@ final class ClientOptionsStore {
                         if (reader.peek() != JsonToken.BOOLEAN) throw new IOException("showHints must be a boolean");
                         showHints = reader.nextBoolean();
                         break;
+                    case "showSwapCounts":
+                        if (reader.peek() != JsonToken.BOOLEAN) throw new IOException("showSwapCounts must be a boolean");
+                        showSwapCounts = reader.nextBoolean();
+                        break;
                     default: throw new IOException("Unknown field: " + key);
                 }
             }
@@ -105,7 +111,7 @@ final class ClientOptionsStore {
         }
         if (schema == null || schema != ClientOptions.SCHEMA_VERSION) throw new IOException("Supported schemaVersion is 1");
         if (mode == null || profile == null || goal == null || showHints == null) throw new IOException("Missing option field");
-        return new ClientOptions(mode, profile, goal, showHints);
+        return new ClientOptions(mode, profile, goal, showHints, showSwapCounts);
     }
 
     private static String string(JsonReader reader) throws IOException {

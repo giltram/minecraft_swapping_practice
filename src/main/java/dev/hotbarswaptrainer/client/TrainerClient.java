@@ -24,6 +24,7 @@ public final class TrainerClient implements ClientModInitializer {
     private static TrainerClient instance;
     private final ClientSessionView session = new ClientSessionView();
     private TrainerKeyBindings keys;
+    private dev.hotbarswaptrainer.stats.HistoryStore history;
     private ProfileRepository profileRepository;
     private ClientOptions options = ClientOptions.defaults();
     private ClientOptionsStore optionsStore;
@@ -39,6 +40,8 @@ public final class TrainerClient implements ClientModInitializer {
                 .resolve("hotbar-swap-trainer/profiles"), new MinecraftItemCatalog()),
                 new ClientOptionsStore(FabricLoader.getInstance().getConfigDir()
                         .resolve("hotbar-swap-trainer/client-options.json")));
+        history = new dev.hotbarswaptrainer.stats.HistoryStore(FabricLoader.getInstance().getConfigDir()
+                .resolve("hotbar-swap-trainer/history"));
         keys = new TrainerKeyBindings();
         ClientPackets.register(session::accept);
         ClientTickEvents.END_CLIENT_TICK.register(this::tick);
@@ -137,7 +140,7 @@ public final class TrainerClient implements ClientModInitializer {
         if (!client.isInSingleplayer() || client.player == null || session.active()) return;
         refreshProfiles();
         if (!profileAvailable) return;
-        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal()));
+        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal(), showHints()));
     }
 
     void stop(String reason) {
@@ -153,9 +156,15 @@ public final class TrainerClient implements ClientModInitializer {
     String profile() { return options.profile; }
     int goal() { return options.goal; }
     boolean showHints() { return options.showHints; }
+    boolean showSwapCounts() { return options.showSwapCounts; }
+    void toggleSwapCounts() { acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), !showSwapCounts())); }
     boolean profileAvailable() { return profileAvailable; }
-    void toggleHints() { acceptOptions(new ClientOptions(mode(), profile(), goal(), !showHints())); }
+    void toggleHints() { acceptOptions(new ClientOptions(mode(), profile(), goal(), !showHints(), showSwapCounts())); }
     ProfileRepository profileRepository() { return profileRepository; }
+    HistoryBrowser historyBrowser() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        return new HistoryBrowser(history, client.player.getUuid(), this::canEditProfiles);
+    }
     boolean canEditProfiles() {
         MinecraftClient client = MinecraftClient.getInstance();
         return ProfileEditorSession.allowed(client.isInSingleplayer(),
@@ -164,17 +173,19 @@ public final class TrainerClient implements ClientModInitializer {
     }
     void cycleMode() {
         acceptOptions(new ClientOptions(mode() == TrainingMode.SINGLE_ITEM ? TrainingMode.FULL_INVENTORY
-                : TrainingMode.SINGLE_ITEM, profile(), goal(), showHints()));
+                : TrainingMode.SINGLE_ITEM, profile(), goal(), showHints(), showSwapCounts()));
     }
     /** Commit only valid input; an unfinished edit must not replace the last usable goal. */
+    static Integer parseGoal(String text) {
+        if (text == null || !text.matches("[0-9]+")) return null;
+        try { return Integer.parseInt(text); }
+        catch (NumberFormatException overflow) { return null; }
+    }
     boolean setGoal(String text) {
-        if (text == null || !text.matches("[0-9]+")) return false;
-        try {
-            acceptOptions(new ClientOptions(mode(), profile(), Integer.parseInt(text), showHints()));
-            return true;
-        } catch (NumberFormatException overflow) {
-            return false;
-        }
+        Integer goal = parseGoal(text);
+        if (goal == null) return false;
+        acceptOptions(new ClientOptions(mode(), profile(), goal, showHints(), showSwapCounts()));
+        return true;
     }
     List<String> refreshProfiles() {
         List<String> ids = new ArrayList<>();
@@ -186,7 +197,7 @@ public final class TrainerClient implements ClientModInitializer {
         } else if (!ids.contains(profile())) {
             String fallback = ids.contains("default") ? "default" : ids.get(0);
             profileFeedback = "Profile '" + profile() + "' unavailable; using '" + fallback + "'.";
-            options = new ClientOptions(mode(), fallback, goal(), showHints());
+            options = new ClientOptions(mode(), fallback, goal(), showHints(), showSwapCounts());
             LogManager.getLogger("HotbarSwapTrainer").warn(profileFeedback);
         }
         if (!loaded.getErrors().isEmpty()) {
@@ -194,18 +205,14 @@ public final class TrainerClient implements ClientModInitializer {
         }
         return ids;
     }
-    void cycleProfile() {
-        String previous = profile();
+    /** Explicit layout selection also retries saving unchanged/repaired preferences. */
+    boolean selectProfile(String id) {
         List<String> profiles = refreshProfiles();
-        if (profiles.isEmpty()) return;
-        // A missing selection falls back on this click, rather than skipping the fallback.
-        if (previous.equals(profile())) {
-            String selected = profiles.get((profiles.indexOf(profile()) + 1) % profiles.size());
-            profileFeedback = "";
-            options = new ClientOptions(mode(), selected, goal(), showHints());
-        }
-        // Explicit selection also confirms a repaired single-profile catalogue and retries unsaved edits.
+        if (!profiles.contains(id)) return false;
+        profileFeedback = "";
+        options = new ClientOptions(mode(), id, goal(), showHints(), showSwapCounts());
         saveOptions();
+        return true;
     }
 
     private void acceptOptions(ClientOptions accepted) {
@@ -232,7 +239,7 @@ public final class TrainerClient implements ClientModInitializer {
         List<String> messages = new ArrayList<>();
         if (!configError.isEmpty()) messages.add(configError);
         if (!saveError.isEmpty()) messages.add(saveError);
-        if (!profileAvailable) messages.add("No valid profiles. Repair profiles/*.json, then click Profile or reopen options.");
+        if (!profileAvailable) messages.add("No valid profiles. Repair profiles/*.json, then reopen Edit item layout.");
         if (!profileFeedback.isEmpty()) messages.add(profileFeedback);
         return messages;
     }

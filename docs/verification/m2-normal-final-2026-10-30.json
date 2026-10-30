@@ -1,0 +1,84 @@
+{
+  "status": "passed",
+  "productionJar": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+  "productionSha256": "e4c24c96e48a2d40483f53c13cccd1c405b756c8b0a88ee64aa0ff2436fa126e",
+  "normal": {
+    "mode": "normal",
+    "status": "passed",
+    "detail": "Single3, Full3, forbidden-drop replacement, unlimited-stop, no-op, same-batch swaps and complete restoration passed; sent tasks=9",
+    "elapsedSeconds": 261.676050458
+  },
+  "crash": {
+    "mode": "crash",
+    "status": "ready",
+    "detail": "Runtime.halt(91) after confirmed training save",
+    "elapsedSeconds": 265.790486917
+  },
+  "normalCrashProcessExit": 91,
+  "recover": {
+    "mode": "recover",
+    "status": "passed",
+    "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+    "elapsedSeconds": 16.590280625
+  },
+  "recoverProcessExit": 0,
+  "strictImmediateRestorationComparison": true,
+  "selectionGracePeriod": false,
+  "stopRequest": [
+    {
+      "event": "stop-request",
+      "detail": "Client END tick; STOP follows prior vanilla input packets"
+    }
+  ],
+  "preRecoverySaves": [
+    {
+      "path": "run-m2-runtime-20261030/saves/hst-smoke/level.dat",
+      "sha256": "a8f4920bcf2466b84de9fe0cc421be7930da8e3c293610e0eea583d8a52ad632",
+      "trainingInventory": true,
+      "activeRecovery": true,
+      "originalSnapshotMatchesAll41": true,
+      "selection": 6
+    },
+    {
+      "path": "run-m2-runtime-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "sha256": "819ff6267783520f3d76a1960823566873b7e19091017c00ac7f8bb32e174795",
+      "trainingInventory": true,
+      "activeRecovery": true,
+      "originalSnapshotMatchesAll41": true,
+      "selection": 6
+    }
+  ],
+  "postExitReadback": {
+    "status": "passed",
+    "method": "Independent standard-library typed NBT decoding after process exit",
+    "baseline": "run-m2-runtime-20261030/smoke/baseline.nbt",
+    "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+    "checks": [
+      {
+        "path": "run-m2-runtime-20261030/saves/hst-smoke/level.dat",
+        "sha256": "e1d866c8cc6595cf875e8662fe23e2595cc334dac68f4badba8a31ba81f87b38",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+        "recoveryPresent": false
+      },
+      {
+        "path": "run-m2-runtime-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "b79c302d0aca1494ea25e04b75444b6266583b38725e00734ebc1be908688fc8",
+        "inventoryPositions": 41,
+        "selectedSlot": 6,
+        "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+        "recoveryPresent": false
+      }
+    ],
+    "permissions": {
+      "run-m2-runtime-20261030/saves/hst-smoke": "0o755",
+      "run-m2-runtime-20261030/saves/hst-smoke/playerdata": "0o755"
+    }
+  },
+  "evidence": "run-m2-runtime-20261030/smoke/m2-evidence-20261030/normal-ordered-stop",
+  "earlierFailure": "docs/verification/m2-normal-pending-2026-10-30.json",
+  "driverCorrection": "Unlimited STOP now goes from client END tick through the same connection after prior vanilla input packets, replacing a direct server stop that bypassed their ordering. No production code or artifact changed.",
+  "diagnosticLimit": "The earlier failing live snapshot was not captured, so its exact differing slots/selection cannot be reconstructed. An unlocked intermediate run passed without triggering its selection observer. The final ordered-STOP run removed that observer and passed all four strict comparisons plus halt/recover.",
+  "remainingRequired": "Human physical-input and subjective visual acceptance remain pending; ordinary-world gate stays enabled."
+}

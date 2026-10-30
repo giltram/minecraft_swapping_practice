@@ -1,5 +1,10 @@
 # M2-A: client option persistence
 
+Current GUI update: [multi-select layout and training-count input](m2-usability-plan.md)
+reuse these backend contracts. [Current verification](m2-multiselect-acceptance.md)
+records its own artifact and executed checks; earlier artifact results below are
+historical, not automatic acceptance of the new GUI.
+
 Scope: mode, selected profile, requested successes and Target hints only. No
 changes to recovery, timing, protocol, ordinary-world gates, history/PBs or rule editing.
 
@@ -35,3 +40,11 @@ No game was launched for M2-A. Actual client exit/relaunch, GUI scales/readabili
 profile repair interaction and visible disk-error feedback remain pending in
 [the M2-A checklist](testing.md#m2-a-client-options-verification). Earlier M1 game
 results do not verify this rebuilt artifact. No further M2 subtasks were started.
+
+## HUD counter preference follow-up
+
+ClientOptions also owns showSwapCounts, an optional schema-1 boolean defaulting OFF.
+Older files without it load without rewriting; accepted edits persist the complete
+value atomically. Wrong types and duplicate flags are rejected/preserved like other
+invalid fields. Mode/profile/goal/hint changes preserve this independent preference.
+It is client-only and adds no START field. See [current verification](hud-pb-simplification.md).

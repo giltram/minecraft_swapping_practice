@@ -26,6 +26,7 @@ public class ClientOptionsStoreTest {
         assertEquals("default", options.profile);
         assertEquals(10, options.goal);
         assertFalse(options.showHints);
+        assertFalse(options.showSwapCounts);
         assertFalse(Files.exists(file));
     }
 
@@ -35,7 +36,7 @@ public class ClientOptionsStoreTest {
         ClientOptionsStore store = new ClientOptionsStore(file);
         store.load();
         for (int goal : new int[] {0, 1, 73, 10001, Integer.MAX_VALUE}) {
-            ClientOptions expected = new ClientOptions(TrainingMode.FULL_INVENTORY, "custom-1", goal, true);
+            ClientOptions expected = new ClientOptions(TrainingMode.FULL_INVENTORY, "custom-1", goal, true, goal % 2 == 1);
             store.save(expected);
             assertEquals(expected, new ClientOptionsStore(file).load());
             assertEquals(1, new JsonParser().parse(read(file)).getAsJsonObject().get("schemaVersion").getAsInt());
@@ -57,7 +58,8 @@ public class ClientOptionsStoreTest {
                 {"mode", "\"UNKNOWN\""}, {"mode", "false"}, {"profile", "\"\""},
                 {"profile", "\"../custom\""}, {"profile", "42"}, {"goal", "-1"},
                 {"goal", "2147483648"}, {"goal", "1.5"}, {"goal", "\"10\""},
-                {"goal", "null"}, {"showHints", "\"false\""}, {"showHints", "0"}, {"extra", "true"}
+                {"goal", "null"}, {"showHints", "\"false\""}, {"showHints", "0"}, {"showSwapCounts", "null"}, {"showSwapCounts", "1"},
+                {"showSwapCounts", "\"false\""}, {"extra", "true"}
         };
         for (String[] invalid : invalidFields) {
             JsonObject json = new JsonParser().parse(valid).getAsJsonObject();
@@ -97,6 +99,27 @@ public class ClientOptionsStoreTest {
         try { store.save(ClientOptions.defaults()); fail("Expected replacement failure"); }
         catch (IOException expected) { assertArrayEquals(new byte[] {1, 2, 3}, Files.readAllBytes(sentinel)); }
         try (Stream<Path> files = Files.list(file.getParent())) { assertEquals(1, files.count()); }
+    }
+
+    @Test
+    public void legacyOptionsDefaultSwapCountsOffWithoutRewritingAndCanSaveTheNewFlag() throws Exception {
+        Path file = file();
+        ClientOptionsStore initial = new ClientOptionsStore(file);
+        initial.load(); initial.save(new ClientOptions(TrainingMode.FULL_INVENTORY, "custom", 73, true));
+        JsonObject legacy = new JsonParser().parse(read(file)).getAsJsonObject();
+        legacy.remove("showSwapCounts");
+        byte[] original = legacy.toString().getBytes(StandardCharsets.UTF_8);
+        Files.write(file, original);
+        ClientOptionsStore store = new ClientOptionsStore(file);
+        ClientOptions loaded = store.load();
+        assertFalse(loaded.showSwapCounts);
+        assertEquals(TrainingMode.FULL_INVENTORY, loaded.mode);
+        assertEquals(73, loaded.goal); assertTrue(loaded.showHints);
+        assertArrayEquals(original, Files.readAllBytes(file));
+        store.save(new ClientOptions(loaded.mode, loaded.profile, loaded.goal, loaded.showHints, true));
+        assertTrue(new ClientOptionsStore(file).load().showSwapCounts);
+        rejectAndPreserve(file, read(file).replace("\"showSwapCounts\": true",
+                "\"showSwapCounts\": true, \"showSwapCounts\": false").getBytes(StandardCharsets.UTF_8));
     }
 
     private void rejectAndPreserve(Path file, byte[] bytes) throws Exception {

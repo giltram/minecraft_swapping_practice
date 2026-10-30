@@ -1,6 +1,6 @@
 # Profile, task, and result contracts
 
-These packages implement immutable training domain state and M2-B's separate editor drafts. `task` uses `profile` and Minecraft's NBT value types; it does not access players, registries, files, networking, clients, or mutable live inventory. `stats` depends only on task mode and result values. File access is confined to `ProfileRepository`; its injected `ItemCatalog` owns registry/materialization access. The private memory-only `ProfileJson` codec shares schema, catalog and NBT checks across loads and editor validation.
+These packages implement immutable training domain state and M2-B's separate editor drafts. `task` uses `profile` and Minecraft's NBT value types; it does not access players, registries, files, networking, clients, or mutable live inventory. `stats` depends on task mode and result values; HistoryStore owns its separate injected history file I/O. Profile file access is confined to `ProfileRepository`; its injected `ItemCatalog` owns registry/materialization access. The private memory-only `ProfileJson` codec shares schema, catalog and NBT checks across loads and editor validation.
 
 ## Positions and whole stacks
 
@@ -120,7 +120,7 @@ The inventory/session adapter separately checks armor, main positions 9..35, cur
 
 `TaskResult` records `SUCCESS`, `INVALID`, or `STOPPED`, elapsed monotonic nanoseconds, swaps/effective swaps/no-op swaps, slot changes, forbidden actions, and a reason. Counters require `swapAttempts = effectiveSwaps + noOpSwaps`. Mistakes are explicitly `noOpSwaps + forbiddenActions`; extra valid exchanges do not count as mistakes. Timing quality is `server-go-ack-to-action`, not a claim of frame-perfect visual reaction time.
 
-`SessionResult` preserves all attempts but computes total/average/best time from successes only. Zero requested successes means unlimited; zero average/best means there is no successful attempt. `ResultStore.save(playerId, result)` is outside recovery and must be idempotent for the same player/session. `findLatest(playerId)` returns an optional result; `forget(playerId)` and `clear()` follow disconnect/world shutdown. M1's server-thread-confined `InMemoryResultStore` retains only each player's latest result; durable history is M2 work.
+`SessionResult` preserves all attempts but computes total/average/best time from successes only. Zero requested successes means unlimited; zero average/best means there is no successful attempt. `ResultStore.save(playerId, result)` is outside recovery and must be idempotent for the same player/session. `findLatest(playerId)` returns an optional result; `forget(playerId)` and `clear()` follow disconnect/world shutdown. InMemoryResultStore remains available for latest-memory callers. The production composition uses HistoryStore; forget/clear only affect its latest-memory projection, while read(UUID) rereads durable records after restart. See [M2-D](m2-d-history.md).
 
 ## Verification locations
 
@@ -134,3 +134,26 @@ The inventory/session adapter separately checks armor, main positions 9..35, cur
 - `inventory/RecoveryRecordTest`: all 41 positions, selected slot, deep copies, checksums, world/player binding, corrupt/unsupported/inactive records, malformed snapshot rejection.
 
 Actual executed checks and remaining runtime acceptance gates are recorded in `docs/testing.md`; test source presence alone does not indicate a passed check.
+
+
+## M2 frozen history and PB contracts
+
+SessionResult's original constructor remains available with metadata=null. The
+metadata-aware constructor adds immutable SessionMetadata: player UUID, start/end
+wall-clock milliseconds, profile ID/name snapshot, declared hints, timing/scoring
+and stationary option versions and explicit end state. Neither constructor changes
+TaskValidator, GO_ACK timing or successful-only aggregates. Counter relationships
+and successful-duration sums reject overflow instead of wrapping into fast scores.
+
+HistoryStore/HistoryJson validate the schema/binding/collection/file limits before
+accepting persisted values. HistorySnapshot.query(Filter,page) is a pure 10-row
+query over a bounded explicitly loaded catalogue. PersonalBests.forConditions is
+the sole PB owner: SUCCESS only for task; COMPLETED + exact positive goal for
+finite sum/average. Conditions split by player/mode/hash/hints/versions/options;
+finite PB additionally splits goal. Unknown metadata cannot inherit current settings.
+Ties use earliest end, UUID ascending, then attempt order. The full rules and
+limits live in [D](m2-d-history.md) and [E](m2-e-history-pb.md).
+
+New tests: stats/HistoryStoreTest, stats/PersonalBestsTest and
+client/HistoryBrowserTest. Game/fault evidence remains distinct in
+[m2-acceptance.md](m2-acceptance.md).

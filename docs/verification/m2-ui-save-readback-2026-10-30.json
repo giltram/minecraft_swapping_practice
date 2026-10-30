@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "method": "Independent standard-library typed NBT decoding after process exit",
+  "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+  "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+  "checks": [
+    {
+      "path": "run-m2-ui-20261030-errors/saves/hst-smoke/level.dat",
+      "sha256": "51f7c207a0d29d8be32abb8b2cb3ccb8f8d660d5ed3f1d7a0c4f6c1eddfc45e6",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+      "recoveryPresent": false
+    },
+    {
+      "path": "run-m2-ui-20261030-errors/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "sha256": "f78bd1724b4675eb07c2e46a39a5101a6f16112edd4eaead56e0826bdd9f1a10",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+      "recoveryPresent": false
+    }
+  ],
+  "permissions": {
+    "run-m2-ui-20261030-errors/saves/hst-smoke": "0o755",
+    "run-m2-ui-20261030-errors/saves/hst-smoke/playerdata": "0o755"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "implementation": "complete",
+  "humanExperienceAcceptance": "pending",
+  "production": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "bcac3a75b58d7b6338331b1311ec7f7edb0aae433c7093e62a79d0a1877a7fb1",
+    "classes": 119,
+    "classVersion": 52,
+    "smokeOrAcceptanceClasses": false,
+    "shadowFieldRemapped": true,
+    "localeKeys": 92
+  },
+  "checks": [
+    {
+      "command": "scripts/gradle-jdk8.sh --offline test build",
+      "status": "passed",
+      "tests": {
+        "tests": 114,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "note": "Suite actually executed in the preceding test build smokeJar; final exact invocation reused tests.",
+      "logs": [
+        {
+          "path": "docs/verification/m2-copy-layout-2026-10-30/build.log",
+          "sha256": "a97af4ab6014f48987ff95bdcae45bfa4847168e4d293e4b0cfaba115414e63c"
+        },
+        {
+          "path": "docs/verification/m2-copy-layout-2026-10-30/required-build.log",
+          "sha256": "260a7c37eb653b8898a354c982735a6db2df11670a346345f43745e68ce79545"
+        }
+      ]
+    },
+    {
+      "command": "python3 scripts/check-boundaries.py",
+      "status": "passed",
+      "javaFiles": 80,
+      "packages": 12,
+      "edges": 27
+    },
+    {
+      "command": "python3 -m py_compile scripts/run-profile-editor-ui.py",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "firstClient": {
+    "status": "passed",
+    "exitCode": 0,
+    "stages": 28,
+    "detail": "passed\n28 production-client steps: direct same-page multi-selection and marks, compact headings, left-aligned labelled quantities and Delete, all selected icons/counts, zero selections→EMPTY saved, multiple quantities, no exchange/required distinction/fixed-unlimited buttons, raw inline quantities and SNBT across resize/children, cancel unchanged file, custom removal confirmation, retained advanced pools, conflict/write-denial, 0/positive/invalid training count, hidden idle Ready, finite/unlimited real training and two-save restoration, actual logical320x240. Programmatic input only.\n",
+    "result": {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/first-result.txt",
+      "sha256": "895a98446807e5533ca5c308ff36d0f6d17338c62e2b38ab8e1e99ff8c62d8e0"
+    },
+    "manifest": {
+      "path": "run-m2-ui-copy-layout-20261030/smoke/copy-layout-first-run/launch-manifest.json",
+      "sha256": "f0efb4da83ab5fbae7098d28aa31ffd7db4ba1d519e655055ad2cd87ec07a984"
+    },
+    "log": {
+      "path": "run-m2-ui-copy-layout-20261030/smoke/copy-layout-first-run/client.log",
+      "sha256": "ca457baf7294426abb630c091c873d005748fe762da7684e48c78e9ac8d67f16"
+    }
+  },
+  "restartClient": {
+    "status": "passed",
+    "exitCode": 0,
+    "detail": "passed\nFresh production process: selected profile/unlimited, stone32+dirt7 and three-item OPTIONAL/custom NBT profile and both histories survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.\n",
+    "result": {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/restart-result.txt",
+      "sha256": "89c924d00c427a1be9765f41fb1aa2144067202ddf4456a56754692a6d8ccfd5"
+    },
+    "manifest": {
+      "path": "run-m2-ui-copy-layout-20261030/smoke/reopen-launch-manifest.json",
+      "sha256": "36d58621429ae930d22d68aa63b1fd539dfa340a2019d2efbe158c42fd8744b2"
+    },
+    "log": {
+      "path": "run-m2-ui-copy-layout-20261030/smoke/copy-layout-restart-client.log",
+      "sha256": "86c1543fc58245938488f354138c2bd2dac89b0b1ef73bd8b56712d20c89a492"
+    }
+  },
+  "saveReadbacks": [
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-copy-layout-20261030/saves/hst-smoke/level.dat",
+          "sha256": "7c8e506601e1712a1386b067c9dbcbd038e781e1f8d27d75f91cb055d22248b9",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-copy-layout-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "cac0c4c98785ea8ca832420884974f1999473a4d84bf7a878bb54bd38664821f",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-copy-layout-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-copy-layout-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-copy-layout-20261030/saves/hst-smoke/level.dat",
+          "sha256": "9a2fbe829d5b98a5509746bd85750f49f8150413478fc1af00acb363ad23102f",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-copy-layout-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "bac8772d4fb9150e2d17d8b5c23e82ea872e2bbb1d6b9881acb362d59c391470",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-copy-layout-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-copy-layout-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/picker.png",
+      "sha256": "786c255e831eb778a50299627b9958ba2e44ad736479d6ed659d1dec15f35200",
+      "original": "run-m2-ui-copy-layout-20261030/screenshots/u22-chinese-picker.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/task-count.png",
+      "sha256": "17ba5864f74c10a1093b5df42caa6902081973aae8a9a91f60c7d7c4235b0265",
+      "original": "run-m2-ui-copy-layout-20261030/screenshots/u20-chinese-options.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/picker-en.png",
+      "sha256": "643dfc7413ba14354940276aa317af27f452161274a1e8fcf3a5ed8e684c3a85",
+      "original": "run-m2-ui-copy-layout-20261030/screenshots/m04-multiselect-all-items.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/task-count-en.png",
+      "sha256": "eaf7352f5ad8e1aae367062bfc36f142703767aab0b81d5c2b14c3e14d864c17",
+      "original": "run-m2-ui-copy-layout-20261030/screenshots/m01-options-single-count.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-copy-layout-2026-10-30/minimum.png",
+      "sha256": "f8717c48e64693db943b80c42598a66944b0dd8d198899aad59700d8c2a27b4e",
+      "original": "run-m2-ui-copy-layout-20261030/screenshots/m13-compact-multiselect.png",
+      "framebuffer": [
+        1280,
+        960
+      ],
+      "edited": false
+    }
+  ],
+  "advancedDecision": {
+    "decision": "retain-secondary-entry",
+    "benefit": "Keep OPTIONAL/FLEXIBLE and complete NBT/matching editable without JSON.",
+    "cost": "One additional secondary entry; ordinary selection/count editing does not use it."
+  },
+  "limits": [
+    "Programmatic widget events, supplied acknowledgements and vanilla server handlers are not human experience/physical-input acceptance.",
+    "Human mouse/wheel/keyboard and subjective readability remain pending.",
+    "No full M1 crash/fault/LAN matrix rerun for this copy/layout-only artifact; existing safety gate remains."
+  ]
+}

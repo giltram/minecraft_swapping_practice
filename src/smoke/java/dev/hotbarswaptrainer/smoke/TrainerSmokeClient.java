@@ -78,6 +78,8 @@ public final class TrainerSmokeClient implements ClientModInitializer {
     private volatile PendingStart pendingStart;
     private volatile long lastStartAttemptNanos;
     private int startAttempts;
+    private volatile TrainerProtocol.Request pendingStop;
+    private boolean stopRequested;
     private boolean awaitingStart;
     private int startWaitTicks;
     private long started;
@@ -109,6 +111,18 @@ public final class TrainerSmokeClient implements ClientModInitializer {
         if (confirmOwnedWorld(client)) return;
         if (client.player != null) {
             ownedWorldRequested = false;
+            TrainerProtocol.Request stop = pendingStop;
+            if (stop != null && client.getNetworkHandler() != null) {
+                // Match a real client stop: vanilla's queued slot echo and all witness
+                // swaps precede STOP on this connection. A direct server stop can race them.
+                try {
+                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                    TrainerProtocol.writeRequest(buf, stop);
+                    pendingStop = null;
+                    ClientSidePacketRegistry.INSTANCE.sendToServer(TrainerProtocol.REQUEST, buf);
+                    event("stop-request", "Client END tick; STOP follows prior vanilla input packets");
+                } catch (RuntimeException failure) { fail(failure); }
+            }
             PendingStart request = pendingStart;
             long now = System.nanoTime();
             if (request != null && (lastStartAttemptNanos == 0 || now - lastStartAttemptNanos >= 1_000_000_000L)
@@ -264,7 +278,12 @@ public final class TrainerSmokeClient implements ClientModInitializer {
                 Runtime.getRuntime().halt(91);
             }
             if (stage == 3 && phase.equals("SUCCESS") && ((Integer) field(session, "completed")) >= 2) {
-                TrainerMod.SESSIONS.stop(player, "Smoke unlimited stop");
+                if (!stopRequested) {
+                    stopRequested = true;
+                    pendingStop = new TrainerProtocol.Request(TrainerProtocol.Action.STOP,
+                            (UUID) field(session, "id"), observedTask.getId(), (Long) field(session, "revision"),
+                            TrainingMode.SINGLE_ITEM, "default", 0, "Smoke unlimited stop");
+                }
                 return;
             }
             if (!phase.equals("RUNNING")) return;
@@ -290,6 +309,8 @@ public final class TrainerSmokeClient implements ClientModInitializer {
     private void begin(ServerPlayerEntity player, TrainingMode training, int goal) throws Exception {
         lastTask = null;
         lastPhase = "";
+        stopRequested = false;
+        pendingStop = null;
         event("begin", training + " goal=" + goal + " stage=" + stage);
         awaitingStart = true;
         startWaitTicks = 0;
@@ -357,8 +378,14 @@ public final class TrainerSmokeClient implements ClientModInitializer {
     }
 
     private void verifySessionFinished(ServerPlayerEntity player) throws Exception {
-        if (InventoryService.isProtected(player) || !baseline.equals(InventorySnapshot.capture(player.inventory))) {
-            throw new IllegalStateException("Original 41 slots/selection were not restored at stage " + stage);
+        InventorySnapshot observed = InventorySnapshot.capture(player.inventory);
+        if (InventoryService.isProtected(player) || !baseline.equals(observed)) {
+            try (OutputStream stream = Files.newOutputStream(output.resolve("normal-restoration-mismatch-" + stage + ".nbt"))) {
+                NbtIo.writeCompressed(observed.toTag(), stream);
+            }
+            throw new IllegalStateException("Original 41 slots/selection were not restored at stage " + stage
+                    + "; selected=" + observed.toTag().getInt("SelectedItemSlot")
+                    + "; stacksEqual=" + baseline.toTag().getList("Inventory", 10).equals(observed.toTag().getList("Inventory", 10)));
         }
         ResultStore store = (ResultStore) field(TrainerMod.SESSIONS, "results");
         SessionResult result = store.findLatest(player.getUuid()).orElseThrow(() -> new IllegalStateException("Missing session result"));

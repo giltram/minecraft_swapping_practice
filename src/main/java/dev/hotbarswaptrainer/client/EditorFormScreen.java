@@ -50,6 +50,9 @@ abstract class EditorFormScreen extends Screen {
         retain(); super.resize(client, width, height);
     }
 
+    protected void dynamicLine(java.util.function.Supplier<String> value, int color) {
+        labels.add(new Label(cursor, value, color)); cursor += 14;
+    }
     protected void paragraph(String text, int color) {
         // Wrap complete errors/paths. No invisible truncated repair instructions.
         for (String part : text.split("\n", -1)) {
@@ -102,7 +105,8 @@ abstract class EditorFormScreen extends Screen {
     }
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         positionControls();
-        renderBackground(matrices);
+        // An opaque form surface prevents the gameplay HUD from colliding with small-window controls.
+        fill(matrices, 0, 0, width, height, 0xFF20242C);
         drawCenteredString(matrices, textRenderer, title.getString(), width / 2, 10, 0xFFFFFF);
         double scale = client.getWindow().getScaleFactor();
         int bottom = (int) Math.round(viewport.bottom * scale), top = (int) Math.round(viewport.top * scale);
@@ -112,7 +116,7 @@ abstract class EditorFormScreen extends Screen {
         ItemStack hovered;
         try {
             for (Label label : labels) if (viewport.visible(label.offset, 10))
-                textRenderer.drawWithShadow(matrices, label.text, viewport.left + 2, viewport.y(label.offset), label.color);
+                textRenderer.drawWithShadow(matrices, textRenderer.trimToWidth(label.text.get(), viewport.width - 4), viewport.left + 2, viewport.y(label.offset), label.color);
             boolean inside = viewport.contains(mouseX, mouseY);
             for (Control row : controls) if (viewport.visible(row.offset, 20))
                 row.widget.render(matrices, inside ? mouseX : -1000, inside ? mouseY : -1000, delta);
@@ -128,8 +132,10 @@ abstract class EditorFormScreen extends Screen {
                     viewport.left + viewport.width + 6, y + thumb, 0xFFAAAAAA);
         }
         for (ButtonWidget button : footer) button.render(matrices, mouseX, mouseY, delta);
+        renderDetails(matrices, mouseX, mouseY);
         if (!hovered.isEmpty()) renderTooltip(matrices, hovered, mouseX, mouseY);
     }
+    protected void renderDetails(MatrixStack matrices, int x, int y) { }
     protected ItemStack renderContents(MatrixStack matrices, int x, int y, float delta) { return ItemStack.EMPTY; }
     @Override public boolean mouseClicked(double x, double y, int button) {
         positionControls();
@@ -180,7 +186,8 @@ abstract class EditorFormScreen extends Screen {
         Control(int offset, AbstractButtonWidget widget) { this.offset = offset; this.widget = widget; }
     }
     private static final class Label {
-        final int offset, color; final String text;
-        Label(int offset, String text, int color) { this.offset = offset; this.text = text; this.color = color; }
+        final int offset, color; final java.util.function.Supplier<String> text;
+        Label(int offset, String text, int color) { this(offset, () -> text, color); }
+        Label(int offset, java.util.function.Supplier<String> text, int color) { this.offset = offset; this.text = text; this.color = color; }
     }
 }

@@ -12,8 +12,13 @@ final class ClientOptions {
     final String profile;
     final int goal;
     final boolean showHints;
+    final boolean showSwapCounts;
 
     ClientOptions(TrainingMode mode, String profile, int goal, boolean showHints) {
+        this(mode, profile, goal, showHints, false);
+    }
+
+    ClientOptions(TrainingMode mode, String profile, int goal, boolean showHints, boolean showSwapCounts) {
         if (mode == null) throw new IllegalArgumentException("Training mode is required");
         if (profile == null || profile.length() > LoadoutProfile.MAX_ID_LENGTH
                 || !profile.matches("[a-z0-9][a-z0-9_.-]*")) {
@@ -24,6 +29,7 @@ final class ClientOptions {
         this.profile = profile;
         this.goal = goal;
         this.showHints = showHints;
+        this.showSwapCounts = showSwapCounts;
     }
 
     static ClientOptions defaults() { return new ClientOptions(TrainingMode.SINGLE_ITEM, "default", 10, false); }
@@ -31,8 +37,9 @@ final class ClientOptions {
     @Override public boolean equals(Object other) {
         if (!(other instanceof ClientOptions)) return false;
         ClientOptions value = (ClientOptions) other;
-        return mode == value.mode && profile.equals(value.profile) && goal == value.goal && showHints == value.showHints;
+        return mode == value.mode && profile.equals(value.profile) && goal == value.goal && showHints == value.showHints
+                && showSwapCounts == value.showSwapCounts;
     }
 
-    @Override public int hashCode() { return Objects.hash(mode, profile, goal, showHints); }
+    @Override public int hashCode() { return Objects.hash(mode, profile, goal, showHints, showSwapCounts); }
 }

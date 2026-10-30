@@ -10,6 +10,8 @@ import java.util.Set;
 /** Production/intermediary acceptance hooks must not affect named runClient or normal smoke. */
 public final class AcceptanceMixinPlugin implements IMixinConfigPlugin {
     @Override public boolean shouldApplyMixin(String target, String mixin) {
+        if (mixin.endsWith("UiRestoreGateMixin")) return !FabricLoader.getInstance().isDevelopmentEnvironment()
+                && Boolean.getBoolean("hotbarswaptrainer.historyUi");
         return !FabricLoader.getInstance().isDevelopmentEnvironment()
                 && System.getProperty("hotbarswaptrainer.smoke", "").startsWith("accept-");
     }

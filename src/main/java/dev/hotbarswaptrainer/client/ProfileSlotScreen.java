@@ -10,6 +10,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 
+import static dev.hotbarswaptrainer.client.EditorText.text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,46 +22,46 @@ final class ProfileSlotScreen extends EditorFormScreen {
     private final int slotIndex;
     private final List<Preview> previews = new ArrayList<>();
     ProfileSlotScreen(Screen parent, ProfileEditorSession editor, int slotIndex) {
-        super("Edit " + ProfileRepository.slotName(slotIndex));
+        super(text("slotSettings", EditorText.slot(slotIndex)));
         this.parent = parent; this.editor = editor; this.slotIndex = slotIndex;
     }
     private ProfileDraft.Slot slot() { return editor.draft().getSlots().get(slotIndex); }
     @Override protected void buildForm() {
         previews.clear();
         LoadoutProfile validated = editor.validatedProfile();
-        paragraph("Changes stay in the shared profile draft. Back never saves the file.", 0xBBBBBB);
-        paragraph("Current rule: " + slot().getKind(), 0xFFDD88);
-        for (SlotRule.Kind kind : SlotRule.Kind.values()) action("Use " + kind, () -> changeKind(kind));
-        paragraph("REQUIRED / OPTIONAL need candidates. EMPTY has none. FLEXIBLE candidates are optional fillers.", 0xDDDDDD);
-        action("Add candidate…", () -> client.openScreen(new ProfileItemPickerScreen(this, item -> {
+
+        paragraph(ProfileSlotPresentation.summary(slot()), 0xFFDD88);
+        for (SlotRule.Kind kind : SlotRule.Kind.values()) action(text("rule." + kind), () -> changeKind(kind));
+        paragraph(text("ruleHelp"), 0xDDDDDD);
+        action(text("addAllowed"), () -> client.openScreen(new ProfileItemPickerScreen(this, item -> {
             ProfileDraft.Candidate candidate = new ProfileDraft.Candidate(item, 1);
             slot().getAlternatives().add(candidate);
             client.openScreen(new ProfileCandidateScreen(this, editor, candidate));
         }))).active = slot().getKind() != SlotRule.Kind.EMPTY;
         int index = 0;
         for (ProfileDraft.Candidate candidate : slot().getAlternatives()) {
-            paragraph("Candidate " + (++index) + ": " + candidate.getItem() + " x" + editor.count(candidate), 0xDDDDDD);
+            paragraph(text("allowedItem", ++index, candidate.getItem(), editor.count(candidate)), 0xDDDDDD);
             ButtonWidget edit = new ButtonWidget(viewport.left + 24, 0, Math.min(200, viewport.width - 24), 20,
-                    new LiteralText("Edit item / quantity / advanced…"), ignored ->
+                    new LiteralText(text("editAllowed")), ignored ->
                     client.openScreen(new ProfileCandidateScreen(this, editor, candidate)));
             placedControl(edit, cursor);
             ItemStack icon = ProfileItemCatalog.preview(candidate, validated == null ? null :
                     validated.getSlots().get(slotIndex).getAlternatives().get(index - 1).getTemplate());
             previews.add(new Preview(cursor, icon)); cursor += 24;
-            action("Remove candidate " + index + "…", () -> client.openScreen(new EditorConfirmScreen(this,
-                    "Remove this candidate and all its current item, quantity and NBT edits?", () -> {
+            action(text("removeAllowed", index), () -> client.openScreen(new EditorConfirmScreen(this,
+                    text("removeConfirm"), () -> {
                 slot().getAlternatives().remove(candidate); client.openScreen(this);
             })));
         }
-        footer("Back to profile");
+        footer(text("back"));
     }
     private void changeKind(SlotRule.Kind next) {
-        if (next == SlotRule.Kind.EMPTY && !slot().getAlternatives().isEmpty()) {
-            client.openScreen(new EditorConfirmScreen(this, "EMPTY requires removing all " + slot().getAlternatives().size()
-                    + " candidates, including their edits. Confirm this removal?", () -> {
-                slot().getAlternatives().clear(); slot().setKind(next); client.openScreen(this);
-            }));
-        } else { slot().setKind(next); rebuild(); }
+        if (slot().getKind() == next) return;
+        String explanation = next == SlotRule.Kind.EMPTY ? text("emptyConfirm") : text("ruleConfirm", text("rule." + next));
+        client.openScreen(new EditorConfirmScreen(this, explanation, () -> {
+            if (next == SlotRule.Kind.EMPTY) slot().getAlternatives().clear();
+            slot().setKind(next); client.openScreen(this);
+        }));
     }
     @Override protected ItemStack renderContents(MatrixStack matrices, int x, int y, float delta) {
         ItemStack hovered = ItemStack.EMPTY;

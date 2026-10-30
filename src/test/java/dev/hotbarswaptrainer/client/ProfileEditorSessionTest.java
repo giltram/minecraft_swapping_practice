@@ -164,4 +164,70 @@ public class ProfileEditorSessionTest {
             assertFalse(ProfileEditorSession.allowed(true, true, false, view));
         }
     }
+    @Test public void multiSelectionAddsWithoutReplacingAndSavesAllQuantitiesOnlyOnMainSave() throws Exception {
+        ProfileEditorSession editor = open(); byte[] original = Files.readAllBytes(source);
+        ProfileDraft.Candidate originalItem = first(editor);
+        ProfileDraft.Candidate stone = editor.selectItem(0, "minecraft:stone");
+        ProfileDraft.Candidate dirt = editor.selectItem(0, "minecraft:dirt");
+        assertSame(stone, editor.selectItem(0, "minecraft:stone"));
+        assertEquals(3, editor.draft().getSlots().get(0).getAlternatives().size());
+        assertSame(originalItem, first(editor)); assertEquals("1", editor.count(stone));
+        editor.setCount(stone, "32"); editor.setCount(dirt, "7");
+        assertArrayEquals(original, Files.readAllBytes(source)); assertTrue(editor.save());
+        assertEquals(3, repository.load(source).getSlots().get(0).getAlternatives().size());
+        assertEquals(32, repository.load(source).getSlots().get(0).getAlternatives().get(1).getTemplate().getCount());
+        assertEquals(7, repository.load(source).getSlots().get(0).getAlternatives().get(2).getTemplate().getCount());
+    }
+    @Test public void deselectingTheLastOrdinaryItemIsEmptyAndSelectingAgainUsesTheSameRuleForOneOrMany() throws Exception {
+        ProfileEditorSession editor = open();
+        java.util.List<ProfileDraft.Candidate> last = editor.selectedItems(0, first(editor).getItem());
+        assertFalse(editor.removalNeedsConfirmation(0, last)); editor.deselectItems(0, last);
+        assertEquals(SlotRule.Kind.EMPTY, editor.draft().getSlots().get(0).getKind());
+        assertTrue(editor.save()); assertEquals(SlotRule.Kind.EMPTY, repository.load(source).getSlots().get(0).getKind());
+        editor.selectItem(0, "minecraft:stone");
+        assertEquals(SlotRule.Kind.REQUIRED, editor.draft().getSlots().get(0).getKind());
+        editor.selectItem(0, "minecraft:dirt");
+        assertEquals(SlotRule.Kind.REQUIRED, editor.draft().getSlots().get(0).getKind());
+        editor.deselectItems(0, editor.selectedItems(0, "minecraft:stone"));
+        assertEquals(1, editor.draft().getSlots().get(0).getAlternatives().size());
+        assertEquals(SlotRule.Kind.REQUIRED, editor.draft().getSlots().get(0).getKind());
+    }
+    @Test public void openingAndAdditiveSelectionKeepEveryCustomVariantAndRequireConfirmationForRemoval() throws Exception {
+        ProfileEditorSession editor = open(); ProfileDraft.Candidate custom = first(editor);
+        custom.setNbt("{value:1b}"); custom.setMatch(StackSpec.NbtMatch.FIELDS); custom.setMatchNbt("{value:1b}");
+        ProfileDraft.Candidate variant = new ProfileDraft.Candidate(custom.getItem(), 1); variant.setNbt("{}");
+        editor.draft().getSlots().get(0).getAlternatives().add(variant);
+        assertSame(custom, editor.selectItem(0, custom.getItem()));
+        editor.selectItem(0, "minecraft:stone");
+        assertEquals(3, editor.draft().getSlots().get(0).getAlternatives().size());
+        java.util.List<ProfileDraft.Candidate> removed = editor.selectedItems(0, custom.getItem());
+        assertEquals(2, removed.size()); assertTrue(editor.removalNeedsConfirmation(0, removed));
+        assertEquals("{value:1b}", custom.getNbt()); assertEquals("{}", variant.getNbt());
+        assertEquals(3, editor.draft().getSlots().get(0).getAlternatives().size());
+        editor.deselectItems(0, removed); assertEquals(1, editor.draft().getSlots().get(0).getAlternatives().size());
+    }
+    @Test public void specialRulesSurviveAdditiveEditsAndOnlyExplicitLastRemovalConvertsToEmpty() throws Exception {
+        ProfileEditorSession editor = open();
+        for (SlotRule.Kind kind : new SlotRule.Kind[] {SlotRule.Kind.OPTIONAL, SlotRule.Kind.FLEXIBLE}) {
+            editor.reset(); ProfileDraft.Slot slot = editor.draft().getSlots().get(0); slot.setKind(kind);
+            editor.selectItem(0, "minecraft:stone"); assertEquals(kind, slot.getKind());
+            editor.deselectItems(0, editor.selectedItems(0, "minecraft:stone")); assertEquals(kind, slot.getKind());
+            java.util.List<ProfileDraft.Candidate> last = editor.selectedItems(0, first(editor).getItem());
+            assertTrue(editor.removalNeedsConfirmation(0, last)); assertEquals(kind, slot.getKind());
+            editor.deselectItems(0, last); assertEquals(SlotRule.Kind.EMPTY, slot.getKind());
+        }
+    }
+    @Test public void inlineRawQuantitiesSurviveOtherSelectionsAndInvalidCountsNeverSave() throws Exception {
+        ProfileEditorSession editor = open(); byte[] original = Files.readAllBytes(source);
+        ProfileDraft.Candidate stone = editor.selectItem(0, "minecraft:stone");
+        for (String raw : new String[] {"", "0", "-1", "65", "2147483648"}) {
+            editor.setCount(stone, raw); editor.selectItem(0, "minecraft:dirt");
+            assertEquals(raw, editor.count(stone)); assertFalse(editor.save());
+            assertArrayEquals(original, Files.readAllBytes(source)); assertFalse(editor.reloadRequired());
+        }
+        editor.setCount(stone, "32"); assertTrue(editor.save());
+        editor.setCount(editor.selectedItems(0, "minecraft:stone").get(0), "");
+        editor.reset(); assertEquals("32", editor.count(editor.selectedItems(0, "minecraft:stone").get(0)));
+        assertFalse(editor.dirty());
+    }
 }

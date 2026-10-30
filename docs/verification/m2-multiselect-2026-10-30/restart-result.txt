@@ -1,0 +1,2 @@
+passed
+Fresh production process: selected profile/unlimited, stone32+dirt7 and three-item OPTIONAL/custom NBT profile and both histories survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.

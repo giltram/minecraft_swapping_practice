@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-30",
+  "status": "passed",
+  "artifact": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+  "sha256": "e5aefc9434a99290a037d9263d34afb7d5260d479f47a6cea39833d9f91e578f",
+  "checks": {
+    "unitTests": {
+      "tests": 120,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "build": "scripts/gradle-jdk8.sh --offline test build smokeJar",
+    "boundaries": "80 Java files, 12 packages, 27 directed dependencies; passed",
+    "diffWhitespace": "git diff --check; passed",
+    "productionClient": "passed\n36 production stages: existing usability suite plus compact Avg/Best summary, PB table with only Refresh/Back at minimum and normal sizes, real Single/Full successful records, default-hidden swap count option and RUNNING HUD with counts on/off; both saved inventories restored. Programmatic input only.",
+    "savedPlayerReadback": {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-pb-hud-final-20261030/saves/hst-smoke/level.dat",
+          "sha256": "04f0633c9ea38841069e05927947208316135f13cd9fac6a5c3014435ee8ecf7",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-pb-hud-final-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "7e75c9ee040f0eab24e62461cd26655763d3ec6f82fea854dca6065465bae1ff",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-pb-hud-final-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-pb-hud-final-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    }
+  },
+  "launchManifest": "run-m2-ui-pb-hud-final-20261030/launch-manifest.json",
+  "screenshots": {
+    "pb-minimum.png": "06a408bbfdf25e1424130240a4e30452e2a1c7cfad606f99b52c9f7f7be8430f",
+    "completed.png": "5888f3544ba3556a00cdd9cd4632dbb8a4ed17396a019e8f8f8121f2a12a5f8f",
+    "pb.png": "6a4abd62f4e9dbe9bcbd72fa518f58b34388997d9262e2e91e422f8d6ae75c13",
+    "options.png": "cbd57edfb1f3266d01385f3c70a2f29ad6c6a372044156441a126d86fafa71ad",
+    "hud-swaps-off.png": "9726a564a285358332ce2e256a75258b11ef03c2260ed562e9f7b626b8178783",
+    "hud-swaps-on.png": "6e4cb6b152108e8766c6b09621a9b9f6c1110f46e2807bf30f66a75bb8402734"
+  },
+  "limitations": "Programmatic production-client input. Human keyboard/focus acceptance remains separate."
+}

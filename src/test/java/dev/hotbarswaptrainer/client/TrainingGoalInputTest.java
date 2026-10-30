@@ -28,4 +28,22 @@ public class TrainingGoalInputTest {
         assertTrue(trainer.setGoal("0"));
         assertEquals(0, trainer.goal());
     }
+    @Test public void parserPreservesZeroAndTheExistingRangeWithoutInventingDefaults() {
+        for (int accepted : new int[] {0, 1, 73, 10001, Integer.MAX_VALUE})
+            assertEquals(Integer.valueOf(accepted), TrainerClient.parseGoal(Integer.toString(accepted)));
+        assertEquals(Integer.valueOf(73), TrainerClient.parseGoal("00073"));
+        for (String raw : new String[] {null, "", "-1", "x", "2147483648", "１", " 7", "7 "})
+            assertNull(TrainerClient.parseGoal(raw));
+    }
+    @Test public void optionsHideIdleReadyButRetainOtherFeedbackAndErrors() {
+        assertFalse(TrainerOptionsScreen.showSessionMessage(null));
+        assertFalse(TrainerOptionsScreen.showSessionMessage(new dev.hotbarswaptrainer.network.TrainerProtocol.View.Builder()
+                .phase("IDLE").message("Ready").build()));
+        assertTrue(TrainerOptionsScreen.showSessionMessage(new dev.hotbarswaptrainer.network.TrainerProtocol.View.Builder()
+                .phase("IDLE").message("Stopped").build()));
+        assertTrue(TrainerOptionsScreen.showSessionMessage(new dev.hotbarswaptrainer.network.TrainerProtocol.View.Builder()
+                .phase("ERROR").message("Profile unavailable").build()));
+        assertTrue(TrainerOptionsScreen.showSessionMessage(new dev.hotbarswaptrainer.network.TrainerProtocol.View.Builder()
+                .phase("ERROR_LOCKED").message("Restore failed").build()));
+    }
 }

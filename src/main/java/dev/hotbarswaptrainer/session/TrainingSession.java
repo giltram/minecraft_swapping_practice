@@ -4,6 +4,7 @@ import dev.hotbarswaptrainer.environment.StationaryEnvironment;
 import dev.hotbarswaptrainer.input.PlayerActionTracker;
 import dev.hotbarswaptrainer.profile.LoadoutProfile;
 import dev.hotbarswaptrainer.stats.TaskResult;
+import dev.hotbarswaptrainer.stats.SessionMetadata;
 import dev.hotbarswaptrainer.task.InventoryTask;
 import dev.hotbarswaptrainer.task.TrainingMode;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +21,10 @@ final class TrainingSession {
     final LoadoutProfile profile;
     final TrainingMode mode;
     final int goal;
+    final boolean targetHints;
+    final long startedAtMillis = System.currentTimeMillis();
+    long endedAtMillis;
+    SessionMetadata.EndState endState;
     final StationaryEnvironment environment;
     final Random random = new Random();
     final List<TaskResult> results = new ArrayList<>();
@@ -30,7 +35,8 @@ final class TrainingSession {
     int deadlineTick, completed;
     String message = "";
 
-    TrainingSession(ServerPlayerEntity player, LoadoutProfile profile, TrainingMode mode, int goal) {
+    TrainingSession(ServerPlayerEntity player, LoadoutProfile profile, TrainingMode mode, int goal, boolean hints) {
+        this.targetHints = hints;
         this.profile = profile;
         this.mode = mode;
         this.goal = goal;

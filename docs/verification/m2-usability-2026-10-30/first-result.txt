@@ -1,0 +1,2 @@
+passed
+37 rendered production steps: item-first flow, quantity/default/Enter, main save, cancel unchanged file, existing alternatives/custom NBT edit, rule/replacement/empty confirmations, raw quantities/SNBT across resize/children, pending selection on return, reset, whole-rule exchanges, conflict/write-denial retained drafts/reload, fixed/unlimited and invalid input, actual finite/unlimited training and two-save restoration, native640x480 scale1/2/4. Programmatic widgets and server handlers, not human experience acceptance.

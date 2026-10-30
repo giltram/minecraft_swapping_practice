@@ -19,7 +19,8 @@ public final class TaskResult {
     public TaskResult(UUID taskId, Outcome outcome, long elapsedNanos, int swapAttempts,
                       int effectiveSwaps, int slotChanges, int noOpSwaps, int forbiddenActions, String invalidReason) {
         if (elapsedNanos < 0 || swapAttempts < 0 || effectiveSwaps < 0 || slotChanges < 0
-                || noOpSwaps < 0 || forbiddenActions < 0 || swapAttempts != effectiveSwaps + noOpSwaps) {
+                || noOpSwaps < 0 || forbiddenActions < 0 || (long) swapAttempts != (long) effectiveSwaps + noOpSwaps
+                || (long) noOpSwaps + forbiddenActions > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Invalid result counters");
         }
         this.taskId = Objects.requireNonNull(taskId, "taskId");

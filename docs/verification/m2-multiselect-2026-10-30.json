@@ -1,0 +1,260 @@
+{
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "implementation": "complete",
+  "humanExperienceAcceptance": "pending",
+  "production": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "f1907939041c6568a0587be56f319b6ba3fbc940b31ad0035a2701f57214d65a",
+    "classes": 119,
+    "classVersions": [
+      52
+    ],
+    "smokeOrAcceptanceClasses": false,
+    "obsoleteTwoModeDraftOrProposalClasses": false,
+    "shadowFieldRemapped": true,
+    "localeKeys": 92
+  },
+  "checks": [
+    {
+      "command": "scripts/gradle-jdk8.sh --offline test build",
+      "status": "passed",
+      "tests": {
+        "tests": 114,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "note": "Suite actually executed on final Java sources; final resource restoration build reused tests. Logs retain executed/up-to-date distinctions.",
+      "logs": [
+        {
+          "path": "docs/verification/m2-multiselect-2026-10-30/build.log",
+          "sha256": "862733295f7ffb2a55cfa94519f2a9917a0d450fc093adc8a07bdaf2723517a0"
+        },
+        {
+          "path": "docs/verification/m2-multiselect-2026-10-30/required-build.log",
+          "sha256": "fe232dc83d11f15e743e0694b2c8765674c75f4d8acd1d00be478ad6a18d2180"
+        }
+      ]
+    },
+    {
+      "command": "python3 scripts/check-boundaries.py",
+      "status": "passed",
+      "javaFiles": 80,
+      "packages": 12,
+      "directedEdges": 27
+    },
+    {
+      "command": "python3 -m py_compile scripts/run-profile-editor-ui.py",
+      "status": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "firstClient": {
+    "command": "python3 scripts/run-profile-editor-ui.py --usability --run-name run-m2-ui-multiselect-verified-20261030 --launch",
+    "exitCode": 0,
+    "stages": 28,
+    "status": "passed",
+    "result": {
+      "path": "docs/verification/m2-multiselect-2026-10-30/first-result.txt",
+      "sha256": "ae315b47a8b8e4112b21d47df21e06b324d15ba2cd69c5fed5dc6dd472bd4dee"
+    },
+    "detail": "passed\n28 production-client steps: direct same-page multi-selection and marks, all selected icons/counts, zero selections→EMPTY saved, multiple quantities, no exchange/required distinction/fixed-unlimited buttons, raw inline quantities and SNBT across resize/children, cancel unchanged file, custom removal confirmation, retained advanced pools, conflict/write-denial, 0/positive/invalid training count, hidden idle Ready, finite/unlimited real training and two-save restoration, actual logical320x240. Programmatic input only.\n",
+    "manifest": {
+      "path": "run-m2-ui-multiselect-verified-20261030/smoke/multiselect-first-run/launch-manifest.json",
+      "sha256": "eb2bbd2c1db3e4f84c8ab6b2fb0e523feabac74d6584a32f820f126108d4b0c6"
+    },
+    "log": {
+      "path": "run-m2-ui-multiselect-verified-20261030/smoke/multiselect-first-run/client.log",
+      "sha256": "274dce972a8dfde14a05e584ee2d2b57634ce7481a9096773c07347975ca983e"
+    }
+  },
+  "restartClient": {
+    "command": "python3 scripts/run-profile-editor-ui.py --usability --run-name run-m2-ui-multiselect-verified-20261030 --reopen --launch",
+    "exitCode": 0,
+    "status": "passed",
+    "result": {
+      "path": "docs/verification/m2-multiselect-2026-10-30/restart-result.txt",
+      "sha256": "89c924d00c427a1be9765f41fb1aa2144067202ddf4456a56754692a6d8ccfd5"
+    },
+    "detail": "passed\nFresh production process: selected profile/unlimited, stone32+dirt7 and three-item OPTIONAL/custom NBT profile and both histories survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.\n",
+    "manifest": {
+      "path": "run-m2-ui-multiselect-verified-20261030/smoke/reopen-launch-manifest.json",
+      "sha256": "6581a283db18c95e0b7eb7f8e341e886538d61e60d014aaf63d32846edcd69db"
+    },
+    "log": {
+      "path": "run-m2-ui-multiselect-verified-20261030/smoke/multiselect-restart-client.log",
+      "sha256": "63595eafba9455997121b7d5f67efb3c3910910d8687543567465869edc2cf1c"
+    }
+  },
+  "saveReadbacks": [
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/level.dat",
+          "sha256": "a53d51c5df052ada2db1131286a675bb1816da2cc934a913e3f36ca27ee73127",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "0cf807cfb11b85fb69b1aa0394d6dcfe5cfb9b3c352499cb41f5ca76f16c4c94",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-layout-ui/saves/hst-smoke/level.dat",
+      "baselineSha256": "8921c20b549eaace19d4766d9da11b052a3548580801e458fad3f541cd6bdb4f",
+      "checks": [
+        {
+          "path": "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/level.dat",
+          "sha256": "ccc860edc6ed1bb2f7255d28495a43ee645b9b71aacfe9a3855ce74fbc80a13a",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "1a0cb98236177a99be2ae47535467f8ab1f9938ae924323606d0eb3321df7523",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke": "0o755",
+        "run-m2-ui-multiselect-verified-20261030/saves/hst-smoke/playerdata": "0o755"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/picker.png",
+      "sha256": "9c48a53c02f45361a8ba191c7b4f32d36424485a113f8c55a2e18c2524780fdf",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/u22-chinese-picker.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/task-count.png",
+      "sha256": "935f2b4bb8fe0c8f4ea46fde655a73a78ec9f83bba14b4460f43f89b39c9da99",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/u20-chinese-options.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/main.png",
+      "sha256": "e917a904b659f04a0cb46ea27d760174b74d7f6c08e674552b2fe19a922f6ed1",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/u21-chinese-main.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/catalogue-marks.png",
+      "sha256": "4fcd3270cbc7bbeb96dadd8e4fd039ad939500c52c7c82cda6bda7da38f3d768",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/m04-multiselect-all-items.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/empty.png",
+      "sha256": "63045a448cd9d6ae05e0ca33d1a27a0b20985b667a7e5325bc95cc3c3df23f56",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/m03-none-selected.png",
+      "framebuffer": [
+        2200,
+        1400
+      ],
+      "edited": false
+    },
+    {
+      "path": "docs/verification/m2-multiselect-2026-10-30/minimum.png",
+      "sha256": "8b3c878bf412c9ef57c61b42d954a8415d78271bbc2ebafe43b1a1cd70ed769f",
+      "original": "run-m2-ui-multiselect-verified-20261030/screenshots/m13-compact-multiselect.png",
+      "framebuffer": [
+        1280,
+        960
+      ],
+      "edited": false
+    }
+  ],
+  "remapRegression": {
+    "status": "passed",
+    "data": {
+      "beforeResourceOnly": {
+        "jarSha256": "55911a11706b3b205d3fead0556184b5ba7105d4e012b492bdfc0273a13b4a30",
+        "mainMapSha256": "ae1d106e37fccdff8975b67f6e7eed80747b97176599818d6c99a4485297316e",
+        "smokeMapSha256": "70d078486b9787d5ee7d87983c92b332c7269f2350de3ba107b6e32454e9c10c",
+        "mappedShadowField": true
+      },
+      "resourceOnlyAfterSmoke": {
+        "mappedShadowField": true,
+        "compileJavaUpToDate": true,
+        "remapExecuted": true,
+        "mainMapSha256": "ae1d106e37fccdff8975b67f6e7eed80747b97176599818d6c99a4485297316e"
+      },
+      "afterRestore": {
+        "jarSha256": "f1907939041c6568a0587be56f319b6ba3fbc940b31ad0035a2701f57214d65a",
+        "mappedShadowField": true,
+        "localeRestoredExactly": true
+      }
+    },
+    "log": {
+      "path": "docs/verification/m2-multiselect-2026-10-30/resource-only-build.log",
+      "sha256": "b56b3c8fa8c0c9dc3025a456bbcae2ca7d46f7602497e772738c1b9f00843e8f"
+    }
+  },
+  "earlierAttempts": [
+    {
+      "instance": "run-m2-ui-multiselect-20261030",
+      "status": "passed28-programmatic-stages",
+      "superseded": "neutral empty-selection copy and bounded quantity previews"
+    },
+    {
+      "instance": "run-m2-ui-multiselect-final-20261030",
+      "status": "startup-failed-before-world",
+      "reason": "Shared main/smoke Mixin export lost player→field_14140 mapping on a resource-only rebuild. Separate producer outputs fixed and resource-only regression actually rerun.",
+      "crashReport": {
+        "path": "run-m2-ui-multiselect-final-20261030/crash-reports/crash-2026-10-30_14.07.41-client.txt",
+        "sha256": "09251d1b2d1f09bb91425bbc972b574935ddf7de26fdd7a744940294ffc8e0fc"
+      }
+    }
+  ],
+  "limits": [
+    "Programmatic widgets and supplied acknowledgements/vanilla server swap handlers do not establish physical input or subjective usability.",
+    "Human wheel/rebound/held-key, focus/Tab/Enter/Esc through long lists, clipped custom/potion tooltips and long-name readability remain pending.",
+    "The earlier full M1 crash/fault/LAN matrix was not rerun on this GUI artifact. Ordinary-world training remains gated."
+  ]
+}

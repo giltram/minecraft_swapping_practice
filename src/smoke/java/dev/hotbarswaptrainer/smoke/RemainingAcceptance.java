@@ -15,6 +15,7 @@ final class RemainingAcceptance {
     private RemainingAcceptance() { }
 
     static String run(ServerPlayerEntity player, InventorySnapshot baseline, String mode, Path output) throws Exception {
+        if (mode.equals("accept-history")) return HistoryAcceptance.run(player, baseline, output);
         if (mode.equals("accept-protection")) return ProtectionAcceptance.run(player, baseline, output);
         if (mode.equals("accept-phase-guards")) return PhaseGuardAcceptance.run(player, baseline, output);
         if (mode.equals("accept-lan")) {

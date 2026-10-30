@@ -1,5 +1,10 @@
 # M2-B: profile editing backend
 
+Current GUI update: [multi-select layout and training-count input](m2-usability-plan.md)
+reuse these backend contracts. [Current verification](m2-multiselect-acceptance.md)
+records its own artifact and executed checks; earlier artifact results below are
+historical, not automatic acceptance of the new GUI.
+
 Scope: edit an existing profile's name and ten complete rules; keep its ID. No
 new GUI, creation/copy/deletion, history/PBs, M3, protocol or recovery changes.
 M2-A client options and the existing slot-order editor remain in place.

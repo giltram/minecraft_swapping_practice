@@ -28,3 +28,21 @@ Loom's Mercury/JDT dependencies contain open Eclipse version ranges. Resolving t
 Use `scripts/gradle-jdk8.sh` to avoid inheriting a system Java 25 default. `TRAINER_JAVA_HOME` selects a specific JDK 8; Apple Silicon's original-native client test uses an Intel JDK 8 under Rosetta.
 
 `scripts/gradle-jdk8.sh resolvedArtifacts` records coordinates, filenames and SHA256s, including snapshot artifacts. [The test record](../docs/testing.md) distinguishes executed build checks from pending game acceptance. Preserve dependency verification metadata and the resolved graph when refreshing this baseline; top-level version pins alone do not freeze snapshot contents.
+
+## Separate Mixin exports for main and smoke
+
+Loom0.4.33 configures the same `MappingsProvider.mappingsMixinExport` for every
+non-test source set. The smoke annotation processor has no main @Shadow fields,
+so compiling smoke overwrote main's export. A later resource-only build reused
+main compilation but remapped without `player→field_14140`; the production JAR
+then failed at Mixin application before opening a world. Method refmaps alone
+still looked complete and did not detect this field-remapping failure.
+
+`build.gradle` keeps main's export at Loom's expected path, redirects smoke to
+`build/loom-cache/smoke-mixin-map.tiny`, declares producer outputs and remap input,
+and disables partial Java compilation for these two aggregating Mixin producers.
+No dependency, game hook or upstream binary changes. Resource-only rebuilding
+must keep `ServerPlayNetworkHandlerMixin`'s actual bytecode field `field_14140`,
+not `player`, after compiling smoke. Current acceptance records that regression
+check and a real production launch. This is a build-output ownership fix, not
+an inventory-recovery implementation change.

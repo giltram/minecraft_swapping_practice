@@ -4,28 +4,28 @@
 
 Every message includes protocol version, session/task UUID and revision. The server owns acceptance rules and results. The client rejects old revisions and recently closed sessions. A task change resets its READY, GO_ACK and interruption flags. Malformed or unsupported packets are discarded; a missing handshake eventually times out on the server.
 
-P toggles training and O opens the small mode/profile/length selector. Both bindings appear in vanilla Controls. The client only calls `wasPressed()` on these two mod bindings. The `MinecraftClient` adapter lets vanilla consume its own Swap Hands queue, suppressing only premature swap packets before GO_ACK or after an interruption. RUNNING uses the original packet path, including rebound keys. Hotbar selection is untouched.
+P toggles training and O opens Training options (mode, task count and hints). Both bindings appear in vanilla Controls. The client only calls `wasPressed()` on these two mod bindings. The `MinecraftClient` adapter lets vanilla consume its own Swap Hands queue, suppressing only premature swap packets before GO_ACK or after an interruption. RUNNING uses the original packet path, including rebound keys. Hotbar selection is untouched.
 
-Session length is a numeric `TextFieldWidget`, labelled Successes with a visible
-`0 = unlimited` hint. Valid goals cover the entire nonnegative signed-int range
-(0..2147483647); positive values count successful tasks only. The old 10000 cap
-is removed from both request decoding and server START validation without changing
-the wire encoding. The client accepts ASCII digits, permits an empty editing
-draft, and disables Start/Enter for empty or overflowing values. Invalid edits do
-not replace the last valid client preference. The screen retains its draft across
-resize and visits to the layout editor; repeat-key events are scoped to the
-options screen. The layout editor remains available while the goal draft is
-invalid, provided restoration has finished. Tests: `TrainingGoalInputTest` and
-`TrainerProtocolTest` (including 0, 1, 73, 10001 and the signed-int maximum).
+Session length uses the label **Number of successful training tasks
+(0=unlimited)** directly above its input, without a separate title/help block. Positive values count successfully completed
+training tasks only. The raw text stays on TrainerOptionsScreen through resize,
+GUI scale and child returns. Blank, syntax errors and overflow block Start/Enter
+without replacing accepted preferences. TrainerClient.parseGoal shares the exact
+nonnegative signed-int validation used by accepted options. Legacy0/positive
+values map directly; no migration or wire/history/PB change is needed.
+The ordinary server IDLE/Ready catalogue message is omitted from O; other feedback,
+including actual errors, remains visible.
 
 READY requires the exact prepared ten-slot inventory, selected slot, focus, no screen and a released Swap Hands binding. GO_ACK is queued after the first GO HUD draw and before subsequently allowed vanilla swap packets. Rendering is earlier than physical display; the measured server acknowledgement interval is not a claim of frame-perfect input latency. Opening a screen, pausing or losing focus reports an interruption. The selector does not pause the integrated server so restoration can finish.
 
-The HUD displays the server phase and counters, interpolating elapsed time only while RUNNING. Final times remain server values. When hints are enabled, Single Item names its explicit destination; Full Inventory labels its icons as one valid target and the selected hotbar/offhand rules describe alternatives. Finite and unlimited progress use the same projection. Rule/item editing is implemented separately in M2-C; history/PBs remain unimplemented.
+The HUD displays server phase, progress and time, interpolating elapsed time only while RUNNING.
+Show swap counts is a local option, default OFF, which adds attempted/effective swaps.
+Mode/profile labels, selections and mistakes are hidden; completed summaries show Avg/Best. Final times remain server values. When hints are enabled, Single Item names its explicit destination; Full Inventory labels its icons as one valid target and the selected hotbar/offhand rules describe alternatives. Finite and unlimited progress use the same projection. Rule/item editing is implemented separately in M2-C; history/PBs are available from the stopped/restored O screen (see M2-E below).
 
 O → Target hints: ON/OFF controls only the target/destination/rule block, in both
 modes. The preference defaults to false and persists across sessions, world
 changes and client restarts through M2-A configuration below. Status/error text,
-progress, counters, countdown and GO remain visible. In particular, rendered GO
+progress, timer, countdown and GO remain visible; swap counters follow their own option. In particular, rendered GO
 still invokes `afterGoRendered` independently of the hint flag, so hiding hints
 cannot suppress GO_ACK or stall preparation. The wire contract and completion
 rules are unchanged. With Single Item hints off, the explicit destination is also
@@ -35,7 +35,7 @@ ambiguous to the player.
 ## M2-A local client options
 
 `ClientOptions` is an immutable validated value containing `mode`, `profile`,
-`goal` (requested successes, not achieved progress) and `showHints`.
+`goal` (requested successes, not achieved progress), `showHints` and `showSwapCounts`.
 `ClientOptionsStore` alone owns their file I/O. `TrainerClient` loads once during
 client initialization, resolves profile availability through its local repository,
 and saves accepted option changes. Neither component reads server session objects.
@@ -48,19 +48,22 @@ The file is `config/hotbar-swap-trainer/client-options.json`:
   "mode": "SINGLE_ITEM",
   "profile": "default",
   "goal": 10,
-  "showHints": false
+  "showHints": false,
+  "showSwapCounts": false
 }
 ```
 
 A missing file uses those same defaults and is not created just by loading or
 opening the screen. Accepted changes and explicit profile selections write the
-complete validated value. Blank/overflowing numeric drafts remain screen-local, so toggling another
+complete validated value. Blank/invalid fixed-count drafts remain screen-local, so toggling another
 option while a draft is invalid saves the last valid goal. Reinitializing the
 screen with unchanged valid text does not write. All nonnegative signed-int goals,
 including 0 and 2147483647, round trip.
 
-Loading requires all five fields with exact JSON types, supported schema, known
-mode, legal profile ID and an integer goal in range. Unknown/duplicate fields,
+Loading requires the original five fields with exact JSON types, supported schema, known
+mode, legal profile ID and an integer goal in range. The optional boolean
+showSwapCounts defaults to false in legacy schema-1 files; loading never rewrites them.
+Unknown/duplicate fields,
 trailing content, malformed JSON/UTF-8 and files above 16 KiB are rejected. A failed
 load uses the complete safe defaults, logs the detailed path/cause and shows a
 repair message in O. The original file remains untouched; configuration writes
@@ -77,38 +80,21 @@ Profiles are checked on initialization, screen initialization, explicit profile
 selection, accepted edits and START. A missing selection explicitly falls back to
 `default` if valid, otherwise the first valid profile in repository filename order.
 Loading/fallback alone does not rewrite the file; the next accepted change or
-explicit profile selection saves the resolved selection. With no valid profiles, Start and Customize layout are
-disabled, and Profile remains clickable to retry after repairing the local files.
-Other options and Done remain usable; no unavailable profile is saved. Retrying
-Profile after repairing even a single unchanged profile saves pending valid preferences.
+explicit profile selection saves the resolved selection. With no valid profiles, Start is disabled; Edit item layout remains available
+to display source-file errors and refresh after repair.
+Other options and Done remain usable; no unavailable profile is saved. Selecting
+a layout after repairing even an unchanged profile saves pending valid preferences.
 
 Tests: `ClientOptionsStoreTest`, `ClientOptionsPersistenceTest` and the existing
 `TrainingGoalInputTest`. See [testing.md](testing.md#m2-a-client-options-verification)
 for executed checks and pending game acceptance.
 
-`TrainerLayoutScreen` is opened from O → Customize layout only after the client
-observes restoration complete in local single-player. It loads a frozen profile
-through a separate client-owned `ProfileRepository`; it never accesses server
-services or mutable inventory. Two slot clicks exchange the complete rules.
-Each row shows its slot, rule kind, candidate count and **every** candidate icon
-with quantities. Long pools wrap, the list scrolls vertically, and each icon has
-the vanilla item tooltip (including potion details). Reset edits restores the opening order, Cancel/Esc
-writes nothing, and Save persists the selected profile for both modes through
-`saveSlotOrder`. Errors keep the editor open. Saving also rechecks that no
-transaction is active. Profiles are discovered locally on explicit profile
-selection, so file changes do not depend on an earlier server catalogue packet.
-The server still independently reloads/validates/freezes the profile on START.
-There is no protocol change or inventory capture in the editor.
-
-Slot cards draw their own backgrounds, sized to fit all their candidates.
-Vanilla 1.16.1 `AbstractButtonWidget` samples a fixed 20px-high atlas strip without
-vertical scaling; using that renderer for taller cards spills into adjacent
-button states and the language icon. Ordinary 20px action buttons remain vanilla.
-`SlotCandidateLayout` owns the pure wrapping/scroll/hit-test geometry. OpenGL
-scissoring clips list rendering between the header and footer, and hit testing
-uses those same bounds so a clipped row cannot capture action-button clicks.
-Swaps, resets and resizing recalculate heights and clamp the previous scroll.
-Tests live in `client/SlotCandidateLayoutTest`.
+O → Edit item layout is the sole layout entry. Its first page selects the training
+layout; each adjacent Edit action opens name, nine hotbar icons, offhand and
+Save/Cancel/Reset. Exchange positions has been removed from the GUI and
+editor coordinator. The old saveSlotOrder backend remains compatible. Slot click
+opens the searchable multi-select item catalogue directly. SlotCandidateLayout
+continues to own pure icon wrapping geometry.
 
 Validation requires an actual 1.16.1 client: check rebound Swap Hands, pre-held/repeated keys during countdown, multiple same-tick packets, pause/focus loss, GUI scales and target rule readability. See `docs/testing.md` for the final task's executed versus pending checks.
 
@@ -116,19 +102,39 @@ A client interaction-manager guard rejects item/block use before vanilla predict
 
 ## M2-C visual profile editor
 
-O → Edit profile → source-file list → profile overview → slot → candidate →
-advanced NBT or searchable item picker. The old Slot order editor remains a
-separate O action. The source list uses listProfileFiles/load, including visible
-errors for broken files. A row captures both Path and expected LoadoutProfile;
-beginEdit never guesses a target from ID. The editor's ID is read-only.
+O → Edit item layout is the sole training-layout selector. Clicking a layout name
+selects and immediately persists its ID without opening the editor or editing the
+profile file. The selected row is marked; the adjacent Edit button opens that exact
+source for editing, without changing the training selection. Duplicate IDs after
+the first valid file cannot be selected, matching repository catalogue order.
+Refresh/reflow only reload the catalogue. There is no separate Profile button in O.
+
+O → Edit item layout → Edit beside a profile → slot → multi-select catalogue.
+Click catalogue icons to select/deselect any number of allowed items, staying on
+one page. Every selected icon/count appears above the catalogue, and catalogue
+icons are marked green. Click a selected icon to edit its quantity in the left-aligned field below
+“Item quantity: name”; the adjacent Delete button deselects it. Explicitly deselecting the final item makes the slot EMPTY.
+One and many REQUIRED items use the same count presentation. The picker heading
+is simply the position and count (for example Hotbar1 ·2).
+Existing OPTIONAL/FLEXIBLE profiles keep their kind on opening or additive edits.
+Advanced rule/NBT pages remain a secondary picker footer action: retaining them
+keeps OPTIONAL/FLEXIBLE/custom NBT editable, at the small cost of one extra entry.
+No catalogue-count/instruction line or multiplication-sign quantity label is shown.
 
 | Component | Ownership / contract |
 | --- | --- |
-| ProfileEditorSession | One explicit source, expected snapshot and Edit; independent ProfileDraft; per-candidate raw count strings; opening/reset baseline; structural validation and separate ProfileApplicability; save/reload/error coordination. No direct file I/O or widgets. |
-| ProfileSourceScreen / ProfileEditorScreen | Discovery and exact source selection; name, ten slot links, validation, Single and Full count indicators, save/cancel/reset/explicit reload. |
-| ProfileSlotScreen / ProfileCandidateScreen / ProfileAdvancedScreen | Rule choices and all candidates; item/count input; nullable generation/matching SNBT and EXACT/FIELDS, with explicit use-default actions. Child Back retains the shared draft, never saves. |
-| ProfileItemCatalog / ProfileItemPickerScreen | Client registry enumeration, ID/localized-name search, safe base icons for invalid drafts or validated normalized template previews, and vanilla tooltips. No real inventory access. Reuses SlotCandidateLayout wrapping geometry. |
-| EditorViewport / EditorFormScreen / EditorConfirmScreen | Shared scroll bounds, clipped vanilla controls/text, pointer/tooltip gating, focus reveal/Tab, repeat-key lifecycle and scrollable confirmations. Every form and arbitrarily long errors/lists scroll above fixed footer actions. |
+| ProfileEditorSession | Exact source/expected/Edit, ProfileDraft, per-item raw quantities, reset baseline, validation/applicability and typed save/reload feedback. Selection adds/removes actual allowed items in memory. No pending single-item proposal or exchange state. |
+| ProfileSlotPresentation | Uniform localized allowed-item counts; special legacy rule semantics are described only where relevant. |
+| ProfileSourceScreen / ProfileEditorScreen | Exact source choice; name and hotbar/offhand previews; Save/Cancel/Reset/reload after errors. |
+| ProfileItemPickerScreen / ProfileItemCatalog | Name/ID search, scrollable marked catalogue, complete selected-icon strip, inline per-item quantities, safe normalized previews and vanilla tooltips. Query/active icon are view state; counts/SNBT stay in the shared draft. |
+| ProfileSlotScreen / ProfileCandidateScreen / ProfileAdvancedScreen | Secondary natural-language rules and complete per-item NBT/matching/default settings, preserving null versus explicit {}. |
+| TrainerOptionsScreen / TrainerClient.parseGoal | One raw training-count input, explicit0 hint and shared valid-goal parser; existing ClientOptionsStore persistence. |
+| EditorViewport / EditorFormScreen / EditorConfirmScreen | Shared clipped scroll/input/tooltip geometry, Tab focus reveal, inline errors and fixed footers. |
+
+Ordinary toggles are direct edits, with no mandatory selection/quantity confirmation
+page. Removing custom NBT/matching items or the last item of a special rule asks
+before destructive removal. Adding items never replaces other allowed items or
+normalizes their NBT/defaults. Main Save alone writes through the repository.
 
 Entry and Save require local single-player with a live player/world, LAN closed
 (public server publication metadata only), and an IDLE/ERROR client projection.
@@ -145,9 +151,9 @@ first, never substitutes a default. Incomplete SNBT stays in ProfileDraft. These
 values survive child returns, resize and GUI-scale reinitialization.
 
 Dirty Cancel/Esc requires confirmation. Reset confirms replacement with the last
-opened/saved baseline; EMPTY confirms deleting nonempty candidate lists. Switching
-to REQUIRED/OPTIONAL/FLEXIBLE preserves all candidates. Candidate removal is also
-confirmed. Full count feasibility is labelled as a count condition only; legal
+opened/saved baseline; all rule changes confirm first. Switching
+to REQUIRED/OPTIONAL/FLEXIBLE preserves all allowed items. Advanced item removal is also
+confirmed; ordinary catalogue toggles ask only for custom/special-rule removal. Full count feasibility is labelled as a count condition only; legal
 Single-only drafts save, with no seed sampling.
 
 Save calls repository.save(Edit), then load(samePath)/beginEdit(samePath, loaded)
@@ -155,3 +161,30 @@ and refreshes options. Invalid input stays editable. Persistence errors preserve
 the draft, show the readable error and require explicit confirmed Reload source
 before another save, including when replacement succeeded but reopening failed.
 Reload never searches for another same-ID file. See [M2-C acceptance](m2-c-profile-editor.md).
+
+
+## M2-E history and scrollable options
+
+TrainerOptionsScreen now shares EditorFormScreen/EditorViewport so preferences,
+long feedback and the PB entry scroll above fixed Start/Done actions.
+Goal drafts survive resize and child returns; invalid text never overwrites the
+accepted option. History uses the same canEditProfiles local/LAN-closed/live-world
+and acknowledged IDLE/ERROR gate at entry and navigation. Active,
+RESTORING, ERROR_LOCKED and unknown join projections fail closed. Pages close when
+the gate is lost; restoration is never paused.
+
+HistoryBrowser owns the current-player UUID and explicitly refreshed immutable snapshot.
+Its filter/page query API remains available internally; the screen exposes no filters,
+pagination or details. The client root injects the common installation history directory.
+Entry reads through HistoryStore; rendering and resizing never read disk.
+The 2×2 PB table shows Single Item / Full Inventory and their fastest successful task
+times (three decimal seconds, or PB —). PersonalBests.fastestTaskForMode merges profile
+hashes, hints, goals and partial/unlimited sessions while retaining player and supported
+version checks. Warnings mark incomplete reads. History files and the stricter
+forConditions API remain compatible. See [current PB contract](m2-e-history-pb.md).
+
+Protocol version is now **2**: START adds one bounded boolean for the declared
+Target hints preference. It is frozen once, not read from client mutable state at
+stop. Other request factories remain source compatible. Server-thread queueing and
+session/revision acknowledgement guards are unchanged. This declaration is not an
+anti-cheat proof. History itself needs no protocol messages or server object access.

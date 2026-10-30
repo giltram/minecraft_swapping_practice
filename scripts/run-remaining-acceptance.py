@@ -101,7 +101,7 @@ def launch(mode, destination, exit_code=0, evidence=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--group", choices=("protection", "phases", "exits", "corruption", "writes", "all"), default="all")
+    parser.add_argument("--group", choices=("protection", "phases", "exits", "corruption", "writes", "history", "all"), default="all")
     parser.add_argument("--case", action="append", help="Run only this exact mode within the selected group; repeat to select several")
     parser.add_argument("--skip-case", action="append", default=[], help="Skip an already verified exact case; repeat as needed")
     args = parser.parse_args()
@@ -112,6 +112,8 @@ def main():
               "scope": "Actual lifecycle/load/write/vanilla handler acceptance; session setup accelerates countdown and supplies acknowledgments"}
     path = output / "report.json"
     cases = []
+    if args.group in ("history", "all"):
+        cases.append(("accept-history", 0, None))
     if args.group in ("protection", "all"):
         cases.append(("accept-protection", 0, None))
     if args.group in ("phases", "all"):

@@ -12,6 +12,7 @@ import dev.hotbarswaptrainer.profile.ProfileRepository;
 import dev.hotbarswaptrainer.profile.SlotRule;
 import dev.hotbarswaptrainer.profile.StackSpec;
 import dev.hotbarswaptrainer.stats.SessionResult;
+import dev.hotbarswaptrainer.stats.SessionMetadata;
 import dev.hotbarswaptrainer.stats.TaskResult;
 import dev.hotbarswaptrainer.stats.ResultStore;
 import dev.hotbarswaptrainer.task.*;
@@ -108,7 +109,7 @@ public final class SessionManager {
         LoadoutProfile selected = null;
         for (LoadoutProfile profile : loaded.getProfiles()) if (profile.getId().equals(request.profileId)) selected = profile;
         if (selected == null) { error(player, "Profile unavailable: " + String.join("; ", loaded.getErrors())); return; }
-        TrainingSession session = new TrainingSession(player, selected, request.mode, request.goal);
+        TrainingSession session = new TrainingSession(player, selected, request.mode, request.goal, request.targetHints);
         sessions.put(player.getUuid(), session);
         try {
             inventory.backup(player, session.id);
@@ -262,33 +263,56 @@ public final class SessionManager {
     public void stop(ServerPlayerEntity player, String reason) {
         TrainingSession session = sessions.get(player.getUuid());
         if (session != null) {
+            if (session.endState == null) {
+                session.endedAtMillis = Math.max(session.startedAtMillis, System.currentTimeMillis());
+                session.endState = "Session complete".equals(reason) ? SessionMetadata.EndState.COMPLETED
+                        : "Disconnected".equals(reason) ? SessionMetadata.EndState.DISCONNECTED
+                        : "Server stopping".equals(reason) ? SessionMetadata.EndState.SHUTDOWN
+                        : ("Stopped".equals(reason) || "Stopped by player".equals(reason)) ? SessionMetadata.EndState.STOPPED
+                        : SessionMetadata.EndState.ABORTED;
+            }
             if (session.phase == TrainingSession.Phase.RUNNING) {
                 session.elapsedNanos = System.nanoTime() - session.startedNanos;
                 session.results.add(result(session, TaskResult.Outcome.STOPPED, reason));
             }
             session.phase = TrainingSession.Phase.RESTORING;
-            session.message = reason;
+            session.message = "Session complete".equals(reason) ? "" : reason;
             publish(player, session);
         }
+        // Only recovery failures may enter ERROR_LOCKED. Statistics and notifications run after this boundary.
         try {
             inventory.restore(player);
-            sessions.remove(player.getUuid());
-            recoveryFailed.remove(player.getUuid());
-            if (session != null) {
-                SessionResult summary = new SessionResult(session.id, session.mode, session.profile.getHash(), session.goal, session.results);
-                try { results.save(player.getUuid(), summary); }
-                catch (java.io.IOException | RuntimeException statisticsFailure) {
-                    LOGGER.error("Could not save statistics; inventory restoration already committed", statisticsFailure);
-                }
-                reason += String.format(Locale.ROOT, ": %d successes, average %.3fs, best %.3fs", summary.getSuccessCount(),
-                        summary.getAverageNanos() / 1e9, summary.getBestNanos() / 1e9);
-            }
-            idle(player, reason);
         } catch (Exception failure) {
             LOGGER.error("Inventory recovery is locked; original NBT retained", failure);
             recoveryFailed.add(player.getUuid());
             if (session != null) { session.phase = TrainingSession.Phase.ERROR_LOCKED; session.message = failure.getMessage(); publish(player, session); }
             else errorLocked(player, failure.getMessage());
+            return;
+        }
+        sessions.remove(player.getUuid());
+        recoveryFailed.remove(player.getUuid());
+        try {
+            if (session != null) {
+                SessionMetadata metadata = new SessionMetadata(player.getUuid(), session.startedAtMillis, session.endedAtMillis,
+                        session.profile.getId(), session.profile.getName(), session.targetHints, SessionMetadata.TIMING,
+                        SessionMetadata.SCORING, SessionMetadata.ENVIRONMENT, session.endState);
+                SessionResult summary = new SessionResult(session.id, session.mode, session.profile.getHash(), session.goal, session.results, metadata);
+                if ("Session complete".equals(reason)) reason = "";
+                try { results.save(player.getUuid(), summary); }
+                catch (java.io.IOException | RuntimeException statisticsFailure) {
+                    LOGGER.error("Could not save statistics; inventory restoration already committed", statisticsFailure);
+                    reason += " | History save failed; inventory restored. See log; this result may be missing.";
+                }
+                reason += (reason.isEmpty() ? "" : " | ") + String.format(Locale.ROOT, "Avg %.3fs | Best %.3fs",
+                        summary.getAverageNanos() / 1e9, summary.getBestNanos() / 1e9);
+            }
+        } catch (RuntimeException statisticsFailure) {
+            LOGGER.error("Could not summarize statistics; inventory restoration already committed", statisticsFailure);
+            reason += " | History unavailable; inventory restored. See log.";
+        }
+        try { idle(player, reason); }
+        catch (RuntimeException notificationFailure) {
+            LOGGER.error("Could not notify restored player; recovery remains complete", notificationFailure);
         }
     }
 
