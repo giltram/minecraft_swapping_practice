@@ -86,6 +86,11 @@ public final class TrainerSmokeClient implements ClientModInitializer {
 
     @Override public void onInitializeClient() {
         if (mode.isEmpty()) return;
+        if (mode.startsWith("accept-arena-")) {
+            if (net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())
+                throw new IllegalArgumentException("Arena acceptance requires the independent production launcher");
+            new ArenaAcceptance().initialize(mode); return;
+        }
         if (mode.startsWith("accept-") && net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment()) {
             throw new IllegalArgumentException("Remaining acceptance modes require the independent production launcher");
         }

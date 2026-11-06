@@ -204,3 +204,26 @@ anti-cheat proof. History itself needs no protocol messages or server object acc
 Profile display names share the domain/history bound of 256 Java characters.
 The editor enforces it at input; source files with longer names are preserved and
 reported as invalid before they can start an unrecordable training session.
+
+## M3-B arena client boundary
+
+PracticeArenaClient owns title launch preflight, detached arena status and the
+exit handshake; PracticeArenaScreen reuses the existing non-pausing scroll form.
+TitleScreenMixin adds one entry and GameMenuScreenMixin routes the existing
+owned-world exit. O adds reset/exit only after the server identifies an arena.
+No duplicate enter action or replacement training/profile/PB controls. All new
+copy uses trainer.arena.* in en_us/zh_cn.
+
+Client requests are queued at END_CLIENT_TICK after vanilla input. EXIT stops and
+restores on the server; ordered inventory/held-slot packets precede EXIT_RESTORED.
+The client acknowledges with EXIT_COMMIT at its end tick, after its vanilla slot
+echo. The server checks the restored snapshot and both saved players before
+EXIT_READY permits disconnect. The existing vanilla disconnect loop renders
+until actual server-thread death. No fixed sleep, automatic previous-world load,
+client session-object access or client-authored recovery snapshot is involved.
+
+Incoming statuses are tied to the actual client player/connection object; queued
+work from a departed connection is discarded. Server readiness remains
+authoritative even if client UI/progress notifications fail. See the
+[arena contract](../src/main/java/dev/hotbarswaptrainer/arena/README.md) and
+[M3-B acceptance](m3-b-practice-arena.md).

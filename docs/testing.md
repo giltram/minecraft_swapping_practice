@@ -368,3 +368,13 @@ cannot be reconstructed; no production change/hash update was made. Along with
 the separate 25-case matrix, 65-stage UI/restart and 8 history checks, automatable
 verification is complete. Required human physical-input/visual acceptance remains
 pending and the ordinary-world gate stays enabled.
+
+## M3-B owned practice arena
+
+Ownership, lifecycle replay, metadata/seal/preflight and read-only region-format
+regressions live in `src/test/.../arena`; detached-wire validation is
+`network/ArenaPacketsTest`. The independent real-process matrix is
+`scripts/run-arena-matrix.py`, using `run-arena-acceptance.py` and post-exit
+`verify-arena-save.py`. No copied seed, recovery rebinding, ordinary save or
+unknown-area cleanup is involved. [M3-B](m3-b-practice-arena.md) records final
+artifact-specific results, earlier failed probes and remaining human checks.

@@ -64,6 +64,15 @@ def boundary_error(package, class_name, imported):
     if not is_client and client_dependency:
         return "common code cannot depend on client code"
 
+    if within(package, PROJECT + ".arena") and any(within(imported, prefix) for prefix in (
+            PROJECT + ".session", PROJECT + ".stats", PROJECT + ".network", PROJECT + ".TrainerMod")):
+        return "arena lifecycle cannot depend on sessions, statistics, networking or the composition root"
+    if within(package, PROJECT + ".session") and within(imported, PROJECT + ".arena"):
+        return "session uses an injected readiness predicate, not the arena implementation"
+    if within(package, PROJECT + ".network") and within(imported, PROJECT + ".arena") \
+            and not within(imported, PROJECT + ".arena.ArenaStatus"):
+        return "network may use the detached ArenaStatus contract, not arena management internals"
+
     is_task = within(package, PROJECT + ".task")
     is_profile = within(package, PROJECT + ".profile")
     if not is_task and not is_profile:

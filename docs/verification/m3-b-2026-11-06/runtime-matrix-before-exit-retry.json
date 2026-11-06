@@ -1,0 +1,708 @@
+{
+  "status": "passed",
+  "artifactSha256": "ca1e3354adab2c32a523d71ac11511b6cb376233280a89c5812eba32996e7098",
+  "cases": [
+    {
+      "instance": "run-arena-20261106-matrix-lifecycle",
+      "scenario": "lifecycle",
+      "launch": {
+        "scenario": "lifecycle",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-lifecycle",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-lifecycle-lifecycle.log",
+        "manifestSha256": "0213884f1dc1817d6e8d8e9de05b6387ddd66d7f9fd5ce4491d894f339a656f4"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "8827791a-7581-40f4-a5cb-ffd09f7a0c56",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-lifecycle/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "5aa71fb45c2092e801393b8e0a53f248a97bdb63ea11c0c9a3a6d1ea816db3ca",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-lifecycle/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "55ae5ddce543768a279258835d0a05a68e1089ea53c4c334ae570515a8b283d1",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-safety",
+      "scenario": "safety",
+      "launch": {
+        "scenario": "safety",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-safety",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            },
+            {
+              "name": "arena save failure",
+              "status": "passed",
+              "detail": "Real directory write denial; journal remained VERIFYING, no inventory lock; permissions restored before idempotent retry"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-safety-safety.log",
+        "manifestSha256": "ac092d818d10506508e481609c868b33cc742cec96ef5594f692f9bb64797647"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "6b79328f-d94c-404b-8935-932a4b5523cd",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-safety/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "afd81e45dc3772042db0aef7c18a7ee7d6af055be59c7d50d53c07b149f939df",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-safety/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "48df7602f829a2be82f0982f23634f35c7134de37d3e6674b466b2165724ab37",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-cut-create",
+      "scenario": "cut-create",
+      "cut": {
+        "scenario": "cut-create",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-cut-create",
+          "detail": "ownership persisted before vanilla creation",
+          "checks": []
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-create-cut-create.log",
+        "manifestSha256": "51d4a931de9ca87da6c54bc5d88c14e062c70d206f1f0d9b9e84346c1c009b70"
+      },
+      "cutJournal": {
+        "version": "1",
+        "id": "a3bd66b1-4742-4cac-9e1e-844dad7b3225",
+        "path": "./run-arena-20261106-matrix-cut-create/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "24a7bcae-4022-460c-b681-9691c38011a2",
+        "previous": "none",
+        "phase": "CREATING"
+      },
+      "forensicOnly": "./run-arena-20261106-matrix-cut-create/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-recover",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-create-recover.log",
+        "manifestSha256": "3e35e7b67924b8e9d3b0b4a821ffb8911f4315dc7a5163c218b7a4e2b8b0e5bd"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "a3bd66b1-4742-4cac-9e1e-844dad7b3225",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-cut-create/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "fc2c4697556e7e3eac1f96a953c38a1680d34bfb61f409c900fdad71d6290f3a",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-cut-create/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "746154d79d4a458eecf3777424930398c00f3225a029322d0342860bf510d97a",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-cut-build",
+      "scenario": "cut-build",
+      "cut": {
+        "scenario": "cut-build",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-cut-build",
+          "detail": "initialization interrupted after a server batch",
+          "checks": []
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-build-cut-build.log",
+        "manifestSha256": "71a296523879672a0a58802fb0127afd43604ac321af09f060bb4051a8686628"
+      },
+      "cutJournal": {
+        "version": "1",
+        "id": "e68907bf-21ee-41a9-b17e-467ccc931697",
+        "path": "./run-arena-20261106-matrix-cut-build/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "9ce8be55-58cd-4cfc-9654-35a61cde3628",
+        "previous": "none",
+        "phase": "INITIALIZING"
+      },
+      "forensicOnly": "./run-arena-20261106-matrix-cut-build/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-recover",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-build-recover.log",
+        "manifestSha256": "d477dcc53a1473341da62ab87796636b6c1cdb80f3d07eba5d616c2bb2089be1"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "e68907bf-21ee-41a9-b17e-467ccc931697",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-cut-build/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "004d725a023fd0e7391cea55fa7e60989bbf556ab238dbec0f410ae7b424ef8b",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-cut-build/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "69303468f315e0d286b4a2b33a39124c227e23fe2d07e4ea2e8f62b67c470dfe",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-cut-ready",
+      "scenario": "cut-ready",
+      "cut": {
+        "scenario": "cut-ready",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-cut-ready",
+          "detail": "ready persisted before user interaction",
+          "checks": []
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-ready-cut-ready.log",
+        "manifestSha256": "92739549d472d168758e66c6ad82f6976d525b10de55dbb5ea8c8a6bf9e99324"
+      },
+      "cutJournal": {
+        "version": "1",
+        "id": "6c7844cf-65fc-44cd-ac3f-68de121ee6cc",
+        "path": "./run-arena-20261106-matrix-cut-ready/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "172c2d79-a310-4878-82e4-dd2cade5fcab",
+        "previous": "none",
+        "phase": "READY"
+      },
+      "forensicOnly": "./run-arena-20261106-matrix-cut-ready/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-recover",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-ready-recover.log",
+        "manifestSha256": "20d4d5e18b692826d48821a94b364b157414b4fdc462c52dd8755b3028ef4a66"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "6c7844cf-65fc-44cd-ac3f-68de121ee6cc",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-cut-ready/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "aff431d7a31f2f88fee73685062da2cf0b4dc068432c78a55e58183e5a3e962b",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-cut-ready/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "6767f002366aaf8bde84193c3cfcead9859dee5f5ee9e037c83a7d47cbaedacd",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-cut-reset",
+      "scenario": "cut-reset",
+      "cut": {
+        "scenario": "cut-reset",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-cut-reset",
+          "detail": "reset interrupted after its write-ahead journal and server batch",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-reset-cut-reset.log",
+        "manifestSha256": "2648f7a1002d70cdc62c8b13107a151ff0eaac0e00a39ffc5cfbadf2d74c1a17"
+      },
+      "cutJournal": {
+        "version": "1",
+        "id": "dee49609-1c02-4d50-8f3e-58f6abd5d5ca",
+        "path": "./run-arena-20261106-matrix-cut-reset/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "cf59dc74-e548-4e72-8137-d6826be733a1",
+        "previous": "cc6030c3-3b61-4e1f-9b41-3d0018d246ca",
+        "phase": "RESETTING"
+      },
+      "forensicOnly": "./run-arena-20261106-matrix-cut-reset/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-recover",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "fresh-process recovery",
+              "status": "passed",
+              "detail": "Both saved players match the same-path 41-slot baseline"
+            },
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-reset-recover.log",
+        "manifestSha256": "13174e63780c368c1805bdf828a705d45db849fcad24b0c4752a86ee866a5274"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "dee49609-1c02-4d50-8f3e-58f6abd5d5ca",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-cut-reset/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "3aeee72a6932b7b64a6c7ea577bdf4a4deaa0d04e44db4623d140a42bfa26b57",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-cut-reset/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "fc571eaef5749cf9746af9390f41b538e77f1e24731ba54e1be1378357cedbb3",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-20261106-matrix-cut-training",
+      "scenario": "cut-training",
+      "cut": {
+        "scenario": "cut-training",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-cut-training",
+          "detail": "active same-path inventory transaction before world reset/exit",
+          "checks": [
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-training-cut-training.log",
+        "manifestSha256": "2f3da1888811955132af99879e6d5b1bb5bba50e5479a6acd1b85438e98e055d"
+      },
+      "cutJournal": {
+        "version": "1",
+        "id": "60d3340f-d243-43a3-9ee4-27f1b901833b",
+        "path": "./run-arena-20261106-matrix-cut-training/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "b3589374-97db-4850-8f48-0fa44cca987e",
+        "previous": "none",
+        "phase": "READY"
+      },
+      "forensicOnly": "./run-arena-20261106-matrix-cut-training/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-recover",
+          "detail": "Create/recover, reset, real exit and same-path reopen completed",
+          "checks": [
+            {
+              "name": "fresh-process recovery",
+              "status": "passed",
+              "detail": "Both saved players match the same-path 41-slot baseline"
+            },
+            {
+              "name": "SINGLE_ITEM/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/STATIONARY",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "SINGLE_ITEM/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "FULL_INVENTORY/MOVING",
+              "status": "passed",
+              "detail": "Actual START/READY/GO_ACK/swaps/stop; exact original inventory read back from both files"
+            },
+            {
+              "name": "reset",
+              "status": "passed",
+              "detail": "Same world identity, obstacle removed, inventory and both saved players unchanged"
+            },
+            {
+              "name": "real exit",
+              "status": "passed",
+              "detail": "Client cleared world/server after confirmed restore, save and server thread termination"
+            },
+            {
+              "name": "same-path reuse",
+              "status": "passed",
+              "detail": "Persistent identity and both original inventories survived real exit/reopen"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-b-2026-11-06/run-arena-20261106-matrix-cut-training-recover.log",
+        "manifestSha256": "2e539004cea9ab94e7e85434b1d0e2977a40f756707c4fc1cacfe1774fb601f4"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "identity": "60d3340f-d243-43a3-9ee4-27f1b901833b",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-20261106-matrix-cut-training/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "ef9343a63949d5e36ddac6124bfc97df316ab5f82b9e636b10ff8df07fb38ad6",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-20261106-matrix-cut-training/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "ea563504270aea44a8126c21f69e1e4e236b1d637bc8d8aa6575bd7c33f08a76",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 Minecraft **Java 1.16.1**, Fabric, local single-player hotbar/offhand practice.
 
-Milestone 1 implementation is under verification. Training remains gated to explicitly marked disposable test saves. Do not use a valuable save for recovery acceptance testing.
+Use the mod-owned practice arena for training. Ordinary worlds still require the explicit disposable-test marker. Do not use a valuable save for recovery acceptance testing.
 
 ## Build
 
@@ -28,6 +28,44 @@ Minecraft 1.16.1 in that instance's `minecraft/mods/` directory. The pinned Mave
 bundle its modules: installing that file alone is insufficient. The independent
 smoke launcher installs the complete checksum-verified POM dependency set.
 
+## Practice arena (M3-B)
+
+1. On the main menu, click **Enter practice arena / 进入练习场**. First entry
+   automatically creates the dedicated save; later entries reuse the same owned
+   save after inspection. No download, datapack, commands or command blocks.
+2. Wait for preparation/checking to finish. Use **O** for the existing mode,
+   Stationary/Moving, profile and task-count controls; **P** starts/stops as before.
+3. O → **Return to title / 返回主菜单**, or the pause menu's exit action, stops
+   training, confirms original inventory restoration, saves and closes the world.
+   It returns to the main menu; another world is never reopened automatically.
+4. O → **Reset arena / 重置场地** asks once before discarding placed blocks and
+   container contents inside the owned 64 × 64 area. Your inventory is restored
+   first. The save and terrain outside this area remain. Reset restores terrain,
+   not a general entity cleanup or arbitrary-world rollback.
+
+The initial arena is a fixed Survival/Peaceful flat world: bedrock, two dirt
+layers and grass, no structures/decoration/mob spawning, fixed day/clear weather,
+and a 64-block world border. Entry recenters you at its safe spawn. Moving still
+allows ordinary walking, sprinting and jumping; standing still never invalidates
+an answer. Training STOP restores in place, without an arena teleport.
+
+Preparation and reset show progress and disable training until saved checks
+finish. Closing the process mid-operation leaves a journal; reopening resumes
+only the same owned area. An altered READY arena asks for explicit reset instead
+of silently clearing it. Inventory recovery runs before field operations.
+
+On an error, data is kept. For a write failure, check free space/permissions and
+Retry. For inventory recovery, use Retry inventory recovery (or P) first; locked
+recovery cannot be bypassed by exit/reset. For missing/damaged/unsupported
+ownership, inspect the log and restore a complete backup **at the original path**.
+Do not edit bindings, move/clone recovery-bearing saves, or delete unknown data
+to force acceptance. An unknown same-name directory is not adopted; back it up
+and move that unknown directory aside before creating a new arena.
+
+The managed save is `saves/hotbar-swap-trainer-practice`; ownership is independent
+of `/swaptrainer enable-test-world`. That older marker never permits generation
+or cleanup in an ordinary save. No save is automatically deleted.
+
 ## Disposable-world training
 
 1. Create a new ordinary test world with cheats enabled. No map download, datapack or command blocks are needed.
@@ -42,8 +80,8 @@ a task invalid and there is no minimum-speed or first-movement requirement. Star
 from safe dry ground. Later tasks may start in the air; stopping or completing
 restores inventory immediately where you are, without teleporting or clearing
 velocity. Normal landing damage may follow restoration. Environment is frozen
-for the session; change it from O after stopping. No terrain/world is prepared
-by the mod.
+for the session; change it from O after stopping. Ordinary marked test saves
+receive no terrain preparation; the dedicated arena uses the separate flow above.
 
 Profiles are JSON files in `config/hotbar-swap-trainer/profiles/`. The bundled `default.json` is installed only when missing; corrupt files are preserved and reported. See [domain contracts](domain.md) for the schema. Profiles are frozen for each session.
 

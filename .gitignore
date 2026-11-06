@@ -12,3 +12,4 @@ __pycache__/
 .DS_Store
 /run-m2-runtime-*/
 /run-m2-ui-*/
+/run-arena-*/

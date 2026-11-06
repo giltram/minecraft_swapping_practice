@@ -161,8 +161,8 @@ The wrapper retains its historical M2 prefix and exact ownership checks. It
 reuses the pinned independent client, copies only the marked inactive seed and
 archives previous launch manifests/results/baselines before reuse. The Moving
 driver operates within the known test spot, never builds a wall or alters
-terrain, and is absent from production. The production mod introduces no world
-creation/preparation feature.
+terrain, and is absent from production. At the M3-A checkpoint, the production mod had no world
+creation/preparation feature; M3-B adds it through the separately owned workflow below.
 
 accept-moving produces moving-checks.json and result-accept-moving.json. It
 uses actual transformed vanilla movement/sprint/swap/selection/interaction
@@ -174,3 +174,42 @@ and record environment/onGround at the lifecycle hook. A post-exit independent
 NBT readback remains required for both modes. This is not real keyboard input,
 physical focus/pause or subjective movement acceptance. The current evidence,
 artifact hash and remaining manual checks are in [M3-A](m3-a-moving-inventory.md).
+
+## M3-B practice-save acceptance
+
+Use a new `run-arena-*` instance, with no copied seed/world/recovery record:
+
+```sh
+scripts/gradle-jdk8.sh --offline test build smokeJar
+python3 scripts/run-arena-acceptance.py --run-name run-arena-<unique> --scenario lifecycle --launch
+python3 scripts/verify-arena-save.py --run-name run-arena-<same>
+python3 scripts/run-arena-matrix.py --prefix run-arena-<unique-matrix> --report /tmp/arena-matrix/report.json
+```
+
+The wrapper reuses the pinned launcher/artifact hashes, Intel JDK8/original
+LWJGL/Fabric baseline and owned-instance marker. It copies only the already
+verified offline logging artifact, never a world. Actual mod title creation owns
+the new save and journal. Existing runs require exact markers and no symlinks.
+Launch manifests, results and logs are archived before same-path reopens.
+
+`lifecycle` uses the actual title widget and managed pause-menu exit, four
+mode/environment combinations through real session/vanilla swap handlers, active
+training reset/exit, inspection of an already-loaded outside chunk without
+generating/changing it, and actual server shutdown/reopen. `safety` additionally
+uses real POSIX host-save and arena-seal-directory write denial, observes the
+actual RESTORING save boundary, checks ERROR_LOCKED rejection and explicit
+recovery retry, and injects one **simulated** final-exit save exception to verify
+Retry retains exit intent. These are distinct mechanisms, not all OS failures.
+
+The matrix performs actual `Runtime.halt(91)` cuts after exclusive ownership
+reservation, during initialization, after READY, during reset and with an active
+inventory transaction. Each requires exit91, fresh cut evidence, archived raw
+saves, then a new same-path process that completes lifecycle/readback with exit0.
+Forensic copies retain original bindings and are never loaded/rebound. The
+independent standard-library NBT decoder then verifies both saved players, all
+41 slots, selected slot 6, UUID, cleared recovery and matching world seal.
+
+The driver supplies acknowledgments and input programmatically, accelerates
+training deadlines and can run without focus. It does not establish physical
+keyboard/mouse feel, real focus/pause interaction or subjective visual quality.
+Exact final artifact, results and remaining checks: [M3-B](m3-b-practice-arena.md).

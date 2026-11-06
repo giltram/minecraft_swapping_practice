@@ -10,7 +10,7 @@ import static dev.hotbarswaptrainer.client.EditorText.text;
 final class TrainerOptionsScreen extends EditorFormScreen {
     private final TrainerClient trainer;
     private String goalDraft;
-    private ButtonWidget editorButton, historyButton;
+    private ButtonWidget editorButton, historyButton, arenaResetButton;
     private TextFieldWidget goalInput;
     TrainerOptionsScreen(TrainerClient trainer) {
         super(text("options")); this.trainer = trainer; goalDraft = Integer.toString(trainer.goal());
@@ -31,6 +31,11 @@ final class TrainerOptionsScreen extends EditorFormScreen {
         historyButton = action(text("history"), () -> {
             if (trainer.canEditProfiles()) client.openScreen(new TrainerHistoryScreen(this, trainer.historyBrowser(), trainer.environment()));
         });
+        if (trainer.arena().present()) {
+            arenaResetButton = action(PracticeArenaScreen.copy("reset"), () -> client.openScreen(
+                    new EditorConfirmScreen(this, PracticeArenaScreen.copy("resetConfirm"), trainer.arena()::reset)));
+            action(PracticeArenaScreen.copy("exit"), trainer.arena()::exit);
+        }
         TrainerProtocol.View view = trainer.session().get();
         if (showSessionMessage(view)) paragraph(view.message, view.phase.contains("ERROR") ? 0xFF8888 : 0xDDDDBB);
         for (String message : trainer.optionMessages()) paragraph(message, 0xFFAA88);
@@ -46,8 +51,9 @@ final class TrainerOptionsScreen extends EditorFormScreen {
     private void updateButtons() {
         if (historyButton == null) return;
         boolean idle = trainer.canEditProfiles();
-        setFooterActive(0, idle && validGoal() && trainer.profileAvailable());
+        setFooterActive(0, idle && validGoal() && trainer.profileAvailable() && trainer.arena().canTrain());
         editorButton.active = idle; historyButton.active = idle;
+        if (arenaResetButton != null) arenaResetButton.active = idle && trainer.arena().resetAvailable() && !trainer.arena().busy();
     }
     private void startTraining() {
         if (!trainer.canEditProfiles() || !validGoal() || !trainer.profileAvailable()) return;

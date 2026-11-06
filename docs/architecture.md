@@ -1,12 +1,12 @@
 # Hotbar Swap Trainer — architecture
 
-Updated 2026-11-01. Target: Minecraft Java **1.16.1**, Fabric, local integrated server.
+Updated 2026-11-06. Target: Minecraft Java **1.16.1**, Fabric, local integrated server.
 
 ## Implementation and safety status
 
-Milestone 1 now has source implementations for profiles/tasks, inventory recovery, stationary sessions, input observation, versioned networking and client controls/HUD. Build and game acceptance results live in [testing.md](testing.md); implementation does not imply those checks passed. Ordinary-world training remains gated: the local owner must explicitly mark a disposable test world with `/swaptrainer enable-test-world`. No terrain is generated or modified.
+Milestone 1 now has source implementations for profiles/tasks, inventory recovery, stationary sessions, input observation, versioned networking and client controls/HUD. Build and game acceptance results live in [testing.md](testing.md); implementation does not imply those checks passed. Ordinary-world training remains gated: the local owner must explicitly mark a disposable test world with `/swaptrainer enable-test-world`. M3-B separately creates and manages its own path-bound practice save; a disposable marker never authorizes terrain changes.
 
-[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3-A adds Moving; Parkour and later M3 milestones remain unimplemented.
+[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3-A adds Moving; [M3-B](m3-b-practice-arena.md) adds the owned practice arena. M3-C/Parkour remain unimplemented.
 
 [M3-A moving inventory training](m3-a-moving-inventory.md) supports both inventory
 modes with a frozen Stationary / Moving option. The user explicitly chose free
@@ -46,7 +46,8 @@ All production packages begin with `dev.hotbarswaptrainer`.
 | inventory | `InventorySnapshot`, versioned `RecoveryRecord`, `ConfirmedPlayerSave`, `InventoryService`, `PendingBlockBreaking` vanilla adapter; snapshot/setup/sync/recovery, runtime stack adapters and `MinecraftItemCatalog` template normalization |
 | input | `PlayerActionTracker` records actual vanilla swaps and changed selections; no score/state decisions |
 | environment | `TrainingEnvironment` owns independent environment IDs; `SessionEnvironment` selects the original stationary anchor or vanilla Moving with accepted-horizontal-movement observation; no terrain lifecycle or outcome decisions |
-| session | `SessionManager` owns all state transitions, timing, invalidation and frozen results; package-private `TrainingSession` is server-thread mutable state |
+| session | `SessionManager` owns all training state transitions, timing, invalidation, frozen results and the confirmed-restoration gate for world operations; injected world-readiness predicate, no arena implementation dependency; package-private `TrainingSession` is server-thread mutable state |
+| arena | [Module contract](../src/main/java/dev/hotbarswaptrainer/arena/README.md): fixed v1 specification, strict ownership journal/preflight, bounded initialization/reset/replay, independent saved-chunk/metadata checks and server lifecycle; no session, stats, network or client imports |
 | stats | Immutable results/frozen SessionMetadata, strict bounded HistoryJson codec, injected HistoryStore I/O, immutable HistorySnapshot queries and pure PersonalBests derivation |
 | network | `TrainerProtocol` bounded DTO encoding and `ServerPackets` decode/queue/send adapter; no client imports |
 | client | Client projection, packet adapter, mod keys, validated `ClientOptions`, client-only `ClientOptionsStore` JSON I/O, options screen with raw training-count input, file-bound multi-select profile drafts, client registry picker and shared clipped scroll forms, optional HUD hints, HistoryBrowser snapshots and the two-mode PB table; never reads server session objects |
@@ -56,6 +57,8 @@ All production packages begin with `dev.hotbarswaptrainer`.
 flowchart TD
   Hooks[Fabric hooks / Mixins] --> Root[TrainerMod composition root]
   Root --> Sessions[session]
+  Root --> Arena[arena]
+  Arena --> Inventory[inventory]
   Sessions --> Profiles[profile]
   Sessions --> Tasks[task]
   Sessions --> Inventory[inventory]
@@ -69,10 +72,12 @@ flowchart TD
   Stats --> Tasks
   Stats --> Environment
   Stats --> Profiles
+  Network --> Arena
   Network --> Tasks
   Network --> Profiles
   Network --> Environment
   Client[client] --> Network
+  Client --> Arena
   Client --> Inventory
   Client --> Profiles
   Client --> Tasks
@@ -108,7 +113,7 @@ All session/inventory writes run on the integrated-server thread. Networking cal
 
 Stop, finite successful-count completion, disconnect and shutdown enter RESTORING. Active NBT loaded after a crash is restored before player interaction and committed on the server thread. Recovery failure enters ERROR_LOCKED, keeps the backup and blocks interaction. New sessions cannot bypass recovery.
 
-1. Validate local host, LAN closed, marked test world, normal screen/cursor, safe grounded player and frozen profile.
+1. Validate local host, LAN closed, ready owned arena OR explicitly marked disposable test world, normal screen/cursor, safe grounded player and frozen profile. The composition root injects this predicate; neither task algorithms nor inventory world binding change.
 2. Deep-copy all inventory slots/selection; attach recovery record and confirm both authoritative save paths before inserting training stacks.
 3. Replace training slots and synchronize complete vanilla player ScreenHandler contents, cursor and held slot; send PREPARING task/revision.
 4. Client waits for matching inventory/selection, focus, no screen and released Swap Hands, then sends READY. After countdown it draws GO and queues GO_ACK before enabling vanilla swap packets.
@@ -121,6 +126,43 @@ Mode/profile labels, selections, mistakes and the completed-session banner are n
 GO/GO_ACK, safety/error messages and underlying counters remain independent of display preferences.
 
 Stats: attempts count vanilla-processed swaps; effective swaps change contents; no-ops do not; slot changes count changed server selectedSlot only. Initialization is excluded. Mistakes = no-op swaps + forbidden actions. Necessary temporary moves and extra legal swaps are not called mistakes. Final timing is server-confirmed GO_ACK-to-completion and includes local scheduling uncertainty; it is not a frame-perfect physical reaction-time claim.
+
+## Owned practice-save lifecycle (M3-B)
+
+The title screen has one Enter practice arena action. It reserves or validates
+`saves/hotbar-swap-trainer-practice`, then delegates to the pinned vanilla
+creation/load API. There is no second entry in O, previous-world reopening or
+world configuration wizard. O retains training controls and adds owned-arena
+Reset/Return to title; pause-menu exit uses the same safe exit flow.
+
+Ownership is explicit: strict versioned journal with stable UUID, exact path,
+fixed generator/bounds, operation identity and phase; an independent atomic NBT
+seal cross-checks the world operation. The original disposable marker permits
+training only. Unknown/existing ordinary/old-test directories are never adopted.
+Missing/damaged/unsupported/path-mismatched ownership is preserved and rejected
+before managed loading/modification. No worlds/regions are deleted or copied to
+bypass recovery path binding.
+
+`CREATING -> INITIALIZING -> VERIFYING -> READY`; reset uses
+`READY -> RESETTING -> VERIFYING -> READY`. Pending operations replay the same
+bounded cuboid, re-dirty chunks and independently confirm saved blocks/settings,
+seal and both player saves before committing READY. READY reuse only inspects;
+changed ground requires explicit reset confirmation. All block changes run on
+the integrated-server thread, in bounded batches, without old block callbacks
+that could propagate beyond the owned bounds. Vanilla flat generation avoids a
+custom chunk generator or general terrain backup/rollback framework.
+
+Root runs session recovery before arena work. RESET/RETRY/EXIT first pass
+`SessionManager.restoreBeforeWorldOperation`; RESTORING/ERROR_LOCKED cannot be
+implicitly retried or bypassed. Arena, statistics and notification failures never
+change recovery records or invent inventory locks. Client commands are queued
+after vanilla input at END_CLIENT_TICK. Exit additionally uses EXIT_RESTORED ->
+client EXIT_COMMIT -> snapshot/save confirmation -> EXIT_READY before vanilla
+disconnect, preventing late selected-slot echoes from overwriting restoration.
+Vanilla renders until the server thread actually terminates after shutdown;
+there is no fixed sleep or early stopped-flag assumption. STOPPED releases the
+service's server references. Full contracts and exact executed/pending evidence
+are in [M3-B](m3-b-practice-arena.md).
 
 ## Inventory recovery and protection
 

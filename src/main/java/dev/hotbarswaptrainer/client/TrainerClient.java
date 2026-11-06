@@ -33,10 +33,12 @@ public final class TrainerClient implements ClientModInitializer {
     private String configError = "";
     private String saveError = "";
     private String profileFeedback = "";
+    private final PracticeArenaClient arena = new PracticeArenaClient();
 
     @Override
     public void onInitializeClient() {
         instance = this;
+        arena.initialize();
         initializeOptions(new ProfileRepository(FabricLoader.getInstance().getConfigDir()
                 .resolve("hotbar-swap-trainer/profiles"), new MinecraftItemCatalog()),
                 new ClientOptionsStore(FabricLoader.getInstance().getConfigDir()
@@ -64,6 +66,7 @@ public final class TrainerClient implements ClientModInitializer {
     }
 
     private void tick(MinecraftClient client) {
+        arena.tick(client);
         if (client.player == null || client.world == null) {
             session.clear();
             return;
@@ -138,7 +141,7 @@ public final class TrainerClient implements ClientModInitializer {
 
     void start() {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!client.isInSingleplayer() || client.player == null || session.active()) return;
+        if (!client.isInSingleplayer() || client.player == null || session.active() || !arena.canTrain()) return;
         refreshProfiles();
         if (!profileAvailable) return;
         ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal(), showHints(), environment()));
@@ -153,6 +156,11 @@ public final class TrainerClient implements ClientModInitializer {
     }
 
     ClientSessionView session() { return session; }
+    PracticeArenaClient arena() { return arena; }
+    public static void enterPracticeArena() { if (instance != null) instance.arena.enter(); }
+    public static boolean inPracticeArena() { return instance != null && instance.arena.present(); }
+    public static void exitPracticeArena() { if (instance != null) instance.arena.exit(); }
+    static void retryPracticeRecovery() { if (instance != null) instance.stop("Retry inventory recovery"); }
     TrainingMode mode() { return options.mode; }
     String profile() { return options.profile; }
     int goal() { return options.goal; }

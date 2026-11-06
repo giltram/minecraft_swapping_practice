@@ -1,6 +1,8 @@
 package dev.hotbarswaptrainer;
 
 import dev.hotbarswaptrainer.inventory.InventoryService;
+import dev.hotbarswaptrainer.arena.PracticeArenaService;
+import dev.hotbarswaptrainer.network.ArenaPackets;
 import dev.hotbarswaptrainer.inventory.MinecraftItemCatalog;
 import dev.hotbarswaptrainer.network.ServerPackets;
 import dev.hotbarswaptrainer.profile.ProfileRepository;
@@ -29,9 +31,20 @@ public final class TrainerMod implements ModInitializer {
                 .resolve("hotbar-swap-trainer/profiles"), new MinecraftItemCatalog());
         try { profiles.installDefaultIfMissing(); }
         catch (Exception failure) { LogManager.getLogger("HotbarSwapTrainer").error("Cannot install default profile", failure); }
-        SESSIONS = new SessionManager(INVENTORY, profiles, new HistoryStore(FabricLoader.getInstance().getConfigDir().resolve("hotbar-swap-trainer/history")));
+        PracticeArenaService arenas = new PracticeArenaService(ArenaPackets::send);
+        SESSIONS = new SessionManager(INVENTORY, profiles, new HistoryStore(FabricLoader.getInstance().getConfigDir().resolve("hotbar-swap-trainer/history")), arenas::trainingAllowed);
         ServerPackets.register(SESSIONS::handle);
-        ServerTickEvents.END_SERVER_TICK.register(SESSIONS::tick);
+        ServerLifecycleEvents.SERVER_STARTED.register(arenas::opened);
+        ServerLifecycleEvents.SERVER_STOPPED.register(arenas::closed);
+        ServerTickEvents.END_SERVER_TICK.register(server -> { SESSIONS.tick(server); arenas.tick(server); });
+        ArenaPackets.register((player, action) -> {
+            if (!arenas.manages(player)) return;
+            if (action == ArenaPackets.Action.STATUS) { arenas.refresh(player); return; }
+            if (!SESSIONS.restoreBeforeWorldOperation(player)) { arenas.recoveryBlocked(player); return; }
+            if (action == ArenaPackets.Action.EXIT) arenas.exit(player);
+            else if (action == ArenaPackets.Action.EXIT_COMMIT) arenas.commitExit(player);
+            else arenas.reset(player, action == ArenaPackets.Action.RETRY);
+        });
         ServerLifecycleEvents.SERVER_STOPPING.register(SESSIONS::shutdown);
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(
                 CommandManager.literal("swaptrainer").then(CommandManager.literal("enable-test-world").executes(context -> {

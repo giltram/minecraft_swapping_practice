@@ -11,7 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class RestoreBoundaryMixin {
     @Inject(method = "restore", at = @At(value = "INVOKE",
             target = "Ldev/hotbarswaptrainer/inventory/ConfirmedPlayerSave;save(Lnet/minecraft/class_3222;)V"))
-    private void acceptance$before(ServerPlayerEntity player, CallbackInfo ci) { SaveWriteFault.restoreBoundary(false); }
+    private void acceptance$before(ServerPlayerEntity player, CallbackInfo ci) {
+        SaveWriteFault.restoreBoundary(false);
+        dev.hotbarswaptrainer.smoke.ArenaRecoveryChecks.beforeRestoreSave(player);
+    }
 
     @Inject(method = "restore", at = @At(value = "INVOKE", shift = At.Shift.AFTER,
             target = "Ldev/hotbarswaptrainer/inventory/ConfirmedPlayerSave;save(Lnet/minecraft/class_3222;)V"))

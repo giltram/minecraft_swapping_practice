@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-06",
+  "status": "automated_checks_passed_manual_pending",
+  "initialWorkingTree": "clean",
+  "commitsCreated": false,
+  "artifact": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "d4a781c5e7b262b9b89ea848e75046390357c8afad211fedbe7efe3a25872b5d",
+    "classMajorVersions": [
+      52
+    ],
+    "acceptanceClassesPresent": false
+  },
+  "toolchain": {
+    "minecraft": "1.16.1",
+    "yarn": "1.16.1+build.21",
+    "loom": "0.4.33",
+    "gradle": "6.5",
+    "loader": "0.9.3+build.207",
+    "fabric": "0.18.0+build.387-1.16.1",
+    "java": "openjdk version \"1.8.0_512\"\nOpenJDK Runtime Environment Corretto-8.512.09.1 (build 1.8.0_512-b09)\nOpenJDK 64-Bit Server VM Corretto-8.512.09.1 (build 25.512-b09, mixed mode)",
+    "nativeBaseline": "original LWJGL 3.2.1 / Intel JDK8 under Rosetta"
+  },
+  "unitTests": {
+    "tests": 154,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": {
+    "command": "scripts/gradle-jdk8.sh --offline test build smokeJar",
+    "status": "passed",
+    "log": "verification/m3-b-2026-11-06/build.log"
+  },
+  "staticChecks": {
+    "boundaries": "100 production Java files, 13 packages, 35 dependencies; no cycles",
+    "newBoundaryRejectionProbes": "passed",
+    "gitDiffCheck": "passed",
+    "pythonCompilation": "passed",
+    "localizedArenaKeys": 22
+  },
+  "productionMatrix": {
+    "path": "docs/verification/m3-b-2026-11-06/runtime-matrix.json",
+    "sha256": "408c809ba120ced46ecf219c2007bc8ca1b2fa458b5a0030eb0854781d2eb972",
+    "status": "passed",
+    "cases": 7,
+    "actualProcesses": 12,
+    "actualHalt91ReopenPairs": 5,
+    "independentInventoryReadbackPerCase": "both saved players / 41 positions / selected slot 6 / UUID / cleared recovery / matching ownership seal"
+  },
+  "legacyMarkedWorld": {
+    "result": {
+      "mode": "accept-moving",
+      "status": "passed",
+      "detail": "13 M3-A programmatic production checks; physical input/focus/feel remain manual",
+      "elapsedSeconds": 14.867518959
+    },
+    "manifestSha256": "dd52377bd0e4c430c05e3ba224dec2f829855518e16d564d5e8bae4f8a615614",
+    "inventoryReadback": {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-m2-runtime-m3-b-20261106/smoke/baseline.nbt",
+      "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+      "checks": [
+        {
+          "path": "run-m2-runtime-m3-b-20261106/saves/hst-smoke/level.dat",
+          "sha256": "2066ef8efab32cff420a4eba66b5291d7b662b75e1c8ecdadc9da2d6bb9994a1",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-runtime-m3-b-20261106/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "472ca608aa2c770639ea3db604c0dee1a9e345bebd3c8bfad8baa3dc97f6f3ec",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-runtime-m3-b-20261106/saves/hst-smoke": "0o755",
+        "run-m2-runtime-m3-b-20261106/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    "terrainReadback": {
+      "status": "passed",
+      "originalFullChunksCompared": 625,
+      "afterFullChunks": 625,
+      "arenaOwnershipCreated": false,
+      "terrainBlocksChanged": false
+    },
+    "method": "Existing accept-moving driver; no active seed recovery record copied; independent typed NBT comparison of all 625 original full chunks and absence of arena ownership data"
+  },
+  "cutRecoveryBinding": "Archived active record in host and UUID files independently retains the original exact playable world path; forensic copies were never loaded or rebound",
+  "pending": [
+    "Human physical keyboard/mouse and subjective Moving feel",
+    "Human focus/pause interaction and minimum-window en_us/zh_cn visual acceptance",
+    "Full historical M1 corruption/mid-write fault matrix not repeated",
+    "Arbitrary power loss, hostile concurrent filesystem modifications and other mods are outside the readback guarantee"
+  ],
+  "scope": "M3-B only; no M3-C, courses, checkpoints, difficulty UI, new movement rules, generator algorithms or statistics"
+}

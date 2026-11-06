@@ -3,6 +3,10 @@
 Status (2026-10-31): implemented. Unit/build and programmatic production checks
 passed; physical-input/feel and the manual items below remain unverified.
 
+The world-management exclusions below describe the scope of M3-A.
+[M3-B](m3-b-practice-arena.md) now separately owns practice-save creation/lifecycle;
+the confirmed free-movement and inventory-recovery rules here remain unchanged.
+
 ## Confirmed scope and product rules
 
 The user explicitly simplified the original movement-enforcement request:

@@ -37,13 +37,21 @@ public final class SessionManager {
     private final Set<UUID> announced = new HashSet<>();
     private final Set<UUID> recoveryFailed = new HashSet<>();
     private final ResultStore results;
+    private final java.util.function.Predicate<ServerPlayerEntity> trainingWorldAllowed;
     private final TaskValidator validator = new TaskValidator();
     private long revision;
 
     public SessionManager(InventoryService inventory, ProfileRepository profiles, ResultStore results) {
+        this(inventory, profiles, results, player -> Files.isRegularFile(player.getServer()
+                .getSavePath(WorldSavePath.ROOT).resolve(".hotbar-swap-trainer-test")));
+    }
+
+    public SessionManager(InventoryService inventory, ProfileRepository profiles, ResultStore results,
+                          java.util.function.Predicate<ServerPlayerEntity> trainingWorldAllowed) {
         this.inventory = inventory;
         this.profiles = profiles;
         this.results = results;
+        this.trainingWorldAllowed = trainingWorldAllowed;
     }
 
     public void handle(ServerPlayerEntity player, TrainerProtocol.Request request) {
@@ -92,8 +100,8 @@ public final class SessionManager {
                 || server.getPlayerManager().getCurrentPlayerCount() != 1) {
             error(player, "Training is restricted to a local single-player world with LAN closed"); return;
         }
-        if (!Files.isRegularFile(server.getSavePath(WorldSavePath.ROOT).resolve(".hotbar-swap-trainer-test"))) {
-            error(player, "Use a disposable world, then run /swaptrainer enable-test-world before training"); return;
+        if (!trainingWorldAllowed.test(player)) {
+            error(player, "Practice arena is not ready, or this world needs /swaptrainer enable-test-world"); return;
         }
         if (player.currentScreenHandler != player.playerScreenHandler || !player.inventory.getCursorStack().isEmpty()
                 || !player.isAlive() || player.isSpectator() || player.hasVehicle() || player.isUsingItem() || !player.isOnGround()
@@ -324,6 +332,17 @@ public final class SessionManager {
         catch (RuntimeException notificationFailure) {
             LOGGER.error("Could not notify restored player; recovery remains complete", notificationFailure);
         }
+    }
+
+    /** World operations cannot implicitly retry ERROR_LOCKED or bypass an unresolved transaction. */
+    public boolean restoreBeforeWorldOperation(ServerPlayerEntity player) {
+        TrainingSession session = sessions.get(player.getUuid());
+        if (recoveryFailed.contains(player.getUuid())
+                || (session != null && (session.phase == TrainingSession.Phase.ERROR_LOCKED
+                || session.phase == TrainingSession.Phase.RESTORING))) return false;
+        if (session != null || InventoryService.isProtected(player)) stop(player, "Stopped");
+        return !sessions.containsKey(player.getUuid()) && !InventoryService.isProtected(player)
+                && !recoveryFailed.contains(player.getUuid());
     }
 
     public void onLoad(ServerPlayerEntity player, CompoundTag playerTag) {

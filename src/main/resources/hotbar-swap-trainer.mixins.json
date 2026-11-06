@@ -15,6 +15,6 @@
     "LivingProtectionMixin",
     "PersistentProjectilePickupProtectionMixin"
   ],
-  "client": ["client.MinecraftClientMixin", "client.ClientPlayerInteractionManagerMixin"],
+  "client": ["client.MinecraftClientMixin", "client.ClientPlayerInteractionManagerMixin", "client.TitleScreenMixin", "client.GameMenuScreenMixin"],
   "injectors": { "defaultRequire": 1 }
 }

@@ -371,3 +371,49 @@ cancels the mining update. This discards pending work rather than deferring it
 until restoration. Stale pre-START work is not scored as a new forbidden action.
 Required injections and remapped Shadows remain fail-closed. Actual verification
 is recorded in [code-review-fixes.md](code-review-fixes.md).
+
+## M3-B fixed-version world lifecycle and bounded reset (2026-11-06)
+
+Inspected the locally generated pinned 1.16.1/Yarn build.21 sources before
+implementation. No modern world-creation API is used.
+
+- `MinecraftClient.method_29607(String, LevelInfo, RegistryTracker.Modifiable,
+  GeneratorOptions)` creates; `startIntegratedServer(String)` loads. Both use
+  vanilla LevelStorage.Session/resource loading and render their loading screen
+  while waiting. `GeneratorOptions.method_28608` installs a FlatChunkGenerator
+  with explicit three layers and empty StructuresConfig.
+- Saved `WorldGenSettings` uses `RegistryReadingOps.of(NbtOps.INSTANCE,
+  RegistryTracker.create())`, matching vanilla's registry IDs rather than plain
+  NbtOps inline dimension objects. Preflight compares exact generator data before
+  vanilla can write the selected owned directory.
+- `GameMenuScreen.initWidgets` contains the ordinary return-to-menu button. A
+  client-only TAIL adapter replaces only that action in an identified practice
+  world; normal-world buttons remain vanilla. TitleScreen.init TAIL adds the one
+  entry. No world/session/recovery logic is in either Mixin.
+- `MinecraftServer.isStopping()` is **server-thread death**, not the early
+  `stopped` field set before shutdown. Vanilla client.disconnect renders while
+  waiting, after world.disconnect triggers the owner stop path. Service STOPPED
+  releases server references; no fixed sleep establishes completion.
+- `World.setBlockState` and `WorldChunk.setBlockState` call old-block replacement
+  callbacks even with neighbor flags disabled. Arena reset therefore replaces
+  the bounded section data directly, removes loaded/pending block entities via
+  the public world adapter, maintains section counts/all existing heightmaps,
+  lighting section status/checkBlock, chunk dirty state and markForUpdate. It
+  performs no drop/comparator/neighbor callbacks beyond the owned cuboid.
+- Chunk save clears dirty state before asynchronous writes. Flush alone is not
+  an acknowledgment. Region readback is genuinely read-only (RandomAccessFile r);
+  vanilla RegionFile opens CREATE/WRITE. A flushed open region's last allocated
+  sector can remain unpadded until close, so validate actual payload length, not
+  nonexistent unused padding. Compare saved block states and block-entity NBT.
+- Vanilla PersistentState.save writes in place and clears dirty even on an I/O
+  error. Arena ownership journal and operation seal use forced same-directory
+  temporaries and atomic replacement instead, followed by readback.
+- Vanilla selected-slot echoes may still be queued when an immediate world action
+  restores inventory. Arena requests are sent at END_CLIENT_TICK. EXIT_RESTORED
+  follows the server's ordered inventory/held-slot sync; the client's end-tick
+  EXIT_COMMIT follows its vanilla echo. Exact snapshot + saved-player and owned
+  terrain readback precede EXIT_READY/disconnect. This preserves original
+  selection as well as inventory contents.
+
+Source inspection and programmatic fixtures are distinct from real process cuts
+and human input. Exact artifact-specific results: [M3-B](m3-b-practice-arena.md).
