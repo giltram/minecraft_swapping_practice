@@ -33,9 +33,13 @@ public final class ArenaRecoveryChecks {
     }
 
     static void run(ServerPlayerEntity player, InventorySnapshot baseline, List<Map<String, Object>> checks) throws Exception {
+        run(player, baseline, checks, dev.hotbarswaptrainer.environment.TrainingEnvironment.STATIONARY);
+    }
+    static void run(ServerPlayerEntity player, InventorySnapshot baseline, List<Map<String, Object>> checks,
+                    dev.hotbarswaptrainer.environment.TrainingEnvironment environment) throws Exception {
         Path world = player.getServer().getSavePath(WorldSavePath.ROOT).toAbsolutePath().normalize();
         byte[] journal = Files.readAllBytes(world.resolve(ArenaJournal.FILE));
-        TrainerMod.SESSIONS.handle(player, TrainerProtocol.Request.start(TrainingMode.SINGLE_ITEM, "default", 0));
+        TrainerMod.SESSIONS.handle(player, TrainerProtocol.Request.start(TrainingMode.SINGLE_ITEM, "default", 0, false, environment));
         AcceptanceSupport.require(InventoryService.isProtected(player), "Safety check did not begin a transaction");
         CompoundTag raw = ((RecoveryHolder) player).trainer$getRecovery().copy();
         Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(world);

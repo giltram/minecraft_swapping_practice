@@ -29,9 +29,12 @@ public class ClientOptionsStoreTest {
         ClientOptions loaded = store.load();
         assertEquals(TrainingEnvironment.STATIONARY, loaded.environment);
         assertArrayEquals(original, Files.readAllBytes(file));
-        store.save(new ClientOptions(loaded.mode, loaded.profile, loaded.goal, loaded.showHints,
-                loaded.showSwapCounts, TrainingEnvironment.MOVING));
-        assertEquals(TrainingEnvironment.MOVING, new ClientOptionsStore(file).load().environment);
+        for (TrainingEnvironment environment : new TrainingEnvironment[] {TrainingEnvironment.MOVING, TrainingEnvironment.PARKOUR}) {
+            store.save(new ClientOptions(loaded.mode, loaded.profile, loaded.goal, loaded.showHints,
+                    loaded.showSwapCounts, environment));
+            ClientOptions reread = new ClientOptionsStore(file).load();
+            assertEquals(environment, reread.environment); assertEquals(loaded.goal, reread.goal);
+        }
     }
 
     @Test
@@ -76,7 +79,7 @@ public class ClientOptionsStoreTest {
                 {"goal", "2147483648"}, {"goal", "1.5"}, {"goal", "\"10\""},
                 {"goal", "null"}, {"showHints", "\"false\""}, {"showHints", "0"}, {"showSwapCounts", "null"}, {"showSwapCounts", "1"},
                 {"showSwapCounts", "\"false\""}, {"extra", "true"},
-                {"environment", "\"PARKOUR\""}, {"environment", "null"}, {"environment", "1"}
+                {"environment", "\"UNKNOWN\""}, {"environment", "null"}, {"environment", "1"}
         };
         for (String[] invalid : invalidFields) {
             JsonObject json = new JsonParser().parse(valid).getAsJsonObject();

@@ -19,7 +19,7 @@ def verify(run):
     if world.resolve() != world or (world / "playerdata").resolve() != world / "playerdata":
         raise ValueError("Linked arena data")
     journal = json.loads((world / ".hotbar-swap-trainer-arena.json").read_text())
-    if journal["path"] != str(world) or journal["version"] != "1" or journal["spec"] != "flat-64-v1" or journal["phase"] != "READY":
+    if journal["path"] != str(world) or journal["version"] not in ("1", "2") or journal["spec"] != "flat-64-v1" or journal["phase"] != "READY":
         raise ValueError("Arena ownership/readiness mismatch")
     spec = importlib.util.spec_from_file_location("independent_nbt", ROOT / "scripts/verify-owned-smoke-save.py")
     nbt = importlib.util.module_from_spec(spec)
@@ -34,6 +34,12 @@ def verify(run):
     seal = nbt.read(world / "data/hotbar-swap-trainer-arena.dat")["data"][1]
     for key in ("id", "path", "spec", "operation"):
         if seal[key] != (8, journal[key]): raise ValueError("Arena seal mismatch: " + key)
+    if seal["version"] != (3, int(journal["version"])): raise ValueError("Arena seal version mismatch")
+    if journal["version"] == "2":
+        if (journal["layout"], journal["seed"]) not in (("flat", "0"), ("basic-parkour-v1", "163161")):
+            raise ValueError("Unsupported course identity/seed")
+        if seal["layout"] != (8, journal["layout"]) or seal["seed"] != (4, int(journal["seed"])):
+            raise ValueError("Saved course identity/seed mismatch")
     checks = []
     for path in [world / "level.dat", world / "playerdata" / (str(player) + ".dat")]:
         if path.is_symlink(): raise ValueError("Linked player save")
@@ -45,7 +51,11 @@ def verify(run):
             raise ValueError("Player UUID/recovery mismatch")
         checks.append({"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                        "inventoryPositions": 41, "selectedSlot": baseline["SelectedItemSlot"][1], "recoveryPresent": False})
+    terrain_spec = importlib.util.spec_from_file_location("independent_terrain", ROOT / "scripts/verify-arena-terrain.py")
+    terrain = importlib.util.module_from_spec(terrain_spec)
+    terrain_spec.loader.exec_module(terrain)
     return {"status": "passed", "method": "Independent standard-library typed NBT decoding after process exit",
+            "terrain": terrain.verify(world, journal, nbt),
             "identity": journal["id"], "baselineSha256": hashlib.sha256(baseline_path.read_bytes()).hexdigest(), "checks": checks}
 
 

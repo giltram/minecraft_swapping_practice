@@ -1,0 +1,67 @@
+[
+  {
+    "name": "STATIONARY-SINGLE_ITEM-finite",
+    "status": "passed",
+    "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+  },
+  {
+    "name": "STATIONARY-FULL_INVENTORY-finite",
+    "status": "passed",
+    "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+  },
+  {
+    "name": "MOVING-SINGLE_ITEM-finite",
+    "status": "passed",
+    "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+  },
+  {
+    "name": "MOVING-FULL_INVENTORY-finite",
+    "status": "passed",
+    "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+  },
+  {
+    "name": "stationary-regression",
+    "status": "passed",
+    "detail": "Anchor, rotation packet, zero velocity/fall distance, grounded flag and restore"
+  },
+  {
+    "name": "accepted-movement-and-relaxed-stops",
+    "status": "passed",
+    "detail": "Actual accepted walking/jump, rotation/vertical zero, collision rejection, teleport reset, repeated stationary callbacks, untouched velocity and counters"
+  },
+  {
+    "name": "SINGLE_ITEM-unlimited-airborne-protection-stop",
+    "status": "passed",
+    "detail": "Unlimited replacement/invalid retry; pickup/use/drop/transfer/block-use/lethal damage guards; immediate restore in place with velocity/fall distance intact"
+  },
+  {
+    "name": "FULL_INVENTORY-unlimited-airborne-protection-stop",
+    "status": "passed",
+    "detail": "Unlimited replacement/invalid retry; pickup/use/drop/transfer/block-use/lethal damage guards; immediate restore in place with velocity/fall distance intact"
+  },
+  {
+    "name": "interrupt-PREPARING",
+    "status": "passed",
+    "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+  },
+  {
+    "name": "interrupt-COUNTDOWN",
+    "status": "passed",
+    "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+  },
+  {
+    "name": "interrupt-GO",
+    "status": "passed",
+    "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+  },
+  {
+    "name": "interrupt-RUNNING",
+    "status": "passed",
+    "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+  },
+  {
+    "name": "interrupt-SUCCESS",
+    "status": "passed",
+    "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+  }
+]

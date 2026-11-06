@@ -32,7 +32,8 @@ public final class TrainerMod implements ModInitializer {
         try { profiles.installDefaultIfMissing(); }
         catch (Exception failure) { LogManager.getLogger("HotbarSwapTrainer").error("Cannot install default profile", failure); }
         PracticeArenaService arenas = new PracticeArenaService(ArenaPackets::send);
-        SESSIONS = new SessionManager(INVENTORY, profiles, new HistoryStore(FabricLoader.getInstance().getConfigDir().resolve("hotbar-swap-trainer/history")), arenas::trainingAllowed);
+        SESSIONS = new SessionManager(INVENTORY, profiles, new HistoryStore(FabricLoader.getInstance().getConfigDir().resolve("hotbar-swap-trainer/history")),
+                (player, environment) -> arenas.layoutAllowed(player, environment == dev.hotbarswaptrainer.environment.TrainingEnvironment.PARKOUR));
         ServerPackets.register(SESSIONS::handle);
         ServerLifecycleEvents.SERVER_STARTED.register(arenas::opened);
         ServerLifecycleEvents.SERVER_STOPPED.register(arenas::closed);
@@ -43,6 +44,7 @@ public final class TrainerMod implements ModInitializer {
             if (!SESSIONS.restoreBeforeWorldOperation(player)) { arenas.recoveryBlocked(player); return; }
             if (action == ArenaPackets.Action.EXIT) arenas.exit(player);
             else if (action == ArenaPackets.Action.EXIT_COMMIT) arenas.commitExit(player);
+            else if (action == ArenaPackets.Action.FLAT || action == ArenaPackets.Action.PARKOUR) arenas.convert(player, action == ArenaPackets.Action.PARKOUR);
             else arenas.reset(player, action == ArenaPackets.Action.RETRY);
         });
         ServerLifecycleEvents.SERVER_STOPPING.register(SESSIONS::shutdown);

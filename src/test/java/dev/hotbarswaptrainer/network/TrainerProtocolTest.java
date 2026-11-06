@@ -15,6 +15,17 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 public class TrainerProtocolTest {
+    @Test public void independentCourseViewRoundTripsAndRejectsNegativeProgress() {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        try {
+            TrainerProtocol.writeView(buf, new TrainerProtocol.View.Builder().environment(TrainingEnvironment.PARKOUR)
+                    .phase("SUCCESS").course("RETURNING", 3, 12, 2, 500).build());
+            TrainerProtocol.View view = TrainerProtocol.readView(buf);
+            assertEquals("SUCCESS", view.phase); assertEquals("RETURNING", view.coursePhase);
+            assertEquals(3, view.coursePlatform); assertEquals(12, view.courseTotal); assertEquals(2, view.courseFalls); assertEquals(500, view.courseNanos);
+            try { new TrainerProtocol.View.Builder().course("RUNNING", -1, 12, 0, 0); fail(); } catch (IllegalArgumentException expected) { }
+        } finally { buf.release(); }
+    }
     @Test public void environmentRoundTripsForBothModesAndViews() {
         for (TrainingMode mode : TrainingMode.values()) for (TrainingEnvironment environment : TrainingEnvironment.values()) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());

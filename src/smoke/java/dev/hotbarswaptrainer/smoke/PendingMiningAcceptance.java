@@ -27,7 +27,7 @@ final class PendingMiningAcceptance {
         require(original.isAir(), "Refuse to replace existing terrain for mining fixture");
         List<String> checks = new ArrayList<>();
         try {
-            for (TrainingEnvironment environment : TrainingEnvironment.values()) {
+            for (TrainingEnvironment environment : new TrainingEnvironment[] {TrainingEnvironment.STATIONARY, TrainingEnvironment.MOVING}) {
                 for (TrainingMode mode : TrainingMode.values()) {
                     for (boolean delayed : new boolean[]{false, true}) {
                         player.world.setBlockState(target, Blocks.STONE.getDefaultState());

@@ -41,4 +41,14 @@ public final class ArenaUiSmokeAccess {
         throw new IllegalStateException("The managed pause-menu exit adapter is missing");
     }
     public static void request(dev.hotbarswaptrainer.network.ArenaPackets.Action action) throws Exception { trainer().arena().request(action); }
+    public static void convert(boolean parkour) throws Exception {
+        if (trainer().arena().prepareLayout(parkour, () -> { })) return;
+        if (!(MinecraftClient.getInstance().currentScreen instanceof EditorConfirmScreen)) throw new IllegalStateException("Missing conversion confirmation");
+        for (Element element : MinecraftClient.getInstance().currentScreen.children()) {
+            if (element instanceof ButtonWidget && ((ButtonWidget) element).getMessage().getString().equals(EditorText.text("confirm"))) {
+                ((ButtonWidget) element).onPress(); return;
+            }
+        }
+        throw new IllegalStateException("Missing conversion confirmation button");
+    }
 }

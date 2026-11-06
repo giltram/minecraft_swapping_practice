@@ -10,6 +10,8 @@ import java.util.Set;
 /** Production/intermediary acceptance hooks must not affect named runClient or normal smoke. */
 public final class AcceptanceMixinPlugin implements IMixinConfigPlugin {
     @Override public boolean shouldApplyMixin(String target, String mixin) {
+        if (mixin.endsWith("ClientStopTraceMixin")) return !FabricLoader.getInstance().isDevelopmentEnvironment()
+                && "accept-moving".equals(System.getProperty("hotbarswaptrainer.smoke", ""));
         if (mixin.endsWith("ArenaReadyCutMixin")) return !FabricLoader.getInstance().isDevelopmentEnvironment()
                 && "accept-arena-cut-ready".equals(System.getProperty("hotbarswaptrainer.smoke", ""));
         if (mixin.endsWith("ArenaExitRetryMixin") || mixin.endsWith("ArenaExitSaveFailureMixin"))

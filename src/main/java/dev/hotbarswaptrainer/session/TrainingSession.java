@@ -42,7 +42,7 @@ final class TrainingSession {
         this.targetHints = hints;
         this.profile = profile;
         this.mode = mode;
-        this.goal = goal;
+        this.goal = environmentType == TrainingEnvironment.PARKOUR ? 1 : goal;
         this.environmentType = environmentType;
         this.environment = SessionEnvironment.create(environmentType, player);
     }

@@ -6,7 +6,7 @@ Updated 2026-11-06. Target: Minecraft Java **1.16.1**, Fabric, local integrated 
 
 Milestone 1 now has source implementations for profiles/tasks, inventory recovery, stationary sessions, input observation, versioned networking and client controls/HUD. Build and game acceptance results live in [testing.md](testing.md); implementation does not imply those checks passed. Ordinary-world training remains gated: the local owner must explicitly mark a disposable test world with `/swaptrainer enable-test-world`. M3-B separately creates and manages its own path-bound practice save; a disposable marker never authorizes terrain changes.
 
-[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3-A adds Moving; [M3-B](m3-b-practice-arena.md) adds the owned practice arena. M3-C/Parkour remain unimplemented.
+[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3-A adds Moving; [M3-B](m3-b-practice-arena.md) adds the owned practice arena. [M3-C](m3-c-parkour.md) adds concurrent Parkour; human route completion remains pending.
 
 [M3-A moving inventory training](m3-a-moving-inventory.md) supports both inventory
 modes with a frozen Stationary / Moving option. The user explicitly chose free
@@ -45,9 +45,10 @@ All production packages begin with `dev.hotbarswaptrainer`.
 | task | Immutable ten-position layouts/tasks, exact `ProfileApplicability` mode preconditions, deterministic Single/Full generators, typed generation failures and `TaskValidator` completion/conservation results |
 | inventory | `InventorySnapshot`, versioned `RecoveryRecord`, `ConfirmedPlayerSave`, `InventoryService`, `PendingBlockBreaking` vanilla adapter; snapshot/setup/sync/recovery, runtime stack adapters and `MinecraftItemCatalog` template normalization |
 | input | `PlayerActionTracker` records actual vanilla swaps and changed selections; no score/state decisions |
-| environment | `TrainingEnvironment` owns independent environment IDs; `SessionEnvironment` selects the original stationary anchor or vanilla Moving with accepted-horizontal-movement observation; no terrain lifecycle or outcome decisions |
-| session | `SessionManager` owns all training state transitions, timing, invalidation, frozen results and the confirmed-restoration gate for world operations; injected world-readiness predicate, no arena implementation dependency; package-private `TrainingSession` is server-thread mutable state |
-| arena | [Module contract](../src/main/java/dev/hotbarswaptrainer/arena/README.md): fixed v1 specification, strict ownership journal/preflight, bounded initialization/reset/replay, independent saved-chunk/metadata checks and server lifecycle; no session, stats, network or client imports |
+| course | [Pure course contract](../src/main/java/dev/hotbarswaptrainer/course/README.md): immutable deterministic `BasicCourse` geometry and disposable monotonic `CourseAttempt`; no Minecraft, file or consumer dependencies |
+| environment | `SessionEnvironment` selects Stationary, Moving or `ParkourEnvironment`; the latter adapts accepted positions/support/teleport acknowledgment to course state. No terrain lifecycle or inventory mutation |
+| session | `SessionManager` owns all training state transitions, timing, invalidation, frozen results and the confirmed-restoration gate for world operations; injected environment-aware world-readiness predicate, no arena implementation dependency; package-private `TrainingSession` is server-thread mutable state |
+| arena | [Module contract](../src/main/java/dev/hotbarswaptrainer/arena/README.md): unchanged v1 base generator, exact flat/course `ArenaLayout`, strict v1/v2 ownership and conversion, bounded replay and independent saved checks; no session, stats, network or client imports |
 | stats | Immutable results/frozen SessionMetadata, strict bounded HistoryJson codec, injected HistoryStore I/O, immutable HistorySnapshot queries and pure PersonalBests derivation |
 | network | `TrainerProtocol` bounded DTO encoding and `ServerPackets` decode/queue/send adapter; no client imports |
 | client | Client projection, packet adapter, mod keys, validated `ClientOptions`, client-only `ClientOptionsStore` JSON I/O, options screen with raw training-count input, file-bound multi-select profile drafts, client registry picker and shared clipped scroll forms, optional HUD hints, HistoryBrowser snapshots and the two-mode PB table; never reads server session objects |
@@ -59,11 +60,14 @@ flowchart TD
   Root --> Sessions[session]
   Root --> Arena[arena]
   Arena --> Inventory[inventory]
+  Arena --> Course[course]
   Sessions --> Profiles[profile]
   Sessions --> Tasks[task]
   Sessions --> Inventory[inventory]
   Sessions --> Input[input]
   Sessions --> Environment[environment]
+  Sessions --> Course
+  Environment --> Course
   Sessions --> Stats[stats]
   Sessions --> Network[network]
   Inventory --> Tasks
@@ -71,11 +75,13 @@ flowchart TD
   Tasks --> Profiles
   Stats --> Tasks
   Stats --> Environment
+  Stats --> Course
   Stats --> Profiles
   Network --> Arena
   Network --> Tasks
   Network --> Profiles
   Network --> Environment
+  Network --> Course
   Client[client] --> Network
   Client --> Arena
   Client --> Inventory
@@ -110,6 +116,8 @@ See [domain.md](domain.md) for JSON schema, classes and test locations.
 All session/inventory writes run on the integrated-server thread. Networking callbacks decode values before queuing work; no retained PacketByteBuf crosses threads.
 
 `BACKING_UP → PREPARING → COUNTDOWN → GO → RUNNING → SUCCESS / INVALID → PREPARING`.
+Parkour holds inventory SUCCESS until its independent course also finishes; it
+never prepares a second successful task in that run.
 
 Stop, finite successful-count completion, disconnect and shutdown enter RESTORING. Active NBT loaded after a crash is restored before player interaction and committed on the server thread. Recovery failure enters ERROR_LOCKED, keeps the backup and blocks interaction. New sessions cannot bypass recovery.
 
@@ -118,7 +126,7 @@ Stop, finite successful-count completion, disconnect and shutdown enter RESTORIN
 3. Replace training slots and synchronize complete vanilla player ScreenHandler contents, cursor and held slot; send PREPARING task/revision.
 4. Client waits for matching inventory/selection, focus, no screen and released Swap Hands, then sends READY. After countdown it draws GO and queues GO_ACK before enabling vanilla swap packets.
 5. Server receives GO_ACK, starts `System.nanoTime()` timing and enters RUNNING. It observes each vanilla swap after execution; success freezes immediately before another packet in the same tick. Tick checks are extra integrity checks.
-6. Invalid actions have priority over completion. Feedback is followed by a new task; PREPARING waits for closed screens/focus/released key. Finite length counts successful tasks only.
+6. Invalid actions have priority over completion. Invalid feedback is followed by a retry; Stationary/Moving success prepares the next task. Parkour success waits for its course. PREPARING waits for closed screens/focus/released key. Finite length counts successful tasks only.
 7. Stop restores the snapshot by complete replacement and confirms the cleared-active save before releasing guards. Only after confirmation, history is atomically committed outside the recovery error boundary, then the current-session summary/error is sent to HUD. Post-restore statistics/aggregation/notification failure cannot re-lock the player.
 
 HUD shows phase/progress/time, optional swap counts (default OFF) and final Avg/Best.
@@ -267,7 +275,7 @@ passes movement through that boundary and publishes/saves the actual environment
 The movement Mixin captures server position after the main-thread fence, then
 observes position only at vanilla's accepted increaseTravelMotionStats branch.
 teleportRequest clears diagnostic evidence; per-packet before/after positions
-avoid counting cross-packet resets. Environment observations have no clock,
+avoid counting cross-packet resets. Moving observations have no clock,
 speed threshold, scoring, HUD or recovery dependency. Only the last accepted X/Z
 segment in blocks is retained; camera/vertical-only/blocked movement contributes
 zero. Low TPS and missing observations cannot invalidate a task.
@@ -289,3 +297,63 @@ and actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN checks.
 bounded restore-observation Mixin applies only to this opt-in production driver.
 The obsolete ProfileEditorUiSmoke and its removed-screen workflow are retired.
 All these classes remain outside the production mod. See [targeted fixes](code-review-fixes.md).
+
+
+## M3-C course and coordination boundaries
+
+[Confirmed rules and acceptance](m3-c-parkour.md) are the product source of truth.
+Parkour freezes the effective inventory quota at one, irrespective of the saved
+Stationary/Moving count. Inventory success holds SUCCESS while the course runs;
+course success freezes its own time while the player solves on the finish pad.
+SessionManager ends only after both, then confirms inventory restoration before
+course-only safe placement. Moving STOP never invokes placement. Invalid inventory
+attempts retry SETUP under the original backup; falls never invoke SETUP/backup.
+
+`course.BasicCourse` centrally defines the versioned seed/layout: thirteen 3x3
+platforms at block y8, twelve cardinal level jumps over one-block gaps, within the
+original cuboid. Every intermediate landing is an ordered checkpoint. Seeded
+rotation is deterministic. Emerald/gold/diamond centers mark start/checkpoints/
+finish. The flat floor remains below; a fall is detected before reaching it.
+Geometry tests are not human playability acceptance.
+
+`CourseAttempt` owns PREPARING/RUNNING/RETURNING/FINISHED/STOPPED, checkpoint,
+falls and monotonic elapsed time. `ParkourEnvironment` owns only the vanilla
+adapter: exact feet height/full footprint, real support and body collision,
+normal locomotion state, accepted airborne/landing sequence, and correction
+barriers. Requested positions never award progress. Matching teleport confirms
+and a fresh supported observation re-arm checkpoint returns; stale/duplicate
+confirms cannot progress. First GO_ACK starts the course clock; later inventory
+GO_ACKs cannot reset it. Pause/focus invalidates the inventory attempt as before,
+while course elapsed includes pause time. No fall penalty or aggregate score.
+
+Arena journal/seal v2 explicitly records layout ID/seed; the pending journal also
+records source ID/seed for the previous seal. The base spec/generator and bounds
+remain flat-64-v1. Legacy v1 records keep exact semantics and are read without
+rewrite. Conversion archives original ownership/seal bytes before write-ahead
+intent. All terrain writers/checkers/readbacks use the target ArenaLayout.
+READY grants Parkour only for its matching owned course. Ordinary test markers
+never grant Parkour. Explicit UI confirmation precedes each destructive layout
+switch; reset rebuilds the current layout. Course return changes no blocks.
+START also rereads the seal and checks current platform/jump/headroom blocks in
+1,305 bounded comparisons before backup, catching idle player edits. Failure
+requires explicit reset; it never repairs terrain automatically. This targeted
+preflight supplements the full managed-volume READY and saved readback checks.
+
+Trainer protocol 4 adds a bounded independent course projection; arena protocol 2
+adds layout-switch actions and the detached layout flag. Existing Java request
+factories still default to Stationary; old wire versions are rejected. Client
+options remain schema 1 with PARKOUR as an accepted environment; missing values
+still default to Stationary without rewrite. The existing environment selector
+is reused. Parkour disables but preserves the count preference. The HUD adds only
+course progress/time/falls and arrival/completion feedback.
+
+History schema 1 is unchanged for old environments. Schema 2 adds an independent
+CourseResult with course/version/seed, rules/timing versions, elapsed time, falls,
+checkpoint and completed flag; completed Parkour sessions require both successes.
+Inventory PBs remain per environment and measure only single inventory tasks.
+Course time is not their total/average/PB. Unknown comparison conditions cannot
+be treated as supported course records. No course leaderboard/history redesign.
+Live attempts are not durable: hard cuts may lose their history, recover inventory
+first, and start a fresh course without accumulating offline time. Nothing about
+course/results enters recovery NBT. Statistics/notification errors remain outside
+the inventory restoration failure boundary.

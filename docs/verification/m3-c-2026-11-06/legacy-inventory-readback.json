@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "method": "Independent standard-library typed NBT decoding after process exit",
+  "baseline": "run-m2-runtime-m3c-final-20261106/smoke/baseline.nbt",
+  "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+  "checks": [
+    {
+      "path": "run-m2-runtime-m3c-final-20261106/saves/hst-smoke/level.dat",
+      "sha256": "2f037116b78d649d2393a7e103e99c82ff9ecc41c8a0481863f5a0078c475312",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+      "recoveryPresent": false
+    },
+    {
+      "path": "run-m2-runtime-m3c-final-20261106/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "sha256": "d498de853eb301ec14ce41cb8ce9f244eff8114103ef2f7a5a9710c5f82c2edf",
+      "inventoryPositions": 41,
+      "selectedSlot": 6,
+      "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+      "recoveryPresent": false
+    }
+  ],
+  "permissions": {
+    "run-m2-runtime-m3c-final-20261106/saves/hst-smoke": "0o755",
+    "run-m2-runtime-m3c-final-20261106/saves/hst-smoke/playerdata": "0o755"
+  }
+}

@@ -24,6 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prefix", required=True)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--parkour", action="store_true", help="Run M3-C scenarios and same-path cut recovery")
     args = parser.parse_args()
     if Path(args.prefix).name != args.prefix or not args.prefix.startswith("run-arena-"):
         parser.error("Expected a direct isolated run-arena-* prefix")
@@ -48,7 +49,8 @@ def main():
                 try: process.wait(timeout=20)
                 except subprocess.TimeoutExpired: process.kill(); process.wait()
                 raise RuntimeError("Owned child timed out: " + run.name + "/" + scenario)
-        path = run / "smoke" / ("arena-cut.json" if expected == 91 else "arena-result.json")
+        family = "parkour" if args.parkour else "arena"
+        path = run / "smoke" / (family + ("-cut.json" if expected == 91 else "-result.json"))
         if code != expected or not path.exists() or path.stat().st_mtime_ns < started:
             raise RuntimeError("Wrong exit/fresh evidence: " + run.name + "/" + scenario + ": " + str(code))
         result = json.loads(path.read_text())
@@ -61,12 +63,14 @@ def main():
 
     save()
     try:
-        for scenario in ("lifecycle", "safety", "cut-create", "cut-build", "cut-ready", "cut-reset", "cut-training"):
+        scenarios = ("parkour", "parkour-disconnect", "parkour-cut-convert", "parkour-cut-reset", "parkour-cut-training") if args.parkour else (
+            "lifecycle", "safety", "cut-create", "cut-build", "cut-ready", "cut-reset", "cut-training")
+        for scenario in scenarios:
             run = ROOT / (args.prefix + "-" + scenario)
             if run.exists(): raise RuntimeError("Matrix requires a fresh case directory: " + str(run))
             case = {"instance": run.name, "scenario": scenario}
             report["cases"].append(case)
-            if scenario.startswith("cut-"):
+            if "cut-" in scenario:
                 case["cut"] = launch(run, scenario, 91)
                 world = run / "saves/hotbar-swap-trainer-practice"
                 journal = json.loads((world / ".hotbar-swap-trainer-arena.json").read_text())
@@ -77,7 +81,7 @@ def main():
                 case["forensicOnly"] = str(forensic)
                 save()
                 print(json.dumps({"case": scenario, "cut": "halt91", "phase": journal["phase"]}), flush=True)
-                case["reopen"] = launch(run, "recover", 0)
+                case["reopen"] = launch(run, "parkour-recover" if args.parkour else "recover", 0)
             else: case["launch"] = launch(run, scenario, 0)
             case["independentPostExitReadback"] = verifier.verify(run)
             case["status"] = "passed"

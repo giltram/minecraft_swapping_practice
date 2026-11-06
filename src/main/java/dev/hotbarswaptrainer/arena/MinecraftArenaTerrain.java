@@ -24,6 +24,7 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
     private final ServerWorld world;
     private final ServerPlayerEntity owner;
     private final Path directory;
+    private ArenaLayout layout = ArenaLayout.FLAT;
 
     MinecraftArenaTerrain(ServerPlayerEntity owner, Path directory) {
         this.owner = owner; this.server = owner.getServer(); this.world = server.getOverworld(); this.directory = directory;
@@ -42,10 +43,16 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
             ArenaJournal.safePath(directory.resolve("region/r." + x + "." + z + ".mca"));
     }
 
+    void checkCourseStart() throws IOException {
+        safe();
+        if (!ArenaLayout.PARKOUR.checkCourse(world::getBlockState)) throw new ArenaLifecycle.ChangedTerrain();
+    }
+
     @Override public void validate(ArenaJournal.Record record) throws IOException {
         safe();
         if (!ArenaSpec.matches(server.getSaveProperties().getGeneratorOptions())) throw new IOException("Arena generator mismatch");
         ArenaSeal.check(directory, record, false);
+        layout = record.layout;
         if (record.phase == ArenaJournal.Phase.READY) checkSavedSettings();
     }
 
@@ -58,12 +65,13 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
         world.getWorldBorder().setCenter(0, 0); world.getWorldBorder().setSize(64);
         world.setSpawnPos(new BlockPos(0, ArenaSpec.SPAWN_Y, 0));
         // Teleport before changing support; reset never carries inventory to a different world.
-        replace(new BlockPos(0, 3, 0), ArenaSpec.blockAt(3));
-        for (int y = 4; y <= 6; y++) {
+        int feetY = (int) layout.arrivalY();
+        replace(new BlockPos(0, feetY - 1, 0), layout.blockAt(0, feetY - 1, 0));
+        for (int y = feetY; y <= feetY + 2; y++) {
             BlockPos pos = new BlockPos(0, y, 0);
-            replace(pos, ArenaSpec.blockAt(y));
+            replace(pos, layout.blockAt(0, y, 0));
         }
-        owner.teleport(world, 0.5, ArenaSpec.SPAWN_Y, 0.5, owner.yaw, owner.pitch);
+        owner.teleport(world, 0.5, feetY, 0.5, owner.yaw, owner.pitch);
         owner.setVelocity(0, 0, 0); owner.fallDistance = 0;
     }
 
@@ -80,7 +88,7 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         for (int y = bottom; y < bottom + 16; y++) for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
             pos.set(chunk.getPos().getStartX() + x, y, chunk.getPos().getStartZ() + z);
-            BlockState expected = ArenaSpec.blockAt(y);
+            BlockState expected = layout.blockAt(pos.getX(), y, pos.getZ());
             if (!expected.equals(chunk.getBlockState(pos))) {
                 replace(pos, expected);
             }
@@ -117,7 +125,7 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         for (int y = bottom; y < bottom + 16; y++) for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
             pos.set(chunk.getPos().getStartX() + x, y, chunk.getPos().getStartZ() + z);
-            if (!ArenaSpec.blockAt(y).equals(chunk.getBlockState(pos))) return false;
+            if (!layout.blockAt(pos.getX(), y, pos.getZ()).equals(chunk.getBlockState(pos))) return false;
         }
         return true;
     }
@@ -143,5 +151,5 @@ final class MinecraftArenaTerrain implements ArenaLifecycle.Terrain {
             throw new IOException("Arena settings were not saved or no longer match");
     }
 
-    @Override public void checkSavedChunk(int chunk) throws IOException { safe(); ArenaSavedChunks.check(directory, chunk); }
+    @Override public void checkSavedChunk(int chunk) throws IOException { safe(); ArenaSavedChunks.check(directory, chunk, pos -> layout.blockAt(pos.getX(), pos.getY(), pos.getZ())); }
 }

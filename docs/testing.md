@@ -378,3 +378,17 @@ regressions live in `src/test/.../arena`; detached-wire validation is
 `verify-arena-save.py`. No copied seed, recovery rebinding, ordinary save or
 unknown-area cleanup is involved. [M3-B](m3-b-practice-arena.md) records final
 artifact-specific results, earlier failed probes and remaining human checks.
+
+
+## M3-C concurrent Parkour
+
+[Confirmed rules, implementation and artifact-specific evidence](m3-c-parkour.md)
+cover deterministic geometry, explicit v1/v2 conversion, accepted supported
+landings/teleport barriers, one task plus course completion, input/backup
+preservation and independent history. The pinned JDK8 suite passed 172 tests;
+production matrix records and separate regression/readback records are linked
+there. Current-course START preflight rejects idle edits without automatic repair.
+Fault/position drivers remain excluded from production. Programmatic coordinates,
+actual process cuts/disconnect/write denial, and human route/physical-input/visual
+acceptance are separate methods; human acceptance is still pending. Do not infer
+playability or frame-perfect timing from builds or programmatic handler calls.

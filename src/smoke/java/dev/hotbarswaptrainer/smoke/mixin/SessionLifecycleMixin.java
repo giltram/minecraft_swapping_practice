@@ -16,6 +16,8 @@ public abstract class SessionLifecycleMixin {
 
     @Inject(method = "disconnect", at = @At("HEAD"))
     private void acceptance$disconnect(ServerPlayerEntity player, CallbackInfo ci) { ExitObservation.observe(player, "disconnect"); }
+    @Inject(method = "disconnect", at = @At("RETURN"))
+    private void acceptance$courseDisconnected(ServerPlayerEntity player, CallbackInfo ci) { dev.hotbarswaptrainer.smoke.ParkourDisconnectChecks.after(player); }
 
     @Inject(method = "shutdown", at = @At("HEAD"))
     private void acceptance$shutdown(MinecraftServer server, CallbackInfo ci) {

@@ -22,9 +22,16 @@ final class ArenaLifecycle {
     private final boolean reuse;
 
     ArenaLifecycle(ArenaJournal journal, Terrain terrain, boolean reset) throws IOException {
+        this(journal, terrain, reset, null);
+    }
+
+    ArenaLifecycle(ArenaJournal journal, Terrain terrain, boolean reset, ArenaLayout target) throws IOException {
         this.journal = journal; this.terrain = terrain; this.record = journal.read();
         terrain.validate(record); // Before any configuration, journal transition or terrain mutation.
-        if (reset) {
+        if (target != null) {
+            record = journal.convert(record, target);
+            terrain.validate(record);
+        } else if (reset) {
             if (record.phase != ArenaJournal.Phase.READY) throw new IOException("An arena operation is already pending");
             record = journal.transition(record, ArenaJournal.Phase.RESETTING);
         }

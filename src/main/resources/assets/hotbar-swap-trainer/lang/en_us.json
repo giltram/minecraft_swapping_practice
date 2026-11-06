@@ -118,5 +118,16 @@
   "trainer.arena.error.load": "Minecraft could not load the practice arena. Saved data is kept. Check the log and folder access, then retry.",
   "trainer.arena.error.local_only": "Arena operations require a local single-player world with LAN closed. Close this world and reopen the arena from the title.",
   "trainer.arena.error.none": "The practice arena is unavailable. Check the log, then retry.",
-  "trainer.arena.progress.exit_restored": "Inventory restored. Confirming save before leaving…"
+  "trainer.arena.progress.exit_restored": "Inventory restored. Confirming save before leaving…",
+  "trainer.environment.stationary": "Stationary",
+  "trainer.environment.moving": "Moving",
+  "trainer.environment.parkour": "Parkour",
+  "trainer.config.parkourOneTask": "Parkour: one inventory task and one course. Finish both; no automatic repeat.",
+  "trainer.arena.convertConfirm": "Switch the arena layout? This rebuilds the entire owned area (x/z -32..31, y 0..255), discarding blocks and container contents. Original inventory must be restored first. Ownership records are archived; the world and recovery binding stay at the same path.",
+  "trainer.parkour.progress": "Parkour %s/%s · %s s · Falls %s",
+  "trainer.parkour.returning": "Returning to checkpoint — waiting for confirmed arrival",
+  "trainer.config.inventoryPb": "Inventory single-task PB",
+  "trainer.parkour.result": "Parkour: %s s · Falls %s · %s",
+  "trainer.parkour.finished": "course finished",
+  "trainer.parkour.unfinished": "course unfinished"
 }

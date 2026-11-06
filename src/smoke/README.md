@@ -1,5 +1,18 @@
 # Optional game acceptance mod
 
+M3-C adds excluded `ParkourAcceptance` / `ParkourDisconnectChecks`, dispatched by
+`accept-arena-parkour*`. `run-arena-matrix.py --parkour` uses fresh owned instances
+for normal flows, real client disconnect and actual halt91 cuts during conversion,
+course reset and active training, followed by fresh processes at the original
+path. Forensic save copies are never loaded/rebound. Programmatic movement invokes
+the transformed vanilla handlers with supported landing checks; it is not physical
+keyboard input or human playability acceptance. Recovery fault injection remains
+here, including real POSIX write denial and the existing restore-boundary Mixin.
+`verify-arena-save.py` now checks v1/v2 identity/seal and both player copies, then
+`verify-arena-terrain.py` independently decodes all saved managed blocks. Historical
+Moving/arena loops explicitly list their two original environments; Parkour has
+its own geometry/ownership prerequisites. Exact evidence: docs/m3-c-parkour.md.
+
 Excluded from the production jar. See `docs/production-smoke.md` for launch,
 ownership and exact native/runtime contracts. All inventory mutations and probes
 run on the integrated-server thread in the explicitly owned disposable save.
@@ -141,3 +154,9 @@ raw cut evidence without ever loading/rebinding those forensic copies, requires
 actual halt91/new-process exit0, and independently decodes saved players. See
 [workflow](../../docs/production-smoke.md#m3-b-practice-save-acceptance) and
 [exact evidence](../../docs/m3-b-practice-arena.md).
+
+M3-C's final legacy regression retains an incomplete early-close probe and an
+explicit same-path recover/retry. `ClientStopTraceMixin` is a passive diagnostic
+only for production `accept-moving`, using pinned method_1592/remap=false. It is
+excluded from the trainer jar and disabled in other modes/development. It prints
+stop stacks without throwing; exact outcomes are in the M3-C evidence record.

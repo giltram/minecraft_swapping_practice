@@ -1,0 +1,38 @@
+{
+  "status": "implemented-automated-checks-passed-human-acceptance-pending",
+  "artifact": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "94993cf408b4ceeff0388bcff5b2d10668d1e22eeec6033666727201495f73cb"
+  },
+  "staticChecks": "m3-c-2026-11-06/static-checks.json",
+  "parkourMatrix": "m3-c-2026-11-06/parkour-matrix.json",
+  "arenaRegressionMatrix": "m3-c-2026-11-06/arena-regression-matrix.json",
+  "cutRecoveryBinding": "m3-c-2026-11-06/cut-recovery-binding.json",
+  "legacyMoving": {
+    "status": "passed",
+    "checks": 13,
+    "result": {
+      "mode": "accept-moving",
+      "status": "passed",
+      "detail": "13 M3-A programmatic production checks; physical input/focus/feel remain manual",
+      "elapsedSeconds": 17.537161583
+    },
+    "manifestSha256": "9d475a52010ca97b456352107c28ec7c67f087a0bc246f6d3490cadc8113569d",
+    "inventoryReadback": "m3-c-2026-11-06/legacy-inventory-readback.json",
+    "unchangedTerrain": "m3-c-2026-11-06/legacy-terrain-after.json",
+    "retainedIncompleteAttemptAndRecovery": "m3-c-2026-11-06/legacy-incomplete-and-recovery.json"
+  },
+  "actualMinecraftProcesses": {
+    "matrices": 20,
+    "successfulLegacyRegression": 1,
+    "successfulLegacyRecovery": 1,
+    "incompleteLegacyAttempt": 1,
+    "failedDiagnosticStartupBeforeWorldLoad": 1
+  },
+  "notExecuted": [
+    "physical keyboard/mouse input",
+    "human route completion",
+    "subjective movement feel",
+    "real focus/pause GUI and localized minimum-window visual acceptance"
+  ]
+}

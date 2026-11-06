@@ -144,7 +144,8 @@ public final class TrainerClient implements ClientModInitializer {
         if (!client.isInSingleplayer() || client.player == null || session.active() || !arena.canTrain()) return;
         refreshProfiles();
         if (!profileAvailable) return;
-        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal(), showHints(), environment()));
+        if (!arena.prepareLayout(environment() == TrainingEnvironment.PARKOUR, this::start)) return;
+        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), environment() == TrainingEnvironment.PARKOUR ? 1 : goal(), showHints(), environment()));
     }
 
     void stop(String reason) {
@@ -169,7 +170,7 @@ public final class TrainerClient implements ClientModInitializer {
     TrainingEnvironment environment() { return options.environment; }
     void cycleEnvironment() {
         acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), showSwapCounts(),
-                environment() == TrainingEnvironment.STATIONARY ? TrainingEnvironment.MOVING : TrainingEnvironment.STATIONARY));
+                TrainingEnvironment.values()[(environment().ordinal() + 1) % TrainingEnvironment.values().length]));
     }
     void toggleSwapCounts() { acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), !showSwapCounts(), environment())); }
     boolean profileAvailable() { return profileAvailable; }

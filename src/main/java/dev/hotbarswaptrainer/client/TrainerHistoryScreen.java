@@ -21,7 +21,7 @@ final class TrainerHistoryScreen extends EditorFormScreen {
         this(parent, browser, TrainingEnvironment.STATIONARY);
     }
     TrainerHistoryScreen(Screen parent, HistoryBrowser browser, TrainingEnvironment environment) {
-        super(text("personalBests") + " · " + environment.displayName);
+        super(text("inventoryPb") + " · " + net.minecraft.client.resource.language.I18n.translate("trainer.environment." + environment.name().toLowerCase(java.util.Locale.ROOT)));
         this.parent = parent; this.browser = browser; this.environment = environment;
     }
     @Override protected void buildForm() {

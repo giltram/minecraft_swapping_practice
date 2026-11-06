@@ -69,7 +69,7 @@ public final class PracticeArenaService {
                     approved = journal.read();
                     operation = null;
                     // Arrival follows recovery and inspection. STOP during Moving still never teleports.
-                    owner.teleport(current.getOverworld(), 0.5, ArenaSpec.SPAWN_Y, 0.5, owner.yaw, owner.pitch);
+                    owner.teleport(current.getOverworld(), 0.5, approved.layout.arrivalY(), 0.5, owner.yaw, owner.pitch);
                     owner.setVelocity(0, 0, 0); owner.fallDistance = 0;
                 }
                 send(owner, next);
@@ -89,6 +89,28 @@ public final class PracticeArenaService {
     }
 
     public boolean manages(ServerPlayerEntity player) { return candidate && player.getServer() == server; }
+    public boolean layoutAllowed(ServerPlayerEntity player, boolean parkour) {
+        if (!trainingAllowed(player)) return false;
+        if (!candidate) return !parkour;
+        if (approved.layout.parkour() != parkour) return false;
+        if (parkour) try {
+            ArenaSeal.check(journal.world(), approved, true);
+            new MinecraftArenaTerrain(player, journal.world()).checkCourseStart();
+        } catch (ArenaLifecycle.ChangedTerrain changed) { fail(player, ArenaStatus.Problem.RESET_REQUIRED, changed); return false; }
+        catch (IOException | RuntimeException invalidOwnership) { fail(player, ArenaStatus.Problem.OWNERSHIP, invalidOwnership); return false; }
+        return true;
+    }
+
+    public void convert(ServerPlayerEntity player, boolean parkour) {
+        if (!localOwner(player) || !manages(player) || InventoryService.isProtected(player)
+                || status.state != ArenaStatus.State.READY || operation != null || exitInventory != null) return;
+        try {
+            ArenaLayout target = parkour ? ArenaLayout.PARKOUR : ArenaLayout.FLAT;
+            if (journal.read().layout == target) return;
+            operation = new ArenaLifecycle(journal, new MinecraftArenaTerrain(player, journal.world()), false, target);
+            send(player, ArenaStatus.of(ArenaStatus.State.BUILDING, 0));
+        } catch (IOException | RuntimeException failure) { fail(player, ArenaStatus.Problem.OWNERSHIP, failure); }
+    }
     private boolean localOwner(ServerPlayerEntity player) {
         return player.getServer() == server && !server.isDedicated() && !server.isRemote()
                 && server.isHost(player.getGameProfile()) && server.getPlayerManager().getCurrentPlayerCount() == 1;
@@ -165,6 +187,8 @@ public final class PracticeArenaService {
     }
 
     private void send(ServerPlayerEntity player, ArenaStatus next) {
+        try { next = new ArenaStatus(next.state, next.problem, next.percent, next.resetAllowed, journal.read().layout.parkour()); }
+        catch (IOException unavailable) { /* No layout claim for unverified ownership. */ }
         boolean changed = status.state != next.state || status.problem != next.problem || status.percent != next.percent;
         status = next;
         if (changed || !announced || server.getTicks() % 20 == 0) {

@@ -24,7 +24,7 @@ public class ArenaPacketsTest {
     }
 
     @Test public void malformedUnsupportedAndTrailingMessagesAreRejected() {
-        for (byte[] raw : new byte[][] {{}, {2, 0}, {1, 99}, {1, 0, 0}}) {
+        for (byte[] raw : new byte[][] {{}, {1, 0}, {2, 99}, {2, 0, 0}}) {
             PacketByteBuf buffer = new PacketByteBuf(Unpooled.wrappedBuffer(raw));
             try { ArenaPackets.readAction(buffer); fail("Accepted malformed request"); } catch (RuntimeException expected) { }
             finally { buffer.release(); }

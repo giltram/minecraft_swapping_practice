@@ -30,7 +30,7 @@ final class MovingAcceptance {
         Vec3d origin = player.getPos();
         Object support = player.world.getBlockState(player.getBlockPos().down());
         List<Map<String, Object>> checks = new ArrayList<>();
-        for (TrainingEnvironment environment : TrainingEnvironment.values()) for (TrainingMode mode : TrainingMode.values()) {
+        for (TrainingEnvironment environment : new TrainingEnvironment[] {TrainingEnvironment.STATIONARY, TrainingEnvironment.MOVING}) for (TrainingMode mode : TrainingMode.values()) {
             resetPosition(player, origin);
             start(player, mode, environment, 2);
             TrainerMod.SESSIONS.handle(player, TrainerProtocol.Request.start(mode, "default", 0, false,

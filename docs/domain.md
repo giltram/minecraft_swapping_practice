@@ -122,6 +122,22 @@ The inventory/session adapter separately checks armor, main positions 9..35, cur
 
 `SessionResult` preserves all attempts but computes total/average/best time from successes only. Zero requested successes means unlimited; zero average/best means there is no successful attempt. `ResultStore.save(playerId, result)` is outside recovery and must be idempotent for the same player/session. `findLatest(playerId)` returns an optional result; `forget(playerId)` and `clear()` follow disconnect/world shutdown. InMemoryResultStore remains available for latest-memory callers. The production composition uses HistoryStore; forget/clear only affect its latest-memory projection, while read(UUID) rereads durable records after restart. See [M2-D](m2-d-history.md).
 
+## M3-C course results
+
+M3-C adds pure `course.BasicCourse` / `CourseAttempt` contracts independently of
+inventory tasks; see the [course README](../src/main/java/dev/hotbarswaptrainer/course/README.md).
+Task generators/validator have no course dependency. Schema-2 Parkour history
+contains a separate `CourseResult` with course/version/seed, rule/timing versions,
+elapsed nanoseconds, falls, checkpoint and completion. Schema-1 inventory history
+remains unchanged. Parkour freezes a one-success goal; a COMPLETED session must
+contain that success and a finished course. Either may finish first and be saved
+in a stopped partial session. Inventory averages/PBs use TaskResult only, separated
+by environment. Course comparison requires supported exact identity/seed/rules/
+timing; no combined score or leaderboard. Live course state never enters recovery
+NBT and is not reconstructed after a crash. Tests: `course/*`,
+`stats/CourseHistoryTest`, `arena/ArenaConversionTest` and excluded production
+Parkour fixtures. Executed vs pending evidence: [M3-C](m3-c-parkour.md).
+
 ## Verification locations
 
 - `profile/ProfileRepositoryTest`: schema/path errors, item limits, broken file preservation, one-time defaults, typed structural NBT, deep copies, normalized hashes, potion predicates.

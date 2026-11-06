@@ -5,9 +5,26 @@ inventory modes. Missing schema-1 environment defaults to STATIONARY without a
 rewrite. Moving allows vanilla movement and stationary solutions in every phase;
 there is no stop grace, extra HUD or movement gate. Initial START still requires
 safe dry ground; later task replacement and restoration need no landing wait.
-Environment is frozen at START and carried by protocol 3. History/PBs use the
+Environment is frozen at START (originally protocol 3; now protocol 4). History/PBs use the
 actual environment; the existing two-column PB table labels the options-selected
 environment in its title. See [M3-A contracts and acceptance](m3-a-moving-inventory.md).
+
+M3-C adds Parkour to the same selector, in both inventory modes. It requires the
+matching READY owned course. Options retain schema 1 and the original saved goal;
+Parkour disables that input and sends an effective goal of one (also enforced on
+the server). No second settings/world entry. A layout mismatch on Start opens
+the existing destructive confirmation, then arena progress, then starts after
+READY. Cancellation does not change terrain. Explicit arena reset preserves layout.
+
+Trainer protocol 4 adds bounded course phase/platform/total/falls/nanoseconds,
+independent of task phase/time. Arena protocol 2 adds FLAT/PARKOUR conversion
+actions and the detached layout flag. Unknown/old wire versions are rejected;
+the client never reports checkpoint/finish success. HUD course interpolation
+continues through RETURNING, then freezes at FINISHED/STOPPED. First GO_ACK alone
+starts course time; task GO_ACK semantics remain unchanged. Inventory-first holds
+SUCCESS; course-first holds on the finish pad until inventory succeeds. Both are
+required. Single-task PBs are explicitly labelled and separated by environment;
+they never display course time as an inventory PB. New copy has en_us/zh_cn keys.
 
 `client.TrainerClient` owns only the local HUD projection, accepted preferences and handshake flags. It assembles `ClientOptionsStore` for local configuration I/O and `ProfileRepository` for local profile validation. It never accesses integrated-server session objects. `network.TrainerProtocol` is the common immutable wire contract; `ServerPackets` and `client.ClientPackets` decode incoming buffers immediately and queue detached values on the game thread.
 

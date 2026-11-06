@@ -54,6 +54,11 @@ def read_source(path):
 
 
 def boundary_error(package, class_name, imported):
+    if within(package, PROJECT + ".course"):
+        if within(imported, PROJECT) and not within(imported, PROJECT + ".course"):
+            return "course geometry/attempt contracts cannot depend on their runtime consumers"
+        if any(within(imported, prefix) for prefix in ("net.minecraft", "net.fabricmc", "java.io", "java.nio.file", "java.net")):
+            return "course geometry/attempt contracts cannot access worlds, players, files or networking"
     is_client = any(within(package, prefix) for prefix in CLIENT_PACKAGES)
     client_dependency = (
         within(imported, "net.minecraft.client")

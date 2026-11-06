@@ -1,0 +1,643 @@
+{
+  "status": "passed",
+  "artifactSha256": "2584e938496d9396726285097e274a973952986e3b5e7a277503a7af1a871250",
+  "cases": [
+    {
+      "instance": "run-arena-m3c-20261106-final-parkour",
+      "scenario": "parkour",
+      "launch": {
+        "scenario": "parkour",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-parkour",
+          "detail": "Programmatic positions, same-path reopen, real exit; human completion remains pending",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            },
+            {
+              "name": "SINGLE_ITEM requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "fall and interruption",
+              "status": "passed",
+              "detail": "Same task/progress/GO_ACK start/backup across fall; duplicate/stale teleport rejection; lethal damage blocked; interruption re-SETUP; exact stop restore"
+            },
+            {
+              "name": "teleport cannot finish",
+              "status": "passed",
+              "detail": "Actual server teleport/confirmation to finish did not advance; returned to last authorized platform"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            },
+            {
+              "name": "course reset",
+              "status": "passed",
+              "detail": "Bounded course reset retained layout/identity and original inventory"
+            },
+            {
+              "name": "course same-path reopen",
+              "status": "passed",
+              "detail": "v2 journal/seal/saved blocks reused after actual save-close-load; recovery resolved first"
+            },
+            {
+              "name": "return to flat",
+              "status": "passed",
+              "detail": "Explicit UI confirmation rebuilt flat template and passed independent saved readback"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-parkour.log",
+        "manifestSha256": "fbd481e586ea45e77d0f08db15682d35b4dd2fb821f32199ea610327c59f7ce5"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "terrain": {
+          "status": "passed",
+          "chunks": 16,
+          "blocks": 1048576,
+          "layout": "flat",
+          "method": "Independent Python region/palette decoding, full managed cuboid"
+        },
+        "identity": "8446276f-3d74-4d72-ba27-badf81541ce1",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-m3c-20261106-final-parkour/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "7c5792e4b2e2e01145748235de225bef0871ba6ebb28d83d69a7bce906f45535",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-m3c-20261106-final-parkour/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "1be3f2818b27dc549d749fd3c82b452f9bca3f00d957f2777d55bf3845a2e08d",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-m3c-20261106-final-parkour-disconnect",
+      "scenario": "parkour-disconnect",
+      "launch": {
+        "scenario": "parkour-disconnect",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-parkour-disconnect",
+          "checks": [
+            {
+              "name": "actual airborne disconnect",
+              "status": "passed",
+              "detail": "Actual client connection close reached session disconnect; both saved inventories restored; course unfinished; DISCONNECTED history"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-disconnect-parkour-disconnect.log",
+        "manifestSha256": "539fbdcb2838a2a3f5a256c0eff06faeca6b248aea7bc961232b3b6cf2225429"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "terrain": {
+          "status": "passed",
+          "chunks": 16,
+          "blocks": 1048576,
+          "layout": "basic-parkour-v1",
+          "method": "Independent Python region/palette decoding, full managed cuboid"
+        },
+        "identity": "38689dc7-498c-4660-8f76-b62aa7d578e9",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-disconnect/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "5f87b784c23ea0e19422dcd9c2ab9af230719fb4092a2834b741f1264e8acdab",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-disconnect/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "47b5df9254d21c5a9f29b2d5135bd6dcab35b389f9b7a913f692ef05c3a6138a",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-m3c-20261106-final-parkour-cut-convert",
+      "scenario": "parkour-cut-convert",
+      "cut": {
+        "scenario": "parkour-cut-convert",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-parkour-cut-convert",
+          "detail": "conversion pending after bounded batch",
+          "checks": []
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-convert-parkour-cut-convert.log",
+        "manifestSha256": "60303b525029f4aabcc1cbd42e3ea5b8d3997c828093488f40a5e15f54d9014c"
+      },
+      "cutJournal": {
+        "version": "2",
+        "id": "92a8b01f-20ad-496f-a02c-3a554272a36a",
+        "path": "./run-arena-m3c-20261106-final-parkour-cut-convert/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "dfa6040f-68ba-4382-929c-c7c7941e3e2d",
+        "previous": "bc885b82-241e-4331-b3bc-6d43dd488ff8",
+        "phase": "RESETTING",
+        "layout": "basic-parkour-v1",
+        "seed": "163161",
+        "sourceLayout": "flat",
+        "sourceSeed": "0"
+      },
+      "forensicOnly": "./run-arena-m3c-20261106-final-parkour-cut-convert/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "parkour-recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-parkour-recover",
+          "detail": "Programmatic positions, same-path reopen, real exit; human completion remains pending",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            },
+            {
+              "name": "SINGLE_ITEM requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "fall and interruption",
+              "status": "passed",
+              "detail": "Same task/progress/GO_ACK start/backup across fall; duplicate/stale teleport rejection; lethal damage blocked; interruption re-SETUP; exact stop restore"
+            },
+            {
+              "name": "teleport cannot finish",
+              "status": "passed",
+              "detail": "Actual server teleport/confirmation to finish did not advance; returned to last authorized platform"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            },
+            {
+              "name": "course reset",
+              "status": "passed",
+              "detail": "Bounded course reset retained layout/identity and original inventory"
+            },
+            {
+              "name": "course same-path reopen",
+              "status": "passed",
+              "detail": "v2 journal/seal/saved blocks reused after actual save-close-load; recovery resolved first"
+            },
+            {
+              "name": "return to flat",
+              "status": "passed",
+              "detail": "Explicit UI confirmation rebuilt flat template and passed independent saved readback"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-convert-parkour-recover.log",
+        "manifestSha256": "6852e76a25953416819284b2fe5192594379acdcf167ce309898fc418ec2eedd"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "terrain": {
+          "status": "passed",
+          "chunks": 16,
+          "blocks": 1048576,
+          "layout": "flat",
+          "method": "Independent Python region/palette decoding, full managed cuboid"
+        },
+        "identity": "92a8b01f-20ad-496f-a02c-3a554272a36a",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-convert/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "3c91cef0e10f01ce9ba865786595f3f086cd7f4a64c2b492489fbebd56fae232",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-convert/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "0085f3326d6967d8d866cb6961f13fc1d91af8686dc14d3c87845a5f240c2fa6",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-m3c-20261106-final-parkour-cut-reset",
+      "scenario": "parkour-cut-reset",
+      "cut": {
+        "scenario": "parkour-cut-reset",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-parkour-cut-reset",
+          "detail": "course reset pending after bounded batch",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            },
+            {
+              "name": "SINGLE_ITEM requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "fall and interruption",
+              "status": "passed",
+              "detail": "Same task/progress/GO_ACK start/backup across fall; duplicate/stale teleport rejection; lethal damage blocked; interruption re-SETUP; exact stop restore"
+            },
+            {
+              "name": "teleport cannot finish",
+              "status": "passed",
+              "detail": "Actual server teleport/confirmation to finish did not advance; returned to last authorized platform"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-reset-parkour-cut-reset.log",
+        "manifestSha256": "039b4bec9359e63c29d427819976db819a1ad2cad2fd803fa7fc96f551757e10"
+      },
+      "cutJournal": {
+        "version": "2",
+        "id": "cb679f79-9d2e-4e55-9990-8cdd325052ea",
+        "path": "./run-arena-m3c-20261106-final-parkour-cut-reset/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "e36f3b97-ef0b-4bb9-8269-1a49cec94b79",
+        "previous": "20468c81-83f7-429a-a6b6-060f4a70d4c7",
+        "phase": "RESETTING",
+        "layout": "basic-parkour-v1",
+        "seed": "163161",
+        "sourceLayout": "basic-parkour-v1",
+        "sourceSeed": "163161"
+      },
+      "forensicOnly": "./run-arena-m3c-20261106-final-parkour-cut-reset/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "parkour-recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-parkour-recover",
+          "detail": "Programmatic positions, same-path reopen, real exit; human completion remains pending",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            },
+            {
+              "name": "SINGLE_ITEM requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "fall and interruption",
+              "status": "passed",
+              "detail": "Same task/progress/GO_ACK start/backup across fall; duplicate/stale teleport rejection; lethal damage blocked; interruption re-SETUP; exact stop restore"
+            },
+            {
+              "name": "teleport cannot finish",
+              "status": "passed",
+              "detail": "Actual server teleport/confirmation to finish did not advance; returned to last authorized platform"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            },
+            {
+              "name": "course reset",
+              "status": "passed",
+              "detail": "Bounded course reset retained layout/identity and original inventory"
+            },
+            {
+              "name": "course same-path reopen",
+              "status": "passed",
+              "detail": "v2 journal/seal/saved blocks reused after actual save-close-load; recovery resolved first"
+            },
+            {
+              "name": "return to flat",
+              "status": "passed",
+              "detail": "Explicit UI confirmation rebuilt flat template and passed independent saved readback"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-reset-parkour-recover.log",
+        "manifestSha256": "8bc32520b5dd4ff70bfece621683cf48de7aba41aa8d8cf38e32409aa49f48fc"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "terrain": {
+          "status": "passed",
+          "chunks": 16,
+          "blocks": 1048576,
+          "layout": "flat",
+          "method": "Independent Python region/palette decoding, full managed cuboid"
+        },
+        "identity": "cb679f79-9d2e-4e55-9990-8cdd325052ea",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-reset/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "b9f483392259ced5d5585f3fef169f6c00435b4ee2044079ae040480a2252387",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-reset/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "b1e37ba85bac9bc24cb7319a28b0467b3533c38b17a00afc3ab16700da4cbb92",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    {
+      "instance": "run-arena-m3c-20261106-final-parkour-cut-training",
+      "scenario": "parkour-cut-training",
+      "cut": {
+        "scenario": "parkour-cut-training",
+        "exitCode": 91,
+        "result": {
+          "status": "ready-to-halt91",
+          "mode": "accept-arena-parkour-cut-training",
+          "detail": "active course and same-path original inventory backup",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-training-parkour-cut-training.log",
+        "manifestSha256": "296feb326cd2e3e1bcc17b6b31a83de087c905f312874c0fe7fe14152fbdd077"
+      },
+      "cutJournal": {
+        "version": "2",
+        "id": "383d9ebb-3c87-469c-bf92-2d07cfa698ba",
+        "path": "./run-arena-m3c-20261106-final-parkour-cut-training/saves/hotbar-swap-trainer-practice",
+        "spec": "flat-64-v1",
+        "bounds": "overworld:-32..31,0..255,-32..31",
+        "operation": "860a6d8f-7fb2-4727-8352-b30d8442b5bf",
+        "previous": "b8faca79-634e-4559-952c-dc4cf42a7092",
+        "phase": "READY",
+        "layout": "basic-parkour-v1",
+        "seed": "163161",
+        "sourceLayout": "flat",
+        "sourceSeed": "0"
+      },
+      "forensicOnly": "./run-arena-m3c-20261106-final-parkour-cut-training/smoke/cut-evidence",
+      "reopen": {
+        "scenario": "parkour-recover",
+        "exitCode": 0,
+        "result": {
+          "status": "passed",
+          "mode": "accept-arena-parkour-recover",
+          "detail": "Programmatic positions, same-path reopen, real exit; human completion remains pending",
+          "checks": [
+            {
+              "name": "converted READY",
+              "status": "passed",
+              "detail": "v2 exact course passed memory/save readback; stable world identity; legacy ownership archive retained"
+            },
+            {
+              "name": "SINGLE_ITEM requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "SINGLE_ITEM requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=0",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=1",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "FULL_INVENTORY requested=7",
+              "status": "passed",
+              "detail": "One task; both completion orderings; vanilla swap solution; confirmed two-file original inventory; separate course result"
+            },
+            {
+              "name": "fall and interruption",
+              "status": "passed",
+              "detail": "Same task/progress/GO_ACK start/backup across fall; duplicate/stale teleport rejection; lethal damage blocked; interruption re-SETUP; exact stop restore"
+            },
+            {
+              "name": "teleport cannot finish",
+              "status": "passed",
+              "detail": "Actual server teleport/confirmation to finish did not advance; returned to last authorized platform"
+            },
+            {
+              "name": "RESTORING and ERROR_LOCKED world gates",
+              "status": "passed",
+              "detail": "Actual stop-save observation and host write denial; world operations rejected, raw transaction/journal retained; explicit recovery retry passed"
+            },
+            {
+              "name": "course reset",
+              "status": "passed",
+              "detail": "Bounded course reset retained layout/identity and original inventory"
+            },
+            {
+              "name": "course same-path reopen",
+              "status": "passed",
+              "detail": "v2 journal/seal/saved blocks reused after actual save-close-load; recovery resolved first"
+            },
+            {
+              "name": "return to flat",
+              "status": "passed",
+              "detail": "Explicit UI confirmation rebuilt flat template and passed independent saved readback"
+            }
+          ]
+        },
+        "log": "./docs/verification/m3-c-2026-11-06/run-arena-m3c-20261106-final-parkour-cut-training-parkour-recover.log",
+        "manifestSha256": "1c00ff0c252548720844f628182671108b05273e54d7ba6260002abb78cf71d7"
+      },
+      "independentPostExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "terrain": {
+          "status": "passed",
+          "chunks": 16,
+          "blocks": 1048576,
+          "layout": "flat",
+          "method": "Independent Python region/palette decoding, full managed cuboid"
+        },
+        "identity": "383d9ebb-3c87-469c-bf92-2d07cfa698ba",
+        "baselineSha256": "76125c851fda6f63d65ce39067ef7c39d743936cb36413371cabeba889b18834",
+        "checks": [
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-training/saves/hotbar-swap-trainer-practice/level.dat",
+            "sha256": "0de8af60d53dbdeed86bcc287b5b3222982c32ec1e1d0286b9cf1691add166a9",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-arena-m3c-20261106-final-parkour-cut-training/saves/hotbar-swap-trainer-practice/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "cb5badc01ba9c75f997db3f7b951b3fda1f60a565f46b6d2638cffef7476f73d",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "recoveryPresent": false
+          }
+        ]
+      },
+      "status": "passed"
+    }
+  ]
+}

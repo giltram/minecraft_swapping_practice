@@ -1,5 +1,9 @@
 package dev.hotbarswaptrainer.session;
 
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
+import dev.hotbarswaptrainer.course.BasicCourse;
+import dev.hotbarswaptrainer.course.CourseAttempt;
+import dev.hotbarswaptrainer.stats.CourseResult;
 import dev.hotbarswaptrainer.inventory.InventoryService;
 import dev.hotbarswaptrainer.inventory.RecoveryHolder;
 import dev.hotbarswaptrainer.inventory.RecoveryRecord;
@@ -37,7 +41,7 @@ public final class SessionManager {
     private final Set<UUID> announced = new HashSet<>();
     private final Set<UUID> recoveryFailed = new HashSet<>();
     private final ResultStore results;
-    private final java.util.function.Predicate<ServerPlayerEntity> trainingWorldAllowed;
+    private final java.util.function.BiPredicate<ServerPlayerEntity, TrainingEnvironment> trainingWorldAllowed;
     private final TaskValidator validator = new TaskValidator();
     private long revision;
 
@@ -48,6 +52,11 @@ public final class SessionManager {
 
     public SessionManager(InventoryService inventory, ProfileRepository profiles, ResultStore results,
                           java.util.function.Predicate<ServerPlayerEntity> trainingWorldAllowed) {
+        this(inventory, profiles, results, (player, environment) -> environment != TrainingEnvironment.PARKOUR && trainingWorldAllowed.test(player));
+    }
+
+    public SessionManager(InventoryService inventory, ProfileRepository profiles, ResultStore results,
+                          java.util.function.BiPredicate<ServerPlayerEntity, TrainingEnvironment> trainingWorldAllowed) {
         this.inventory = inventory;
         this.profiles = profiles;
         this.results = results;
@@ -82,6 +91,7 @@ public final class SessionManager {
                 break;
             case GO_ACK:
                 if (session.phase == TrainingSession.Phase.GO && prepared(player, session)) {
+                    if (!session.environment.begin(player, System.nanoTime())) { stop(player, "Course start is not confirmed on its platform"); return; }
                     session.startedNanos = System.nanoTime();
                     session.phase = TrainingSession.Phase.RUNNING;
                     publish(player, session);
@@ -100,7 +110,7 @@ public final class SessionManager {
                 || server.getPlayerManager().getCurrentPlayerCount() != 1) {
             error(player, "Training is restricted to a local single-player world with LAN closed"); return;
         }
-        if (!trainingWorldAllowed.test(player)) {
+        if (!trainingWorldAllowed.test(player, request.environment)) {
             error(player, "Practice arena is not ready, or this world needs /swaptrainer enable-test-world"); return;
         }
         if (player.currentScreenHandler != player.playerScreenHandler || !player.inventory.getCursorStack().isEmpty()
@@ -121,6 +131,7 @@ public final class SessionManager {
         sessions.put(player.getUuid(), session);
         try {
             inventory.backup(player, session.id);
+            session.environment.initialize(player);
             prepare(player, session);
         } catch (Exception failure) {
             LOGGER.error("Training start failed", failure);
@@ -184,7 +195,10 @@ public final class SessionManager {
                     break;
                 case SUCCESS: case INVALID:
                     if (now >= session.deadlineTick) {
-                        if (session.goal > 0 && session.completed >= session.goal) stop(player, "Session complete");
+                        if (session.environment.courseAttempt() != null && session.completed >= 1) {
+                            if (session.environment.courseAttempt().phase() == CourseAttempt.Phase.FINISHED) stop(player, "Session complete");
+                            else if (now % 5 == 0) publish(player, session);
+                        } else if (session.goal > 0 && session.completed >= session.goal) stop(player, "Session complete");
                         else try { prepare(player, session); }
                         catch (Exception failure) { stop(player, "Task generation failed: " + failure.getMessage()); }
                     }
@@ -254,12 +268,21 @@ public final class SessionManager {
     /** Called only at vanilla's accepted-position boundary, never with raw packet coordinates. */
     public void acceptedMovement(ServerPlayerEntity player, double beforeX, double beforeZ) {
         TrainingSession session = sessions.get(player.getUuid());
-        if (session != null) session.environment.acceptedMovement(beforeX, beforeZ, player.getX(), player.getZ());
+        if (session != null) session.environment.acceptedMovement(player, beforeX, beforeZ);
     }
 
     public void positionCorrected(ServerPlayerEntity player) {
         TrainingSession session = sessions.get(player.getUuid());
         if (session != null) session.environment.positionCorrected();
+    }
+
+    public void teleportConfirmed(ServerPlayerEntity player) {
+        TrainingSession session = sessions.get(player.getUuid());
+        if (session != null) session.environment.teleportConfirmed();
+    }
+    public boolean courseActive(ServerPlayerEntity player) {
+        TrainingSession session = sessions.get(player.getUuid());
+        return session != null && session.environment.courseAttempt() != null;
     }
 
     private void invalidate(ServerPlayerEntity player, TrainingSession session, String reason) {
@@ -282,6 +305,7 @@ public final class SessionManager {
         TrainingSession session = sessions.get(player.getUuid());
         if (session != null) {
             if (session.endState == null) {
+                if (session.environment.courseAttempt() != null) session.environment.courseAttempt().stop(System.nanoTime());
                 session.endedAtMillis = Math.max(session.startedAtMillis, System.currentTimeMillis());
                 session.endState = "Session complete".equals(reason) ? SessionMetadata.EndState.COMPLETED
                         : "Disconnected".equals(reason) ? SessionMetadata.EndState.DISCONNECTED
@@ -309,12 +333,15 @@ public final class SessionManager {
         }
         sessions.remove(player.getUuid());
         recoveryFailed.remove(player.getUuid());
+        if (session != null) try { session.environment.settle(player); }
+        catch (RuntimeException placementFailure) { LOGGER.error("Course placement failed after confirmed inventory restoration", placementFailure); }
         try {
             if (session != null) {
                 SessionMetadata metadata = new SessionMetadata(player.getUuid(), session.startedAtMillis, session.endedAtMillis,
                         session.profile.getId(), session.profile.getName(), session.targetHints, SessionMetadata.TIMING,
                         SessionMetadata.SCORING, session.environmentType.historyId, session.endState);
-                SessionResult summary = new SessionResult(session.id, session.mode, session.profile.getHash(), session.goal, session.results, metadata);
+                SessionResult summary = new SessionResult(session.id, session.mode, session.profile.getHash(), session.goal, session.results, metadata,
+                        session.environment.courseAttempt() == null ? null : CourseResult.freeze(session.environment.courseAttempt()));
                 if ("Session complete".equals(reason)) reason = "";
                 try { results.save(player.getUuid(), summary); }
                 catch (java.io.IOException | RuntimeException statisticsFailure) {
@@ -328,7 +355,8 @@ public final class SessionManager {
             LOGGER.error("Could not summarize statistics; inventory restoration already committed", statisticsFailure);
             reason += " | History unavailable; inventory restored. See log.";
         }
-        try { idle(player, reason); }
+        try { idle(player, reason, session == null || session.environment.courseAttempt() == null ? null
+                : CourseResult.freeze(session.environment.courseAttempt())); }
         catch (RuntimeException notificationFailure) {
             LOGGER.error("Could not notify restored player; recovery remains complete", notificationFailure);
         }
@@ -380,6 +408,11 @@ public final class SessionManager {
                 .countdown(s.phase == TrainingSession.Phase.COUNTDOWN ? Math.max(0, s.deadlineTick - tick(player)) : 0)
                 .elapsed(s.phase == TrainingSession.Phase.RUNNING ? System.nanoTime() - s.startedNanos : s.elapsedNanos)
                 .counts(s.actions.getAttempts(), s.actions.getEffective(), s.actions.getSelections(), s.actions.getNoOps(), s.actions.getForbidden());
+        if (s.environment.courseAttempt() != null) {
+            CourseAttempt course = s.environment.courseAttempt();
+            view.course(course.phase().name(), course.platform(), new BasicCourse(BasicCourse.SEED).finish().index,
+                    course.falls(), course.elapsed(System.nanoTime()));
+        }
         if (s.task != null) {
             List<String> hints = new ArrayList<>();
             int position = 0;
@@ -402,10 +435,17 @@ public final class SessionManager {
         return sendView(player, view.build());
     }
     private void idle(ServerPlayerEntity player, String message) {
+        idle(player, message, null);
+    }
+    private void idle(ServerPlayerEntity player, String message, CourseResult course) {
         ProfileLoadResult loaded = profiles.loadAll();
         List<String> ids = profileIds(loaded);
         if (!loaded.getErrors().isEmpty()) message += " | " + String.join("; ", loaded.getErrors());
-        sendView(player, new TrainerProtocol.View.Builder().revision(++revision).message(limit(message)).profileIds(ids).build());
+        TrainerProtocol.View.Builder view = new TrainerProtocol.View.Builder().revision(++revision).message(limit(message)).profileIds(ids);
+        if (course != null) view.environment(TrainingEnvironment.PARKOUR).progress(0, 1)
+                .course(course.completed ? "FINISHED" : "STOPPED", course.platform,
+                        new BasicCourse(course.seed).finish().index, course.falls, course.elapsedNanos);
+        sendView(player, view.build());
     }
     private void error(ServerPlayerEntity player, String message) {
         LOGGER.info("Training request rejected: {}", message);

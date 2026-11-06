@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 public final class ArenaPackets {
     public static final Identifier REQUEST = new Identifier("hotbar-swap-trainer", "arena_request");
     public static final Identifier STATUS = new Identifier("hotbar-swap-trainer", "arena_status");
-    public enum Action { STATUS, RESET, RETRY, EXIT, EXIT_COMMIT }
+    public enum Action { STATUS, RESET, RETRY, EXIT, EXIT_COMMIT, FLAT, PARKOUR }
     private ArenaPackets() { }
 
     public static void register(BiConsumer<ServerPlayerEntity, Action> handler) {
@@ -29,21 +29,21 @@ public final class ArenaPackets {
     }
 
     public static Action readAction(PacketByteBuf buffer) {
-        if (buffer.readableBytes() != 2 || buffer.readUnsignedByte() != 1) throw new IllegalArgumentException("Unsupported arena request");
+        if (buffer.readableBytes() != 2 || buffer.readUnsignedByte() != 2) throw new IllegalArgumentException("Unsupported arena request");
         return Action.values()[buffer.readUnsignedByte()];
     }
 
-    public static void writeAction(PacketByteBuf buffer, Action action) { buffer.writeByte(1); buffer.writeByte(action.ordinal()); }
+    public static void writeAction(PacketByteBuf buffer, Action action) { buffer.writeByte(2); buffer.writeByte(action.ordinal()); }
 
     public static ArenaStatus readStatus(PacketByteBuf buffer) {
-        if (buffer.readableBytes() != 5 || buffer.readUnsignedByte() != 1) throw new IllegalArgumentException("Unsupported arena status");
+        if (buffer.readableBytes() != 6 || buffer.readUnsignedByte() != 2) throw new IllegalArgumentException("Unsupported arena status");
         return new ArenaStatus(ArenaStatus.State.values()[buffer.readUnsignedByte()],
-                ArenaStatus.Problem.values()[buffer.readUnsignedByte()], buffer.readUnsignedByte(), buffer.readBoolean());
+                ArenaStatus.Problem.values()[buffer.readUnsignedByte()], buffer.readUnsignedByte(), buffer.readBoolean(), buffer.readBoolean());
     }
 
     public static void writeStatus(PacketByteBuf buffer, ArenaStatus status) {
-        buffer.writeByte(1); buffer.writeByte(status.state.ordinal()); buffer.writeByte(status.problem.ordinal());
-        buffer.writeByte(status.percent); buffer.writeBoolean(status.resetAllowed);
+        buffer.writeByte(2); buffer.writeByte(status.state.ordinal()); buffer.writeByte(status.problem.ordinal());
+        buffer.writeByte(status.percent); buffer.writeBoolean(status.resetAllowed); buffer.writeBoolean(status.parkour);
     }
 
     public static void send(ServerPlayerEntity player, ArenaStatus status) {

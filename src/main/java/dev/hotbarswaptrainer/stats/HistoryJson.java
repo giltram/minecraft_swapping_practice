@@ -20,11 +20,12 @@ final class HistoryJson {
 
     static byte[] encode(UUID player, SessionResult result) throws IOException {
         JsonObject root = new JsonObject();
-        root.addProperty("schemaVersion", 1); root.addProperty("playerId", player.toString());
+        root.addProperty("schemaVersion", result.getCourse() == null ? 1 : 2); root.addProperty("playerId", player.toString());
         root.addProperty("sessionId", result.getSessionId().toString()); root.addProperty("mode", result.getMode().name());
         root.addProperty("profileHash", result.getProfileHash()); root.addProperty("requestedSuccesses", result.getRequestedSuccesses());
         root.add("metadata", GSON.toJsonTree(result.getMetadata()));
         root.add("tasks", GSON.toJsonTree(result.getTasks()));
+        if (result.getCourse() != null) root.add("course", GSON.toJsonTree(result.getCourse()));
         byte[] bytes = GSON.toJson(root).getBytes(StandardCharsets.UTF_8);
         decode(bytes, player, result.getSessionId()); // All writes obey the read contract.
         return bytes;
@@ -39,8 +40,10 @@ final class HistoryJson {
                 reader.setLenient(false); value = read(reader, 0);
                 if (reader.peek() != JsonToken.END_DOCUMENT) throw new IOException("Trailing history content");
             }
-            JsonObject root = object(value, "schemaVersion,playerId,sessionId,mode,profileHash,requestedSuccesses,metadata,tasks");
-            if (number(root, "schemaVersion") != 1) throw new IOException("Unknown history schemaVersion");
+            if (!value.isJsonObject() || !value.getAsJsonObject().has("schemaVersion")) throw new IOException("Missing history schemaVersion");
+            long schema = number(value.getAsJsonObject(), "schemaVersion");
+            if (schema != 1 && schema != 2) throw new IOException("Unknown history schemaVersion");
+            JsonObject root = object(value, "schemaVersion,playerId,sessionId,mode,profileHash,requestedSuccesses,metadata,tasks" + (schema == 2 ? ",course" : ""));
             if (!uuid(root, "playerId").equals(player) || !uuid(root, "sessionId").equals(session)) throw new IOException("History identity mismatch");
             String hash = string(root, "profileHash", 128);
             SessionMetadata metadata = null;
@@ -71,11 +74,21 @@ final class HistoryJson {
                 }
                 tasks.add(task);
             }
+            CourseResult course = null;
+            if (schema == 2) {
+                JsonObject c = object(root.get("course"), "courseId,seed,rulesVersion,timingVersion,elapsedNanos,falls,platform,completed");
+                if (!c.get("completed").isJsonPrimitive() || !c.getAsJsonPrimitive("completed").isBoolean()) throw new IOException("Invalid course completion");
+                course = new CourseResult(string(c, "courseId", 128), number(c, "seed"), string(c, "rulesVersion", 128),
+                        string(c, "timingVersion", 128), number(c, "elapsedNanos"), integer(c, "falls"), integer(c, "platform"), c.get("completed").getAsBoolean());
+            }
             SessionResult result = new SessionResult(session, TrainingMode.valueOf(string(root, "mode", 32)), hash,
-                    integer(root, "requestedSuccesses"), tasks, metadata);
+                    integer(root, "requestedSuccesses"), tasks, metadata, course);
+            boolean parkour = metadata != null && dev.hotbarswaptrainer.environment.TrainingEnvironment.PARKOUR.historyId.equals(metadata.environment);
+            if (parkour != (course != null) || (parkour && result.getRequestedSuccesses() != 1)) throw new IOException("Inconsistent course session");
             if (result.getRequestedSuccesses() > 0 && result.getSuccessCount() > result.getRequestedSuccesses()) throw new IOException("Success count exceeds goal");
             if (metadata != null && metadata.endState == SessionMetadata.EndState.COMPLETED
                     && (result.getRequestedSuccesses() == 0 || result.getSuccessCount() != result.getRequestedSuccesses())) throw new IOException("Invalid completed session");
+            if (parkour && metadata.endState == SessionMetadata.EndState.COMPLETED && !course.completed) throw new IOException("Unfinished course cannot complete session");
             return result;
         } catch (IllegalArgumentException | IllegalStateException | ArithmeticException failure) {
             throw new IOException("Invalid history: " + failure.getMessage(), failure);

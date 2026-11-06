@@ -1,6 +1,6 @@
-# Owned practice arena contract
+# Owned practice arena contract (M3-B / M3-C)
 
-M3-B owns one save, `saves/hotbar-swap-trainer-practice`. It never adopts a
+The mod owns one save, `saves/hotbar-swap-trainer-practice`. It never adopts a
 directory because of its name or the old disposable-test marker. Client launch
 preflight reserves a missing directory exclusively and persists ownership before
 vanilla creation. An existing directory must already have a supported, valid,
@@ -13,14 +13,22 @@ exact-path-bound journal. Missing/damaged records and symlinks fail closed.
   cycle; bedrock y=0, dirt y=1..2, grass y=3, air y=4..255. Border is 64 blocks,
   centered at 0/0; mod block writes are restricted to x/z=-32..31, y=0..255 in
   the overworld. Vanilla creates its own spawn chunks outside these bounds.
+- `ArenaLayout`: exact flat or `basic-parkour-v1` target for generation,
+  live verification and saved readback. Geometry belongs to pure `course`.
 - `ArenaLaunch.prepare(saves)`: disk-only preflight before vanilla can load/write.
   Returns create vs load. Validates journal, file tree, exact generator and seal.
   Creation interrupted before level.dat can resume only with the known
   pre-server artifacts; other data is preserved and rejected.
-- `ArenaJournal`: strict version-1 JSON in `.hotbar-swap-trainer-arena.json`.
+- `ArenaJournal`: strict version-1/version-2 JSON in `.hotbar-swap-trainer-arena.json`.
   Stable world UUID, absolute normalized path, exact spec/bounds, operation UUID,
   previous operation and phase. Forced same-directory temporary file plus atomic
   replacement; no non-atomic fallback. Transitions compare the expected record.
+  v1 retains the original eight fields and flat semantics. v2 adds target
+  `layout`/`seed` and `sourceLayout`/`sourceSeed`; the source binds the previous
+  seal during conversion/reset. Unknown fields/versions fail closed.
+  v2 requires an established predecessor and cannot claim CREATING/INITIALIZING.
+  INITIALIZING has no predecessor, RESETTING requires one, and operation/previous
+  cannot be equal. Impossible origins remain raw and rejected.
 - `PracticeArenaService`: server lifecycle/readiness and detached status. Root
   composition injects publishing; this package never imports session or network.
 - `ArenaStatus`: bounded detached status/progress/problem projection.
@@ -31,6 +39,36 @@ reads region files read-only; `ArenaSeal` atomically stores an independent gzip
 NBT operation seal at `data/hotbar-swap-trainer-arena.dat`. A seal alone is never
 ownership/readiness proof. It must match the journal's identity/path/spec and
 current operation (or its previous operation during a pending reset).
+
+## Explicit layout conversion
+
+Existing v1 records are read without rewriting. Only an explicit conversion starts
+a v2 operation. Conversion archives exact original journal/seal bytes as
+`.arena-ownership-<operation>.json` and `data/.arena-seal-<operation>.dat`, refusing
+conflicts. It then journals RESETTING with the target and previous operation,
+before terrain mutation. Existing archives/raw failures are never cleaned up.
+Seal v2 includes layout ID/seed; only the supported current layout or explicitly
+bound previous source may be accepted during replay.
+
+START with a mismatched environment asks for destructive conversion through the
+existing confirmation surface. It rebuilds the whole original cuboid, discarding
+its blocks/container contents. No new save, bounds extension, recovery rebinding
+or deletion. Reset preserves the current layout; Retry resumes the pending
+operation. Read/reuse does not convert. Archive failure before intent leaves
+terrain unchanged and fails closed; conflicting archives are not overwritten.
+
+`PracticeArenaService.layoutAllowed(player, parkour)` grants Parkour only for a
+matching READY owned course. A disposable marker grants neither Parkour nor
+terrain generation. Root injects an environment-aware readiness predicate into
+session; arena never imports session/stats/network/client. Checkpoint return
+belongs to environment and changes no terrain.
+
+Parkour START additionally rereads the current seal and checks the course's
+platform/jump envelope against the exact layout before inventory backup. This is
+1,305 bounded block comparisons (including overlap), not another full operation
+or a terrain write. Missing support/blocked headspace requires explicit reset.
+Full READY generation/load/save checks still compare the entire managed cuboid.
+Ownership archives use forced temporary files and atomic rename before intent.
 
 ## Lifecycle and invariants
 

@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "method": "Independent typed NBT inspection of archived raw cut evidence; copies never loaded or rebound",
+  "checks": [
+    {
+      "path": "run-arena-m3c-20261106-final-parkour-cut-training/smoke/cut-evidence/raw-save/level.dat",
+      "sha256": "ad71f5f7ed2bc2e40b84a47f4f7d7334fdfb0733555930d1be53a9bd6d4bdc61",
+      "originalWorldPathBinding": "./run-arena-m3c-20261106-final-parkour-cut-training/saves/hotbar-swap-trainer-practice",
+      "active": true,
+      "originalInventoryAndSelectionMatch": true
+    },
+    {
+      "path": "run-arena-m3c-20261106-final-parkour-cut-training/smoke/cut-evidence/raw-save/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+      "sha256": "0459ee4871b01fea9fb27ccac2b89f1275dc32ab15947e4e3407f8cb354faf64",
+      "originalWorldPathBinding": "./run-arena-m3c-20261106-final-parkour-cut-training/saves/hotbar-swap-trainer-practice",
+      "active": true,
+      "originalInventoryAndSelectionMatch": true
+    }
+  ]
+}

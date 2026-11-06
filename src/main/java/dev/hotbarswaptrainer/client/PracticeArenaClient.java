@@ -29,6 +29,7 @@ final class PracticeArenaClient {
     private boolean launching, inArena, exiting, exitRequested;
     private Object connectionPlayer;
     private ArenaPackets.Action pendingAction;
+    private Runnable afterConversion;
 
     void initialize() {
         ClientSidePacketRegistry.INSTANCE.register(ArenaPackets.STATUS, (context, buffer) -> {
@@ -76,7 +77,7 @@ final class PracticeArenaClient {
         if (client.player != connectionPlayer) {
             connectionPlayer = client.player;
             if (client.player != null) request(ArenaPackets.Action.STATUS);
-            else if (!launching) { inArena = false; exiting = false; exitRequested = false; pendingAction = null; status = ArenaStatus.of(ArenaStatus.State.NONE, 0); }
+            else if (!launching) { inArena = false; exiting = false; exitRequested = false; pendingAction = null; afterConversion = null; status = ArenaStatus.of(ArenaStatus.State.NONE, 0); }
         }
         if (pendingAction != null && client.getNetworkHandler() != null) {
             ArenaPackets.Action action = pendingAction; pendingAction = null;
@@ -102,8 +103,9 @@ final class PracticeArenaClient {
         } else if (next.state == ArenaStatus.State.READY) {
             if (exitRequested && !exiting) { exit(); return; }
             if (!exiting && client.currentScreen instanceof PracticeArenaScreen) client.openScreen(null);
+            if (afterConversion != null) { Runnable ready = afterConversion; afterConversion = null; ready.run(); }
         } else {
-            if (next.state == ArenaStatus.State.ERROR) exiting = false;
+            if (next.state == ArenaStatus.State.ERROR) { exiting = false; afterConversion = null; }
             if (!(client.currentScreen instanceof PracticeArenaScreen)) client.openScreen(new PracticeArenaScreen(this));
         }
     }
@@ -115,6 +117,18 @@ final class PracticeArenaClient {
     }
 
     void reset() { status = ArenaStatus.of(ArenaStatus.State.BUILDING, 0); showAndRequest(ArenaPackets.Action.RESET); }
+    boolean prepareLayout(boolean parkour, Runnable ready) {
+        if (!inArena) return !parkour;
+        if (status.state != ArenaStatus.State.READY || busy()) return false;
+        if (status.parkour == parkour) return true;
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.openScreen(new EditorConfirmScreen(client.currentScreen, PracticeArenaScreen.copy("convertConfirm"), () -> {
+            afterConversion = ready;
+            status = ArenaStatus.of(ArenaStatus.State.BUILDING, 0);
+            showAndRequest(parkour ? ArenaPackets.Action.PARKOUR : ArenaPackets.Action.FLAT);
+        }));
+        return false;
+    }
     void retry() {
         if (MinecraftClient.getInstance().world == null) { enter(); return; }
         if (status.problem == ArenaStatus.Problem.RECOVERY) {
@@ -126,6 +140,7 @@ final class PracticeArenaClient {
         }
     }
     void exit() {
+        afterConversion = null;
         if (exiting) return;
         if (MinecraftClient.getInstance().world == null) { MinecraftClient.getInstance().openScreen(new TitleScreen()); return; }
         exitRequested = true; exiting = true; showAndRequest(ArenaPackets.Action.EXIT);

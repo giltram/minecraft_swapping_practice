@@ -16,9 +16,10 @@ final class ArenaSeal {
 
     ArenaSeal(ArenaJournal.Record record, Path world) {
         value = new CompoundTag();
-        value.putInt("version", 1); value.putString("id", record.id);
+        value.putInt("version", record.version); value.putString("id", record.id);
         value.putString("operation", record.operation); value.putString("path", world.toString());
         value.putString("spec", ArenaSpec.ID);
+        if (record.version == 2) { value.putString("layout", record.layout.id); value.putLong("seed", record.layout.seed); }
     }
 
     CompoundTag toTag(CompoundTag tag) { return value.copy(); }
@@ -49,10 +50,19 @@ final class ArenaSeal {
         CompoundTag tag;
         try (InputStream input = Files.newInputStream(file)) { tag = NbtIo.readCompressed(input).getCompound("data"); }
         String operation = tag.getString("operation");
-        if (!tag.contains("version", 3) || tag.getInt("version") != 1
+        boolean current = record.operation.equals(operation);
+        boolean previous = !committed && record.phase != ArenaJournal.Phase.READY && record.previous.equals(operation);
+        ArenaLayout layout = current ? record.layout : record.source;
+        int version = tag.getInt("version");
+        boolean layoutMatches = version == 1 ? layout == ArenaLayout.FLAT
+                : version == 2 && layout.id.equals(tag.getString("layout")) && tag.contains("seed", 4) && layout.seed == tag.getLong("seed");
+        java.util.Set<String> keys = new java.util.HashSet<>(java.util.Arrays.asList("version", "id", "operation", "path", "spec"));
+        if (version == 2) { keys.add("layout"); keys.add("seed"); }
+        if (!tag.getKeys().equals(keys) || !tag.contains("version", 3) || (current && version != record.version)
+                || version > record.version || !layoutMatches
                 || !record.id.equals(tag.getString("id")) || !world.toString().equals(tag.getString("path"))
                 || !ArenaSpec.ID.equals(tag.getString("spec"))
-                || !(record.operation.equals(operation) || (!committed && record.phase != ArenaJournal.Phase.READY && record.previous.equals(operation))))
+                || !(current || previous))
             throw new IOException("Arena world seal does not match its ownership journal");
     }
 }

@@ -18,10 +18,13 @@ final class TrainerOptionsScreen extends EditorFormScreen {
     @Override protected void buildForm() {
         trainer.refreshProfiles();
         action(text("mode", TrainerHud.modeName(trainer.mode())), () -> { trainer.cycleMode(); rebuild(); });
-        action(text("environment", trainer.environment().displayName), () -> { trainer.cycleEnvironment(); rebuild(); });
+        action(text("environment", net.minecraft.client.resource.language.I18n.translate("trainer.environment." + trainer.environment().name().toLowerCase(java.util.Locale.ROOT))), () -> { trainer.cycleEnvironment(); rebuild(); });
         goalInput = field(text("trainingCountHelp"), goalDraft, 64, value -> {
             goalDraft = value; trainer.setGoal(value); updateButtons();
         });
+        goalInput.setEditable(!parkour());
+        goalInput.active = !parkour();
+        if (parkour()) paragraph(text("parkourOneTask"), 0xDDDDBB);
         dynamicLine(() -> validGoal() ? "" : text("countError"), 0xFF8888);
         action(text("hints", text(trainer.showHints() ? "on" : "off")), () -> { trainer.toggleHints(); rebuild(); });
         action(text("swapCounts", text(trainer.showSwapCounts() ? "on" : "off")), () -> { trainer.toggleSwapCounts(); rebuild(); });
@@ -41,8 +44,9 @@ final class TrainerOptionsScreen extends EditorFormScreen {
         for (String message : trainer.optionMessages()) paragraph(message, 0xFFAA88);
         footer(text("start"), text("done")); updateButtons();
     }
-    private boolean validGoal() { return TrainerClient.parseGoal(goalDraft) != null; }
-    private void acceptGoal() { if (validGoal()) trainer.setGoal(goalDraft); }
+    private boolean parkour() { return trainer.environment() == dev.hotbarswaptrainer.environment.TrainingEnvironment.PARKOUR; }
+    private boolean validGoal() { return parkour() || TrainerClient.parseGoal(goalDraft) != null; }
+    private void acceptGoal() { if (!parkour() && validGoal()) trainer.setGoal(goalDraft); }
     static boolean showSessionMessage(TrainerProtocol.View view) {
         // The server sends IDLE/Ready with catalogue responses; it is not an option or error.
         return view != null && !view.message.isEmpty() && !("IDLE".equals(view.phase) && "Ready".equals(view.message));
@@ -51,7 +55,7 @@ final class TrainerOptionsScreen extends EditorFormScreen {
     private void updateButtons() {
         if (historyButton == null) return;
         boolean idle = trainer.canEditProfiles();
-        setFooterActive(0, idle && validGoal() && trainer.profileAvailable() && trainer.arena().canTrain());
+        setFooterActive(0, idle && validGoal() && trainer.profileAvailable() && trainer.arena().canTrain() && (!parkour() || trainer.arena().present()));
         editorButton.active = idle; historyButton.active = idle;
         if (arenaResetButton != null) arenaResetButton.active = idle && trainer.arena().resetAvailable() && !trainer.arena().busy();
     }

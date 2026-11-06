@@ -14,7 +14,7 @@ import java.util.UUID;
 
 /** Versioned, bounded wire contract. Contains no client runtime references. */
 public final class TrainerProtocol {
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
     public static final UUID NONE = new UUID(0, 0);
     public static final Identifier REQUEST = new Identifier("hotbar-swap-trainer", "request");
     public static final Identifier VIEW = new Identifier("hotbar-swap-trainer", "view");
@@ -107,6 +107,9 @@ public final class TrainerProtocol {
         public final int destination;
         public final List<String> slotHints;
         public final List<String> profileIds;
+        public final String coursePhase;
+        public final int coursePlatform, courseTotal, courseFalls;
+        public final long courseNanos;
 
         private View(Builder b) {
             sessionId = b.sessionId; taskId = b.taskId; revision = b.revision;
@@ -120,6 +123,8 @@ public final class TrainerProtocol {
             selectedSlot = b.selectedSlot; destination = b.destination;
             slotHints = Collections.unmodifiableList(new ArrayList<>(b.slotHints));
             profileIds = Collections.unmodifiableList(new ArrayList<>(b.profileIds));
+            coursePhase = b.coursePhase; coursePlatform = b.coursePlatform; courseTotal = b.courseTotal;
+            courseFalls = b.courseFalls; courseNanos = b.courseNanos;
         }
 
         public boolean isActive() {
@@ -137,6 +142,9 @@ public final class TrainerProtocol {
             private InventoryLayout expectedInitial, target;
             private int selectedSlot, destination = -1;
             private List<String> slotHints = Collections.emptyList(), profileIds = Collections.emptyList();
+            private String coursePhase = "";
+            private int coursePlatform, courseTotal, courseFalls;
+            private long courseNanos;
 
             public Builder session(UUID value) { sessionId = value; return this; }
             public Builder task(UUID value) { taskId = value; return this; }
@@ -163,6 +171,11 @@ public final class TrainerProtocol {
             public Builder destination(int value) { destination = value; return this; }
             public Builder slotHints(List<String> value) { slotHints = value; return this; }
             public Builder profileIds(List<String> value) { profileIds = value; return this; }
+            public Builder course(String phase, int platform, int total, int falls, long nanos) {
+                if (!phase.isEmpty()) dev.hotbarswaptrainer.course.CourseAttempt.Phase.valueOf(phase);
+                if (platform < 0 || total < platform || total > 128 || falls < 0 || nanos < 0) throw new IllegalArgumentException("Invalid course view");
+                coursePhase = phase; coursePlatform = platform; courseTotal = total; courseFalls = falls; courseNanos = nanos; return this;
+            }
             public View build() { return new View(this); }
         }
     }
@@ -204,6 +217,8 @@ public final class TrainerProtocol {
         buf.writeInt(v.selectedSlot); buf.writeInt(v.destination);
         writeStrings(buf, v.slotHints); writeStrings(buf, v.profileIds);
         buf.writeEnumConstant(v.environment);
+        buf.writeString(v.coursePhase); buf.writeVarInt(v.coursePlatform); buf.writeVarInt(v.courseTotal);
+        buf.writeVarInt(v.courseFalls); buf.writeLong(v.courseNanos);
     }
 
     public static View readView(PacketByteBuf buf) {
@@ -216,6 +231,7 @@ public final class TrainerProtocol {
         b.layouts(readLayout(buf), readLayout(buf)).selectedSlot(buf.readInt()).destination(buf.readInt());
         b.slotHints(readStrings(buf, 10)).profileIds(readStrings(buf, 128));
         b.environment(buf.readEnumConstant(TrainingEnvironment.class));
+        b.course(buf.readString(16), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readLong());
         if (buf.isReadable()) throw new IllegalArgumentException("Trailing view data");
         return b.build();
     }

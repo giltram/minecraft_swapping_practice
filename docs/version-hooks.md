@@ -417,3 +417,34 @@ implementation. No modern world-creation API is used.
 
 Source inspection and programmatic fixtures are distinct from real process cuts
 and human input. Exact artifact-specific results: [M3-B](m3-b-practice-arena.md).
+
+## M3-C accepted landings and teleport barriers (2026-11-06)
+
+Inspected the same local generated 1.16.1/Yarn build.21 sources. `onPlayerMove`
+calls `Entity.move`, resolves the accepted collision branch and updates server
+position before `increaseTravelMotionStats(DDD)V`. It then sets `onGround` from
+the packet, so that boolean alone is not evidence of a platform landing.
+Parkour combines the accepted position with exact feet height, complete normal
+footprint, body clearance via `World.doesNotCollide`, an offset-down collision
+support check and a fresh airborne-to-supported sequence. Player state excludes
+vehicles, flying/gliding, spectators and noClip. All checks run server-side.
+
+`teleportRequest(DDDFFSet)` immediately updates server position, stores
+`requestedTeleportPos`/`requestedTeleportId` and sends the position-look packet.
+`onPlayerMove` skips acceptance while that target is pending. `onTeleportConfirm`
+after the main-thread fence clears the target only when the ID matches. The
+narrow Mixin observes matching pending state before vanilla and publishes
+confirmation after vanilla clears it. Confirmation itself awards no progress;
+the next supported accepted position at the authorized checkpoint re-arms.
+
+The pinned confirmation body dereferences its target on a matching ID even when
+the target is already null. The course-only duplicate guard cancels that stale
+confirmation before the dereference. It does not change Moving's locomotion or
+its diagnostic observations. Intermediary fields used only by excluded production
+fixtures are field_14119 / field_14123; production uses remapped Shadows.
+
+Checkpoint return calls the verified `requestTeleport(DDDFF)` path, clears course
+arrival evidence and velocity/fall distance, and never mutates inventory/terrain.
+STOP placement happens only after inventory restoration succeeds. Existing
+Stationary/Moving adapters use the new optional hooks as no-ops.
+Artifact-specific evidence and human limits: [M3-C](m3-c-parkour.md).

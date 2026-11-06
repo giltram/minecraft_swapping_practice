@@ -35,6 +35,15 @@ final class TrainerHud {
             line(matrices, font, timingLine(trainer.session().displayElapsedNanos(), view.swapAttempts,
                             view.effectiveSwaps, trainer.showSwapCounts()), 8, 32, width - 16, 0xFFFFFF);
         }
+        if (!view.coursePhase.isEmpty()) {
+            line(matrices, font, net.minecraft.client.resource.language.I18n.translate("trainer.parkour.progress", view.coursePlatform,
+                    view.courseTotal, formatSeconds(trainer.session().displayCourseNanos()), view.courseFalls), 8, 44, width - 16, 0xAAFFAA);
+            if ("RETURNING".equals(view.coursePhase)) line(matrices, font,
+                    net.minecraft.client.resource.language.I18n.translate("trainer.parkour.returning"), 8, 56, width - 16, 0xFFFFAA);
+            else if ("FINISHED".equals(view.coursePhase) || "STOPPED".equals(view.coursePhase)) line(matrices, font,
+                    net.minecraft.client.resource.language.I18n.translate("trainer.parkour." + ("FINISHED".equals(view.coursePhase) ? "finished" : "unfinished")),
+                    8, 56, width - 16, 0xAAFFAA);
+        }
         if (trainer.showHints() && view.target != null && view.isActive()) {
             int targetY = Math.max(78, height - 94);
             line(matrices, font, view.mode == TrainingMode.SINGLE_ITEM

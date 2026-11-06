@@ -16,6 +16,7 @@ public final class SessionResult {
     private final String profileHash;
     private final int requestedSuccesses;
     private final List<TaskResult> tasks;
+    private final CourseResult course;
 
     public SessionResult(UUID sessionId, TrainingMode mode, String profileHash, int requestedSuccesses, List<TaskResult> tasks) {
         this(sessionId, mode, profileHash, requestedSuccesses, tasks, null);
@@ -23,6 +24,11 @@ public final class SessionResult {
 
     public SessionResult(UUID sessionId, TrainingMode mode, String profileHash, int requestedSuccesses,
                          List<TaskResult> tasks, SessionMetadata metadata) {
+        this(sessionId, mode, profileHash, requestedSuccesses, tasks, metadata, null);
+    }
+    public SessionResult(UUID sessionId, TrainingMode mode, String profileHash, int requestedSuccesses,
+                         List<TaskResult> tasks, SessionMetadata metadata, CourseResult course) {
+        this.course = course;
         this.metadata = metadata;
         if (requestedSuccesses < 0) throw new IllegalArgumentException("Session length cannot be negative");
         this.sessionId = Objects.requireNonNull(sessionId, "sessionId");
@@ -33,6 +39,7 @@ public final class SessionResult {
     }
 
     public SessionMetadata getMetadata() { return metadata; }
+    public CourseResult getCourse() { return course; }
     public UUID getSessionId() { return sessionId; }
     public TrainingMode getMode() { return mode; }
     public String getProfileHash() { return profileHash; }

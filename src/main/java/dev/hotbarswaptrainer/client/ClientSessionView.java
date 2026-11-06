@@ -49,4 +49,9 @@ final class ClientSessionView {
         if (value == null) return 0;
         return value.elapsedNanos + ("RUNNING".equals(value.phase) ? Math.max(0, System.nanoTime() - receivedAt) : 0);
     }
+    long displayCourseNanos() {
+        if (value == null) return 0;
+        return value.courseNanos + (("RUNNING".equals(value.coursePhase) || "RETURNING".equals(value.coursePhase))
+                ? Math.max(0, System.nanoTime() - receivedAt) : 0);
+    }
 }

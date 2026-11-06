@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "artifactSha256": "94993cf408b4ceeff0388bcff5b2d10668d1e22eeec6033666727201495f73cb",
+  "gradleCommand": "scripts/gradle-jdk8.sh --offline test build smokeJar",
+  "unitTests": {
+    "tests": 172,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "command": "python3 scripts/check-boundaries.py",
+    "status": "passed",
+    "productionFiles": 105,
+    "packages": 14,
+    "directedDependencies": 41
+  },
+  "productionJar": {
+    "classes": 156,
+    "allMajorVersion": 52,
+    "smokeFixturesPresent": false
+  },
+  "localization": {
+    "keyParity": true,
+    "keysPerLanguage": 131
+  },
+  "gitDiffCheck": "passed",
+  "pythonCompilation": "passed"
+}

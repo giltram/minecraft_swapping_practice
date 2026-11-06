@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-name", required=True)
-    parser.add_argument("--scenario", choices=("lifecycle", "safety", "recover", "cut-create", "cut-build", "cut-ready", "cut-reset", "cut-training"), required=True)
+    parser.add_argument("--scenario", choices=("lifecycle", "safety", "recover", "cut-create", "cut-build", "cut-ready", "cut-reset", "cut-training",
+        "parkour", "parkour-recover", "parkour-cut-convert", "parkour-cut-reset", "parkour-cut-training", "parkour-disconnect"), required=True)
     parser.add_argument("--launch", action="store_true")
     args = parser.parse_args()
     if Path(args.run_name).name != args.run_name or not args.run_name.startswith("run-arena-"):

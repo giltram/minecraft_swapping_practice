@@ -1,0 +1,21 @@
+{
+  "status": "incomplete-not-passed",
+  "exitCode": 0,
+  "detail": "Client stopped before the Moving suite produced its result; cause unproven. Host retained active recovery. Never counted as passed.",
+  "forensicOnly": "run-m2-runtime-m3c-final-20261106/smoke/failed-incomplete-moving",
+  "originalPath": "./run-m2-runtime-m3c-final-20261106/saves/hst-smoke",
+  "copiesLoadedOrRebound": false,
+  "recoveryOnlyResult": {
+    "mode": "recover",
+    "status": "passed",
+    "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+    "elapsedSeconds": 19.872425375
+  },
+  "retryResult": {
+    "mode": "accept-moving",
+    "status": "passed",
+    "detail": "13 M3-A programmatic production checks; physical input/focus/feel remain manual",
+    "elapsedSeconds": 17.537161583
+  },
+  "diagnosticStartupFailure": "Excluded passive trace first used an unmapped method string; corrected to pinned method_1592 with remap=false before successful retry."
+}

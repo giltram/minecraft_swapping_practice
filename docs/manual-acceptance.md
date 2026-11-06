@@ -62,3 +62,14 @@ production JAR and no automated smoke driver; keep the ordinary-world gate.
 - Rebound Swap Hands, number/scroll input, hints ON/OFF, focus/pause and early/held
   input retain the M1 checklist above. Record actual binding, native resolution,
   GUI scale, locale, final JAR hash and pass/fail.
+
+
+## M3-C Parkour manual follow-up
+
+Use only the owned production instance and exact artifact recorded in
+[m3-c-parkour.md](m3-c-parkour.md). Its final section supplies the route/keyboard/
+focus/visual checklist. Complete the entire route in both inventory modes, test
+both completion orders, several falls, pending-teleport re-entry and stop/exit,
+including held movement during countdown. Verify real rebound Swap Hands/number/
+scroll input and en_us/zh_cn at minimum and normal window sizes. These remain
+pending and are not covered by programmatic landing coordinates or compilation.

@@ -34,7 +34,7 @@ smoke launcher installs the complete checksum-verified POM dependency set.
    automatically creates the dedicated save; later entries reuse the same owned
    save after inspection. No download, datapack, commands or command blocks.
 2. Wait for preparation/checking to finish. Use **O** for the existing mode,
-   Stationary/Moving, profile and task-count controls; **P** starts/stops as before.
+   Stationary/Moving/Parkour, profile and task-count controls; **P** starts/stops.
 3. O → **Return to title / 返回主菜单**, or the pause menu's exit action, stops
    training, confirms original inventory restoration, saves and closes the world.
    It returns to the main menu; another world is never reopened automatically.
@@ -47,7 +47,7 @@ The initial arena is a fixed Survival/Peaceful flat world: bedrock, two dirt
 layers and grass, no structures/decoration/mob spawning, fixed day/clear weather,
 and a 64-block world border. Entry recenters you at its safe spawn. Moving still
 allows ordinary walking, sprinting and jumping; standing still never invalidates
-an answer. Training STOP restores in place, without an arena teleport.
+an answer. Stationary/Moving STOP restores in place, without an arena teleport.
 
 Preparation and reset show progress and disable training until saved checks
 finish. Closing the process mid-operation leaves a journal; reopening resumes
@@ -65,6 +65,43 @@ and move that unknown directory aside before creating a new arena.
 The managed save is `saves/hotbar-swap-trainer-practice`; ownership is independent
 of `/swaptrainer enable-test-world`. That older marker never permits generation
 or cleanup in an ordinary save. No save is automatically deleted.
+
+## Parkour with inventory practice (M3-C)
+
+1. Enter the same arena from the main menu. In **O**, choose Single Item or Full
+   Inventory and **Parkour / 跑酷**. Each run has one inventory task; the count
+   field is disabled and retains its value for other environments.
+2. Start. If the terrain is flat, confirm the layout change. This discards all
+   blocks/container contents in the existing owned 64×64 cuboid (y0..255), then
+   builds/checks/saves the course. Cancel keeps existing terrain. Starting
+   Stationary/Moving later asks before rebuilding the flat layout.
+3. Start from emerald after countdown/GO. Jump between gray platforms in order,
+   touching each gold checkpoint, then diamond finish. All jumps have the same
+   height and one-block air gap; no sprint/equipment/item use is required.
+   Vanilla Swap Hands and slot controls solve the task while you move.
+4. A fall returns to your last checkpoint. Inventory layout, partial solution
+   and task timing stay intact; course time continues and falls increase once.
+   Arrival waits for teleport confirmation and a fresh supported position.
+   This never rebuilds terrain.
+5. Finish both. Inventory first: continue the route without another task. Course
+   first: its time freezes while you solve on the finish platform. Both complete
+   ends the run and restores inventory. No automatic next run. **P** stops;
+   **P** again retries from start. Parkour stopping places you on the last safe
+   platform after confirmed restoration; Moving still leaves you in place.
+
+The HUD adds course progress/time/falls. Inventory timing remains GO_ACK to
+successful vanilla action. Course time starts at the first GO_ACK, includes
+returns and pause/focus time, and freezes at finish. Pause/inventory/focus loss
+invalidates an unfinished inventory attempt and prepares its retry; course
+progress persists. Opening O stops/restores as before. Reset rebuilds the current
+layout; Return to title keeps the existing safe exit/save protocol.
+
+Course time and inventory single-task PB are separate results. Environment PBs
+never merge. Interrupted attempts do not resume after restart; original inventory
+recovery takes priority. Hard crashes can lose the in-memory result, but cannot
+invent completion or accumulate offline course time. Only the owned validated
+arena permits Parkour; the old disposable marker does not. Human route/keyboard/
+feel acceptance remains pending; see [verification and limits](m3-c-parkour.md).
 
 ## Disposable-world training
 

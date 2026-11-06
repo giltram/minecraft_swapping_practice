@@ -3,7 +3,8 @@ package dev.hotbarswaptrainer.environment;
 /** Independent of inventory task mode. Versioned IDs are persisted in history. */
 public enum TrainingEnvironment {
     STATIONARY("stationary-v1", "Stationary"),
-    MOVING("moving-v1", "Moving");
+    MOVING("moving-v1", "Moving"),
+    PARKOUR("parkour-v1", "Parkour");
 
     public final String historyId;
     public final String displayName;

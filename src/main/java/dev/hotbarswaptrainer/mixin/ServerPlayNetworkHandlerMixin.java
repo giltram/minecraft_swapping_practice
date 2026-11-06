@@ -28,6 +28,9 @@ public abstract class ServerPlayNetworkHandlerMixin {
             "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/server/world/ServerWorld;)V";
 
     @Shadow public ServerPlayerEntity player;
+    @Shadow private net.minecraft.util.math.Vec3d requestedTeleportPos;
+    @Shadow private int requestedTeleportId;
+    @Unique private boolean trainer$confirmingTeleport;
     @Unique private InventoryLayout trainer$beforeSwap;
     @Unique private int trainer$beforeSelectedSlot;
     @Unique private boolean trainer$observeSelection;
@@ -115,5 +118,17 @@ public abstract class ServerPlayNetworkHandlerMixin {
     private void trainer$positionCorrected(double x, double y, double z, float yaw, float pitch,
             java.util.Set<net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket.Flag> flags, CallbackInfo ci) {
         TrainerMod.SESSIONS.positionCorrected(player);
+    }
+
+    @Inject(method = "onTeleportConfirm", at = @At(value = "INVOKE", target = TRAINER_THREAD_BOUNDARY, shift = At.Shift.AFTER), cancellable = true)
+    private void trainer$beforeTeleportConfirm(net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket packet, CallbackInfo ci) {
+        trainer$confirmingTeleport = requestedTeleportPos != null && packet.getTeleportId() == requestedTeleportId;
+        // Pinned vanilla dereferences a null target for a duplicate current-ID confirmation.
+        if (requestedTeleportPos == null && TrainerMod.SESSIONS.courseActive(player)) ci.cancel();
+    }
+    @Inject(method = "onTeleportConfirm", at = @At("RETURN"))
+    private void trainer$afterTeleportConfirm(net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket packet, CallbackInfo ci) {
+        boolean accepted = trainer$confirmingTeleport; trainer$confirmingTeleport = false;
+        if (accepted && requestedTeleportPos == null) TrainerMod.SESSIONS.teleportConfirmed(player);
     }
 }

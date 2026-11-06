@@ -8,10 +8,15 @@ public final class ArenaStatus {
     public final Problem problem;
     public final int percent;
     public final boolean resetAllowed;
+    public final boolean parkour;
 
     public ArenaStatus(State state, Problem problem, int percent, boolean resetAllowed) {
+        this(state, problem, percent, resetAllowed, false);
+    }
+    public ArenaStatus(State state, Problem problem, int percent, boolean resetAllowed, boolean parkour) {
         if (percent < 0 || percent > 100) throw new IllegalArgumentException("Invalid arena progress");
         this.state = state; this.problem = problem; this.percent = percent; this.resetAllowed = resetAllowed;
+        this.parkour = parkour;
     }
 
     public static ArenaStatus of(State state, int percent) { return new ArenaStatus(state, Problem.NONE, percent, false); }

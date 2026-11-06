@@ -136,7 +136,7 @@ final class ArenaAcceptance {
                     CompoundTag saved = baseline.toTag(); saved.putUuid("Player", player.getUuid());
                     AcceptanceSupport.write(baselineFile, saved);
                 }
-                for (TrainingEnvironment environment : TrainingEnvironment.values()) for (TrainingMode mode : TrainingMode.values()) {
+                for (TrainingEnvironment environment : new TrainingEnvironment[] {TrainingEnvironment.STATIONARY, TrainingEnvironment.MOVING}) for (TrainingMode mode : TrainingMode.values()) {
                     TrainerMod.SESSIONS.handle(player, TrainerProtocol.Request.start(mode, "default", 0, false, environment));
                     AcceptanceSupport.require(AcceptanceSupport.phase(player).equals("PREPARING"), "Arena START refused " + mode + "/" + environment);
                     AcceptanceSupport.signal(player, TrainerProtocol.Action.READY);
@@ -199,7 +199,7 @@ final class ArenaAcceptance {
         } catch (Exception failure) { fail(failure); }
     }
 
-    private static void seed(ServerPlayerEntity player) {
+    static void seed(ServerPlayerEntity player) {
         for (int i = 0; i < player.inventory.main.size(); i++) {
             ItemStack stack = new ItemStack(Items.COBBLESTONE, i + 1);
             CompoundTag tag = new CompoundTag(); tag.putInt("ArenaBaselineSlot", i); stack.setTag(tag); player.inventory.main.set(i, stack);
