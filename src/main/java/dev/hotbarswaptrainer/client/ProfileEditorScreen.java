@@ -24,7 +24,7 @@ final class ProfileEditorScreen extends EditorFormScreen {
     }
     @Override protected void buildForm() {
         icons.clear();
-        field(text("name"), editor.draft().getName(), 1048576, editor.draft()::setName);
+        field(text("name"), editor.draft().getName(), LoadoutProfile.MAX_NAME_LENGTH, editor.draft()::setName);
         paragraph(text("chooseSlot"), 0xDDDDDD);
         LoadoutProfile valid = editor.validatedProfile();
         int spacing = Math.min(28, viewport.width / 9);

@@ -11,7 +11,7 @@ import java.util.Set;
 public final class AcceptanceMixinPlugin implements IMixinConfigPlugin {
     @Override public boolean shouldApplyMixin(String target, String mixin) {
         if (mixin.endsWith("UiRestoreGateMixin")) return !FabricLoader.getInstance().isDevelopmentEnvironment()
-                && Boolean.getBoolean("hotbarswaptrainer.historyUi");
+                && Boolean.getBoolean("hotbarswaptrainer.usabilityUi");
         return !FabricLoader.getInstance().isDevelopmentEnvironment()
                 && System.getProperty("hotbarswaptrainer.smoke", "").startsWith("accept-");
     }

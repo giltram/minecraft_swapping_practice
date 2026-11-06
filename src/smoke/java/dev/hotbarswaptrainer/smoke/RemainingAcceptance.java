@@ -15,6 +15,9 @@ final class RemainingAcceptance {
     private RemainingAcceptance() { }
 
     static String run(ServerPlayerEntity player, InventorySnapshot baseline, String mode, Path output) throws Exception {
+        if (mode.equals("accept-pending-mining")) return PendingMiningAcceptance.run(player, baseline, output);
+        if (mode.equals("accept-moving")) return MovingAcceptance.run(player, baseline, output);
+        if (mode.equals("accept-moving-disconnect")) { MovingAcceptance.prepareDisconnect(player, output); return null; }
         if (mode.equals("accept-history")) return HistoryAcceptance.run(player, baseline, output);
         if (mode.equals("accept-protection")) return ProtectionAcceptance.run(player, baseline, output);
         if (mode.equals("accept-phase-guards")) return PhaseGuardAcceptance.run(player, baseline, output);

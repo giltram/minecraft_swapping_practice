@@ -10,7 +10,6 @@
   "entrypoints": {
     "client": [
       "dev.hotbarswaptrainer.smoke.TrainerSmokeClient",
-      "dev.hotbarswaptrainer.client.ProfileEditorUiSmoke",
       "dev.hotbarswaptrainer.client.UsabilityUiSmoke"
     ]
   },

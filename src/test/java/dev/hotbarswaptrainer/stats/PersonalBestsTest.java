@@ -1,6 +1,7 @@
 package dev.hotbarswaptrainer.stats;
 
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import org.junit.Test;
 import java.util.*;
 import static dev.hotbarswaptrainer.stats.HistoryStoreTest.*;
@@ -8,6 +9,19 @@ import static org.junit.Assert.*;
 
 public class PersonalBestsTest {
     private final UUID player = UUID.randomUUID();
+    @Test public void movingPbsRemainSeparateFromStationaryForBothQueries() {
+        SessionResult stationary = r(1, false, HASH, SessionMetadata.EndState.COMPLETED, 30);
+        SessionMetadata m = stationary.getMetadata();
+        SessionResult moving = new SessionResult(UUID.randomUUID(), stationary.getMode(), HASH, 1,
+                Arrays.asList(task(TaskResult.Outcome.SUCCESS, 1)), new SessionMetadata(player, 100, 201,
+                m.profileId, m.profileName, false, m.timingVersion, m.scoringVersion,
+                TrainingEnvironment.MOVING.historyId, m.endState));
+        HistorySnapshot history = new HistorySnapshot(player, Arrays.asList(stationary, moving), Collections.emptyList());
+        assertEquals(30, PersonalBests.fastestTaskForMode(history, stationary.getMode()).get().nanos);
+        assertEquals(1, PersonalBests.fastestTaskForMode(history, stationary.getMode(), TrainingEnvironment.MOVING).get().nanos);
+        assertEquals(30, PersonalBests.forConditions(history, stationary).task.get().nanos);
+        assertEquals(1, PersonalBests.forConditions(history, moving).task.get().nanos);
+    }
     private SessionResult r(int goal, boolean hints, String hash, SessionMetadata.EndState state, long... times) {
         TaskResult[] tasks = new TaskResult[times.length];
         for (int i=0;i<times.length;i++) tasks[i] = task(TaskResult.Outcome.SUCCESS,times[i]);

@@ -1,10 +1,19 @@
 # Client and network
 
+M3-A adds one environment action beside mode: Stationary / Moving, shared by both
+inventory modes. Missing schema-1 environment defaults to STATIONARY without a
+rewrite. Moving allows vanilla movement and stationary solutions in every phase;
+there is no stop grace, extra HUD or movement gate. Initial START still requires
+safe dry ground; later task replacement and restoration need no landing wait.
+Environment is frozen at START and carried by protocol 3. History/PBs use the
+actual environment; the existing two-column PB table labels the options-selected
+environment in its title. See [M3-A contracts and acceptance](m3-a-moving-inventory.md).
+
 `client.TrainerClient` owns only the local HUD projection, accepted preferences and handshake flags. It assembles `ClientOptionsStore` for local configuration I/O and `ProfileRepository` for local profile validation. It never accesses integrated-server session objects. `network.TrainerProtocol` is the common immutable wire contract; `ServerPackets` and `client.ClientPackets` decode incoming buffers immediately and queue detached values on the game thread.
 
 Every message includes protocol version, session/task UUID and revision. The server owns acceptance rules and results. The client rejects old revisions and recently closed sessions. A task change resets its READY, GO_ACK and interruption flags. Malformed or unsupported packets are discarded; a missing handshake eventually times out on the server.
 
-P toggles training and O opens Training options (mode, task count and hints). Both bindings appear in vanilla Controls. The client only calls `wasPressed()` on these two mod bindings. The `MinecraftClient` adapter lets vanilla consume its own Swap Hands queue, suppressing only premature swap packets before GO_ACK or after an interruption. RUNNING uses the original packet path, including rebound keys. Hotbar selection is untouched.
+P toggles training and O opens Training options (mode, environment, task count and hints). Both bindings appear in vanilla Controls. The client only calls `wasPressed()` on these two mod bindings. The `MinecraftClient` adapter lets vanilla consume its own Swap Hands queue, suppressing only premature swap packets before GO_ACK or after an interruption. RUNNING uses the original packet path, including rebound keys. Hotbar selection is untouched.
 
 Session length uses the label **Number of successful training tasks
 (0=unlimited)** directly above its input, without a separate title/help block. Positive values count successfully completed
@@ -34,7 +43,7 @@ ambiguous to the player.
 
 ## M2-A local client options
 
-`ClientOptions` is an immutable validated value containing `mode`, `profile`,
+`ClientOptions` is an immutable validated value containing `mode`, `environment`, `profile`,
 `goal` (requested successes, not achieved progress), `showHints` and `showSwapCounts`.
 `ClientOptionsStore` alone owns their file I/O. `TrainerClient` loads once during
 client initialization, resolves profile availability through its local repository,
@@ -46,6 +55,7 @@ The file is `config/hotbar-swap-trainer/client-options.json`:
 {
   "schemaVersion": 1,
   "mode": "SINGLE_ITEM",
+  "environment": "STATIONARY",
   "profile": "default",
   "goal": 10,
   "showHints": false,
@@ -62,7 +72,7 @@ including 0 and 2147483647, round trip.
 
 Loading requires the original five fields with exact JSON types, supported schema, known
 mode, legal profile ID and an integer goal in range. The optional boolean
-showSwapCounts defaults to false in legacy schema-1 files; loading never rewrites them.
+showSwapCounts defaults to false and environment defaults to STATIONARY in legacy schema-1 files; loading never rewrites them. Unknown environments are rejected.
 Unknown/duplicate fields,
 trailing content, malformed JSON/UTF-8 and files above 16 KiB are rejected. A failed
 load uses the complete safe defaults, logs the detailed path/cause and shows a
@@ -178,13 +188,19 @@ Its filter/page query API remains available internally; the screen exposes no fi
 pagination or details. The client root injects the common installation history directory.
 Entry reads through HistoryStore; rendering and resizing never read disk.
 The 2×2 PB table shows Single Item / Full Inventory and their fastest successful task
-times (three decimal seconds, or PB —). PersonalBests.fastestTaskForMode merges profile
+times (three decimal seconds, or PB —) for the options-selected environment, which
+is labelled in the title. PersonalBests.fastestTaskForMode merges profile
 hashes, hints, goals and partial/unlimited sessions while retaining player and supported
-version checks. Warnings mark incomplete reads. History files and the stricter
+version checks and an explicit environment match. Its old query defaults to
+Stationary. Warnings mark incomplete reads. History files and the stricter
 forConditions API remain compatible. See [current PB contract](m2-e-history-pb.md).
 
-Protocol version is now **2**: START adds one bounded boolean for the declared
-Target hints preference. It is frozen once, not read from client mutable state at
+Protocol version is now **3**: START carries the declared Target hints boolean
+and environment enum; views carry the frozen environment. It is frozen once, not read from client mutable state at
 stop. Other request factories remain source compatible. Server-thread queueing and
 session/revision acknowledgement guards are unchanged. This declaration is not an
 anti-cheat proof. History itself needs no protocol messages or server object access.
+
+Profile display names share the domain/history bound of 256 Java characters.
+The editor enforces it at input; source files with longer names are preserved and
+reported as invalid before they can start an unrecordable training session.

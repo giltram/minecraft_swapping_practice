@@ -1,6 +1,7 @@
 package dev.hotbarswaptrainer.stats;
 
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -13,6 +14,26 @@ import static org.junit.Assert.*;
 public class HistoryStoreTest {
     @Rule public TemporaryFolder temporary = new TemporaryFolder();
     private final UUID player = UUID.randomUUID();
+    @Test public void oldStationaryRemainsReadableAndMovingPersistsActualEnvironment() throws Exception {
+        SessionResult old = stopped();
+        com.google.gson.JsonObject json = new com.google.gson.JsonParser().parse(
+                new String(HistoryJson.encode(player, old), StandardCharsets.UTF_8)).getAsJsonObject();
+        byte[] oldBytes = json.toString().getBytes(StandardCharsets.UTF_8);
+        SessionResult loaded = HistoryJson.decode(oldBytes, player, old.getSessionId());
+        assertEquals(SessionMetadata.ENVIRONMENT, loaded.getMetadata().environment);
+        Path legacyRoot = root();
+        Files.createDirectories(file(legacyRoot, old).getParent()); Files.write(file(legacyRoot, old), oldBytes);
+        new HistoryStore(legacyRoot).save(player, loaded);
+        assertArrayEquals(oldBytes, Files.readAllBytes(file(legacyRoot, old)));
+        SessionMetadata m = old.getMetadata();
+        SessionResult moving = new SessionResult(UUID.randomUUID(), TrainingMode.FULL_INVENTORY, HASH, 0, old.getTasks(),
+                new SessionMetadata(player, 100, 200, m.profileId, m.profileName, true, m.timingVersion,
+                        m.scoringVersion, TrainingEnvironment.MOVING.historyId, m.endState));
+        Path root = root(); new HistoryStore(root).save(player, moving);
+        loaded = new HistoryStore(root).read(player).records.get(0);
+        assertEquals(TrainingEnvironment.MOVING.historyId, loaded.getMetadata().environment);
+        assertEquals(TrainingMode.FULL_INVENTORY, loaded.getMode());
+    }
     static final String HASH = String.join("", Collections.nCopies(64, "a"));
     static TaskResult task(TaskResult.Outcome outcome, long nanos) {
         return new TaskResult(UUID.randomUUID(), outcome, nanos, 3, 2, 4, 1, 2, "reason");

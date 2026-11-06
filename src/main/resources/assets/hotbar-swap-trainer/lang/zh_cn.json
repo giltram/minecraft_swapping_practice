@@ -95,5 +95,6 @@
   "trainer.config.selectedLayout": "当前训练使用",
   "trainer.config.editLayout": "编辑",
   "trainer.config.layoutUnavailable": "此布局已不可用，请刷新后重新选择。",
-  "trainer.config.duplicateLayout": "配置 ID 重复，此文件不能用于选择训练布局。"
+  "trainer.config.duplicateLayout": "配置 ID 重复，此文件不能用于选择训练布局。",
+  "trainer.config.environment": "训练环境：%s"
 }

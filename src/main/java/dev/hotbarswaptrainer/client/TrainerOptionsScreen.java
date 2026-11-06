@@ -18,6 +18,7 @@ final class TrainerOptionsScreen extends EditorFormScreen {
     @Override protected void buildForm() {
         trainer.refreshProfiles();
         action(text("mode", TrainerHud.modeName(trainer.mode())), () -> { trainer.cycleMode(); rebuild(); });
+        action(text("environment", trainer.environment().displayName), () -> { trainer.cycleEnvironment(); rebuild(); });
         goalInput = field(text("trainingCountHelp"), goalDraft, 64, value -> {
             goalDraft = value; trainer.setGoal(value); updateButtons();
         });
@@ -28,7 +29,7 @@ final class TrainerOptionsScreen extends EditorFormScreen {
             if (trainer.canEditProfiles()) client.openScreen(new ProfileSourceScreen(this, trainer));
         });
         historyButton = action(text("history"), () -> {
-            if (trainer.canEditProfiles()) client.openScreen(new TrainerHistoryScreen(this, trainer.historyBrowser()));
+            if (trainer.canEditProfiles()) client.openScreen(new TrainerHistoryScreen(this, trainer.historyBrowser(), trainer.environment()));
         });
         TrainerProtocol.View view = trainer.session().get();
         if (showSessionMessage(view)) paragraph(view.message, view.phase.contains("ERROR") ? 0xFF8888 : 0xDDDDBB);

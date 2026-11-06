@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -60,6 +61,7 @@ final class ClientOptionsStore {
         json.addProperty("goal", options.goal);
         json.addProperty("showHints", options.showHints);
         json.addProperty("showSwapCounts", options.showSwapCounts);
+        json.addProperty("environment", options.environment.name());
         byte[] bytes = (new GsonBuilder().setPrettyPrinting().create().toJson(json) + "\n").getBytes(StandardCharsets.UTF_8);
         Files.createDirectories(file.getParent());
         Path pending = Files.createTempFile(file.getParent(), ".client-options-", ".tmp");
@@ -83,6 +85,7 @@ final class ClientOptionsStore {
         Integer goal = null;
         Boolean showHints = null;
         boolean showSwapCounts = false; // Existing schema-1 files predate the optional HUD preference.
+        TrainingEnvironment environment = TrainingEnvironment.STATIONARY;
         Set<String> seen = new HashSet<>();
         try (JsonReader reader = new JsonReader(new StringReader(json))) {
             reader.setLenient(false);
@@ -94,6 +97,7 @@ final class ClientOptionsStore {
                     case "schemaVersion": schema = integer(reader); break;
                     case "mode": mode = TrainingMode.valueOf(string(reader)); break;
                     case "profile": profile = string(reader); break;
+                    case "environment": environment = TrainingEnvironment.valueOf(string(reader)); break;
                     case "goal": goal = integer(reader); break;
                     case "showHints":
                         if (reader.peek() != JsonToken.BOOLEAN) throw new IOException("showHints must be a boolean");
@@ -111,7 +115,7 @@ final class ClientOptionsStore {
         }
         if (schema == null || schema != ClientOptions.SCHEMA_VERSION) throw new IOException("Supported schemaVersion is 1");
         if (mode == null || profile == null || goal == null || showHints == null) throw new IOException("Missing option field");
-        return new ClientOptions(mode, profile, goal, showHints, showSwapCounts);
+        return new ClientOptions(mode, profile, goal, showHints, showSwapCounts, environment);
     }
 
     private static String string(JsonReader reader) throws IOException {

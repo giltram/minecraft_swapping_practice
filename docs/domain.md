@@ -1,6 +1,6 @@
 # Profile, task, and result contracts
 
-These packages implement immutable training domain state and M2-B's separate editor drafts. `task` uses `profile` and Minecraft's NBT value types; it does not access players, registries, files, networking, clients, or mutable live inventory. `stats` depends on task mode and result values; HistoryStore owns its separate injected history file I/O. Profile file access is confined to `ProfileRepository`; its injected `ItemCatalog` owns registry/materialization access. The private memory-only `ProfileJson` codec shares schema, catalog and NBT checks across loads and editor validation.
+These packages implement immutable training domain state and M2-B's separate editor drafts. `task` uses `profile` and Minecraft's NBT value types; it does not access players, registries, files, networking, clients, or mutable live inventory. `stats` depends on task mode, supported environment IDs, shared profile ID/name bounds and result values; HistoryStore owns its separate injected history file I/O. Profile file access is confined to `ProfileRepository`; its injected `ItemCatalog` owns registry/materialization access. The private memory-only `ProfileJson` codec shares schema, catalog and NBT checks across loads and editor validation.
 
 ## Positions and whole stacks
 
@@ -14,7 +14,7 @@ These packages implement immutable training domain state and M2-B's separate edi
 
 `ProfileRepository(Path, ItemCatalog)` is explicitly reloaded by the application. `ItemCatalog.maximumStackSize(id)` returns zero for unknown items/air. `installDefaultIfMissing()` copies the bundled profile once and never overwrites a file. `loadAll()` returns valid frozen profiles and separate path-specific errors. Duplicate profile IDs are errors. A malformed file remains available for repair.
 
-JSON schema version 1 has `id`, `name`, and a `slots` array containing exactly one rule for each `hotbar1..hotbar9` and `offhand`. Profile IDs have at most 128 lowercase identifier characters, matching the protocol limit. Explicit slot names let the parser reject duplicate or missing positions. Unknown fields are errors. A stack alternative has:
+JSON schema version 1 has `id`, `name`, and a `slots` array containing exactly one rule for each `hotbar1..hotbar9` and `offhand`. Profile IDs have at most 128 lowercase identifier characters, matching the protocol limit. Names are nonblank and limited to 256 Java characters by `LoadoutProfile.MAX_NAME_LENGTH`, shared with editor input and history metadata/decoding. Oversized existing files produce explicit load errors and remain untouched. Explicit slot names let the parser reject duplicate or missing positions. Unknown fields are errors. A stack alternative has:
 
 ```json
 {

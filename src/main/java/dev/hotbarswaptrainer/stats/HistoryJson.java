@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.profile.LoadoutProfile;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -48,7 +49,7 @@ final class HistoryJson {
                 if (!uuid(m, "playerId").equals(player)) throw new IOException("Metadata player mismatch");
                 if (!m.get("targetHints").isJsonPrimitive() || !m.getAsJsonPrimitive("targetHints").isBoolean()) throw new IOException("Invalid hints");
                 metadata = new SessionMetadata(player, number(m, "startedAtMillis"), number(m, "endedAtMillis"),
-                        string(m, "profileId", 128), string(m, "profileName", 256), m.get("targetHints").getAsBoolean(),
+                        string(m, "profileId", LoadoutProfile.MAX_ID_LENGTH), string(m, "profileName", LoadoutProfile.MAX_NAME_LENGTH), m.get("targetHints").getAsBoolean(),
                         string(m, "timingVersion", 128), string(m, "scoringVersion", 128), string(m, "environment", 128),
                         SessionMetadata.EndState.valueOf(string(m, "endState", 32)));
                 if (!hash.matches("[0-9a-f]{64}")) throw new IOException("Invalid profile hash");

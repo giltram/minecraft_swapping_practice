@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.hotbarswaptrainer.profile.ProfileRepository;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -24,6 +25,7 @@ public class ClientOptionsPersistenceTest {
         TrainerClient trainer = client(profiles);
         assertFalse(Files.exists(file()));
         assertFalse(trainer.showSwapCounts());
+        trainer.cycleEnvironment();
         trainer.toggleSwapCounts();
         trainer.cycleMode();
         assertTrue(trainer.selectProfile("custom"));
@@ -33,6 +35,7 @@ public class ClientOptionsPersistenceTest {
 
         TrainerClient restarted = client(profiles);
         assertEquals(TrainingMode.FULL_INVENTORY, restarted.mode());
+        assertEquals(TrainingEnvironment.MOVING, restarted.environment());
         assertEquals("custom", restarted.profile());
         assertEquals(Integer.MAX_VALUE, restarted.goal());
         assertTrue(restarted.showHints());
@@ -96,11 +99,12 @@ public class ClientOptionsPersistenceTest {
     public void missingProfileFallsBackExplicitlyToDefaultOrFirstAvailableProfile() throws Exception {
         ProfileRepository profiles = profiles();
         addProfile("custom");
-        save(new ClientOptions(TrainingMode.FULL_INVENTORY, "removed", 73, true));
+        save(new ClientOptions(TrainingMode.FULL_INVENTORY, "removed", 73, true, false, TrainingEnvironment.MOVING));
         byte[] beforeLoad = Files.readAllBytes(file());
         TrainerClient trainer = client(profiles);
         assertEquals("default", trainer.profile());
         assertTrue(trainer.profileAvailable());
+        assertEquals(TrainingEnvironment.MOVING, trainer.environment());
         assertTrue(trainer.optionMessages().toString().contains("'removed' unavailable; using 'default'"));
         assertArrayEquals(beforeLoad, Files.readAllBytes(file()));
         assertTrue(trainer.selectProfile("custom"));

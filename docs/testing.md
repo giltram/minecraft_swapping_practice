@@ -1,5 +1,37 @@
 # Verification
 
+## Targeted review fixes — 2026-11-01
+
+All three findings in [code-review.md](code-review.md) were confirmed and fixed.
+[Resolution and verification](code-review-fixes.md) and
+[machine evidence](verification/code-review-fixes-2026-11-01.json) record the exact
+final artifact. Forced offline test/build/smokeJar executed all 131 tests with no
+failures/errors/skips; architecture boundaries/cycles and Java-8 artifact
+isolation passed. Actual production acceptance passed eight pending-mining
+cases, all four public UI entrypoints and history/PB-HUD fresh-process reopens.
+Independent post-exit decoding confirmed both restored 41-slot inventories and
+selection with no recovery data after mining and after all six UI processes.
+Physical input/focus/feel and a fresh complete crash fault matrix remain pending.
+All earlier evidence below belongs to its recorded artifact.
+
+
+## M3-A Moving — 2026-10-31
+
+[M3-A acceptance record](m3-a-moving-inventory.md) and
+[machine evidence](verification/m3-a-2026-10-31.json) cover the final free-practice
+rule: Moving never invalidates a stop and has no grace/first-movement gate.
+129 unit tests, pinned Gradle build/smokeJar, boundary/cycle checks and Java-8
+artifact isolation passed. The final independent production artifact passed 13
+programmatic mode/environment/movement/protection checks, then a real airborne
+Moving disconnect. Independent post-exit decoding verified both 41-slot saved
+inventories and cleared recovery for each run. An initial disconnect fixture
+setup failure, its exact raw evidence and successful recovery/retry are retained.
+Physical input/feel, real inventory/pause/focus/options GUI interactions, existing
+wall pushing and a fresh full recovery fault matrix remain unexecuted; the M3-A
+record gives minimal manual steps. Earlier M1/M2 evidence below is historical
+and must not be silently attributed to this artifact.
+
+
 ## Unified layout selection (2026-10-30)
 
 Options no longer has a Profile button. Edit item layout lists the training

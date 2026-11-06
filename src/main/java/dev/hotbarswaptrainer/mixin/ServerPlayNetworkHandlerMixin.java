@@ -31,6 +31,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Unique private InventoryLayout trainer$beforeSwap;
     @Unique private int trainer$beforeSelectedSlot;
     @Unique private boolean trainer$observeSelection;
+    @Unique private double trainer$beforeMovementX, trainer$beforeMovementZ;
 
     @Inject(method = "onPlayerAction", at = @At(value = "INVOKE", target = TRAINER_THREAD_BOUNDARY, shift = At.Shift.AFTER), cancellable = true)
     private void trainer$beforePlayerAction(PlayerActionC2SPacket packet, CallbackInfo ci) {
@@ -99,6 +100,20 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onPlayerMove", at = @At(value = "INVOKE", target = TRAINER_THREAD_BOUNDARY, shift = At.Shift.AFTER), cancellable = true)
     private void trainer$guardMovement(PlayerMoveC2SPacket packet, CallbackInfo ci) {
+        trainer$beforeMovementX = player.getX();
+        trainer$beforeMovementZ = player.getZ();
         if (TrainerMod.SESSIONS.guardMovement(player, packet)) ci.cancel();
+    }
+
+    @Inject(method = "onPlayerMove", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/server/network/ServerPlayerEntity;increaseTravelMotionStats(DDD)V"))
+    private void trainer$acceptedMovement(PlayerMoveC2SPacket packet, CallbackInfo ci) {
+        TrainerMod.SESSIONS.acceptedMovement(player, trainer$beforeMovementX, trainer$beforeMovementZ);
+    }
+
+    @Inject(method = "teleportRequest", at = @At("HEAD"))
+    private void trainer$positionCorrected(double x, double y, double z, float yaw, float pitch,
+            java.util.Set<net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket.Flag> flags, CallbackInfo ci) {
+        TrainerMod.SESSIONS.positionCorrected(player);
     }
 }

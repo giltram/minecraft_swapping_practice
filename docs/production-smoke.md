@@ -144,3 +144,33 @@ The current item-first editor and fixed/unlimited options use the isolated
 The production JAR never includes UI/acceptance classes. See
 [m2-multiselect-acceptance.md](m2-multiselect-acceptance.md) for exact commands, final
 artifact, screenshots, actual programmatic results and pending human checks.
+
+## M3-A free movement acceptance
+
+The existing isolated runtime wrapper additionally accepts two M3-A modes:
+
+```sh
+scripts/gradle-jdk8.sh --offline test build smokeJar
+python3 scripts/run-m2-runtime.py --mode accept-moving --run-name run-m2-runtime-m3-a-20261031 --launch
+python3 scripts/verify-m2-saves.py --run-name run-m2-runtime-m3-a-20261031
+python3 scripts/run-m2-runtime.py --mode accept-moving-disconnect --run-name run-m2-runtime-m3-a-20261031 --launch
+python3 scripts/verify-m2-saves.py --run-name run-m2-runtime-m3-a-20261031
+```
+
+The wrapper retains its historical M2 prefix and exact ownership checks. It
+reuses the pinned independent client, copies only the marked inactive seed and
+archives previous launch manifests/results/baselines before reuse. The Moving
+driver operates within the known test spot, never builds a wall or alters
+terrain, and is absent from production. The production mod introduces no world
+creation/preparation feature.
+
+accept-moving produces moving-checks.json and result-accept-moving.json. It
+uses actual transformed vanilla movement/sprint/swap/selection/interaction
+handlers, accelerates session deadlines, and confirms both restoration save
+paths. accept-moving-disconnect requests a real connection disconnect from a
+Moving Full Inventory RUNNING session while airborne. exit-requested.json and
+exit-observed.json distinguish requested phase from the actual cleanup phase
+and record environment/onGround at the lifecycle hook. A post-exit independent
+NBT readback remains required for both modes. This is not real keyboard input,
+physical focus/pause or subjective movement acceptance. The current evidence,
+artifact hash and remaining manual checks are in [M3-A](m3-a-moving-inventory.md).

@@ -21,7 +21,9 @@ Protocol v2 adds exactly one declared boolean to START; old Java request factori
 remain source compatible with hints=false. Neither common nor session reads client
 state. A hints declaration is not anti-cheat evidence.
 
-Schema 1 stores complete TaskResult fields and metadata. The legacy SessionResult
+Schema 1 stores complete TaskResult fields and metadata. Profile ID/name bounds
+come from `LoadoutProfile` (128/256 Java characters), so every accepted profile
+name fits metadata and history decoding. The legacy SessionResult
 constructor creates explicit metadata=null, preserved but ineligible for PB.
 Required/unknown/duplicate fields, integer syntax/ranges, UUID binding, enum,
 UTF-8, depth, text lengths, task ID uniqueness and successful-duration sum overflow

@@ -6,7 +6,9 @@ RESTORING and ERROR_LOCKED are refused; actions recheck the gate, pages close wh
 it is lost and screens never pause restoration.
 
 The screen is a two-column, two-row table: Single Item and Full Inventory, then
-PB seconds for each mode (or PB —). It exposes no filters, history list, hashes or
+PB seconds for each mode (or PB —). M3-A labels the options-selected environment
+in the title and queries PBs only for that environment, with no second selector.
+It exposes no filters, history list, hashes or
 details. Back is the only footer action. A concise warning marks
 incomplete history without overwhelming the table.
 
@@ -17,9 +19,10 @@ Screens do not parse JSON or own scoring logic. History records remain unchanged
 
 ## Current PB contract
 
-PersonalBests.fastestTaskForMode(snapshot, mode) returns an optional Best reference:
+PersonalBests.fastestTaskForMode(snapshot, mode, environment) returns an optional
+Best reference. The two-argument API defaults to Stationary:
 
-- Lowest positive SUCCESS duration for that mode and the snapshot's player.
+- Lowest positive SUCCESS duration for that mode, environment and the snapshot's player.
 - Combines profile hashes, hint settings and requested lengths, including successful
   tasks in stopped/disconnected/partial/unlimited sessions. INVALID/STOPPED attempts
   never score. Completing an entire finite session is not required.

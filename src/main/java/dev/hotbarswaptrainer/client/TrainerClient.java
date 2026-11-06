@@ -7,6 +7,7 @@ import dev.hotbarswaptrainer.profile.LoadoutProfile;
 import dev.hotbarswaptrainer.profile.ProfileLoadResult;
 import dev.hotbarswaptrainer.profile.ProfileRepository;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -140,7 +141,7 @@ public final class TrainerClient implements ClientModInitializer {
         if (!client.isInSingleplayer() || client.player == null || session.active()) return;
         refreshProfiles();
         if (!profileAvailable) return;
-        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal(), showHints()));
+        ClientPackets.send(TrainerProtocol.Request.start(mode(), profile(), goal(), showHints(), environment()));
     }
 
     void stop(String reason) {
@@ -157,9 +158,14 @@ public final class TrainerClient implements ClientModInitializer {
     int goal() { return options.goal; }
     boolean showHints() { return options.showHints; }
     boolean showSwapCounts() { return options.showSwapCounts; }
-    void toggleSwapCounts() { acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), !showSwapCounts())); }
+    TrainingEnvironment environment() { return options.environment; }
+    void cycleEnvironment() {
+        acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), showSwapCounts(),
+                environment() == TrainingEnvironment.STATIONARY ? TrainingEnvironment.MOVING : TrainingEnvironment.STATIONARY));
+    }
+    void toggleSwapCounts() { acceptOptions(new ClientOptions(mode(), profile(), goal(), showHints(), !showSwapCounts(), environment())); }
     boolean profileAvailable() { return profileAvailable; }
-    void toggleHints() { acceptOptions(new ClientOptions(mode(), profile(), goal(), !showHints(), showSwapCounts())); }
+    void toggleHints() { acceptOptions(new ClientOptions(mode(), profile(), goal(), !showHints(), showSwapCounts(), environment())); }
     ProfileRepository profileRepository() { return profileRepository; }
     HistoryBrowser historyBrowser() {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -173,7 +179,7 @@ public final class TrainerClient implements ClientModInitializer {
     }
     void cycleMode() {
         acceptOptions(new ClientOptions(mode() == TrainingMode.SINGLE_ITEM ? TrainingMode.FULL_INVENTORY
-                : TrainingMode.SINGLE_ITEM, profile(), goal(), showHints(), showSwapCounts()));
+                : TrainingMode.SINGLE_ITEM, profile(), goal(), showHints(), showSwapCounts(), environment()));
     }
     /** Commit only valid input; an unfinished edit must not replace the last usable goal. */
     static Integer parseGoal(String text) {
@@ -184,7 +190,7 @@ public final class TrainerClient implements ClientModInitializer {
     boolean setGoal(String text) {
         Integer goal = parseGoal(text);
         if (goal == null) return false;
-        acceptOptions(new ClientOptions(mode(), profile(), goal, showHints(), showSwapCounts()));
+        acceptOptions(new ClientOptions(mode(), profile(), goal, showHints(), showSwapCounts(), environment()));
         return true;
     }
     List<String> refreshProfiles() {
@@ -197,7 +203,7 @@ public final class TrainerClient implements ClientModInitializer {
         } else if (!ids.contains(profile())) {
             String fallback = ids.contains("default") ? "default" : ids.get(0);
             profileFeedback = "Profile '" + profile() + "' unavailable; using '" + fallback + "'.";
-            options = new ClientOptions(mode(), fallback, goal(), showHints(), showSwapCounts());
+            options = new ClientOptions(mode(), fallback, goal(), showHints(), showSwapCounts(), environment());
             LogManager.getLogger("HotbarSwapTrainer").warn(profileFeedback);
         }
         if (!loaded.getErrors().isEmpty()) {
@@ -210,7 +216,7 @@ public final class TrainerClient implements ClientModInitializer {
         List<String> profiles = refreshProfiles();
         if (!profiles.contains(id)) return false;
         profileFeedback = "";
-        options = new ClientOptions(mode(), id, goal(), showHints(), showSwapCounts());
+        options = new ClientOptions(mode(), id, goal(), showHints(), showSwapCounts(), environment());
         saveOptions();
         return true;
     }

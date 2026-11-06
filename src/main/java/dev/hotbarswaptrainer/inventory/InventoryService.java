@@ -36,6 +36,7 @@ public final class InventoryService {
         if (isProtected(player)) throw new IllegalStateException("An inventory recovery is already active");
         RecoveryRecord record = new RecoveryRecord(player.getUuid(), transaction, worldIdentity(player), InventorySnapshot.capture(player.inventory));
         ((RecoveryHolder) player).trainer$setRecovery(record.toTag());
+        ((PendingBlockBreaking) player.interactionManager).trainer$discardPendingMining();
         persistence.save(player); // No training items exist until both authoritative records read back correctly.
     }
 

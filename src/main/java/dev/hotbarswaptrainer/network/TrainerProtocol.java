@@ -3,6 +3,7 @@ package dev.hotbarswaptrainer.network;
 import dev.hotbarswaptrainer.profile.StackValue;
 import dev.hotbarswaptrainer.task.InventoryLayout;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 /** Versioned, bounded wire contract. Contains no client runtime references. */
 public final class TrainerProtocol {
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     public static final UUID NONE = new UUID(0, 0);
     public static final Identifier REQUEST = new Identifier("hotbar-swap-trainer", "request");
     public static final Identifier VIEW = new Identifier("hotbar-swap-trainer", "view");
@@ -33,6 +34,7 @@ public final class TrainerProtocol {
         public final int goal;
         public final String reason;
         public final boolean targetHints;
+        public final TrainingEnvironment environment;
 
         public Request(Action action, UUID sessionId, UUID taskId, long revision,
                        TrainingMode mode, String profileId, int goal, String reason) {
@@ -41,9 +43,17 @@ public final class TrainerProtocol {
 
         public Request(Action action, UUID sessionId, UUID taskId, long revision,
                        TrainingMode mode, String profileId, int goal, String reason, boolean hints) {
+            this(action, sessionId, taskId, revision, mode, profileId, goal, reason, hints,
+                    TrainingEnvironment.STATIONARY);
+        }
+
+        public Request(Action action, UUID sessionId, UUID taskId, long revision,
+                       TrainingMode mode, String profileId, int goal, String reason, boolean hints,
+                       TrainingEnvironment environment) {
             if (goal < 0 || revision < 0 || profileId == null || !profileId.matches("[a-z0-9_.-]{1,128}")
                     || reason == null || reason.length() > MAX_TEXT) throw new IllegalArgumentException("Invalid request");
             this.targetHints = hints;
+            this.environment = java.util.Objects.requireNonNull(environment);
             this.action = action;
             this.sessionId = sessionId;
             this.taskId = taskId;
@@ -62,9 +72,14 @@ public final class TrainerProtocol {
             return new Request(Action.START, NONE, NONE, 0, mode, profileId, goal, "", hints);
         }
 
+        public static Request start(TrainingMode mode, String profileId, int goal, boolean hints,
+                                    TrainingEnvironment environment) {
+            return new Request(Action.START, NONE, NONE, 0, mode, profileId, goal, "", hints, environment);
+        }
+
         public static Request signal(Action action, View view, String reason) {
             return new Request(action, view.sessionId, view.taskId, view.revision,
-                    view.mode, view.profileId, view.goal, reason);
+                    view.mode, view.profileId, view.goal, reason, false, view.environment);
         }
     }
 
@@ -76,6 +91,7 @@ public final class TrainerProtocol {
         public final String message;
         public final String profileId;
         public final TrainingMode mode;
+        public final TrainingEnvironment environment;
         public final int completed;
         public final int goal;
         public final int countdownTicks;
@@ -95,6 +111,7 @@ public final class TrainerProtocol {
         private View(Builder b) {
             sessionId = b.sessionId; taskId = b.taskId; revision = b.revision;
             phase = b.phase; message = b.message; profileId = b.profileId; mode = b.mode;
+            environment = b.environment;
             completed = b.completed; goal = b.goal; countdownTicks = b.countdownTicks;
             elapsedNanos = b.elapsedNanos; swapAttempts = b.swapAttempts;
             effectiveSwaps = b.effectiveSwaps; slotChanges = b.slotChanges;
@@ -114,6 +131,7 @@ public final class TrainerProtocol {
             private long revision, elapsedNanos;
             private String phase = "IDLE", message = "", profileId = "default";
             private TrainingMode mode = TrainingMode.SINGLE_ITEM;
+            private TrainingEnvironment environment = TrainingEnvironment.STATIONARY;
             private int completed, goal = 10, countdownTicks;
             private int swapAttempts, effectiveSwaps, slotChanges, noOpSwaps, forbiddenActions;
             private InventoryLayout expectedInitial, target;
@@ -127,6 +145,10 @@ public final class TrainerProtocol {
             public Builder message(String value) { message = value; return this; }
             public Builder profile(String value) { profileId = value; return this; }
             public Builder mode(TrainingMode value) { mode = value; return this; }
+            public Builder environment(TrainingEnvironment value) {
+                environment = java.util.Objects.requireNonNull(value);
+                return this;
+            }
             public Builder progress(int done, int total) { completed = done; goal = total; return this; }
             public Builder countdown(int value) { countdownTicks = value; return this; }
             public Builder elapsed(long value) { elapsedNanos = value; return this; }
@@ -151,6 +173,7 @@ public final class TrainerProtocol {
         buf.writeUuid(value.sessionId); buf.writeUuid(value.taskId); buf.writeLong(value.revision);
         buf.writeEnumConstant(value.mode); buf.writeString(value.profileId);
         buf.writeVarInt(value.goal); buf.writeString(value.reason); buf.writeBoolean(value.targetHints);
+        buf.writeEnumConstant(value.environment);
     }
 
     public static Request readRequest(PacketByteBuf buf) {
@@ -164,8 +187,9 @@ public final class TrainerProtocol {
         String reason = buf.readString(MAX_TEXT);
         if (goal < 0 || revision < 0) throw new IllegalArgumentException("Invalid request bounds");
         boolean hints = buf.readBoolean();
+        TrainingEnvironment environment = buf.readEnumConstant(TrainingEnvironment.class);
         if (buf.isReadable()) throw new IllegalArgumentException("Trailing request data");
-        return new Request(action, session, task, revision, mode, profile, goal, reason, hints);
+        return new Request(action, session, task, revision, mode, profile, goal, reason, hints, environment);
     }
 
     public static void writeView(PacketByteBuf buf, View v) {
@@ -179,6 +203,7 @@ public final class TrainerProtocol {
         writeLayout(buf, v.expectedInitial); writeLayout(buf, v.target);
         buf.writeInt(v.selectedSlot); buf.writeInt(v.destination);
         writeStrings(buf, v.slotHints); writeStrings(buf, v.profileIds);
+        buf.writeEnumConstant(v.environment);
     }
 
     public static View readView(PacketByteBuf buf) {
@@ -190,6 +215,8 @@ public final class TrainerProtocol {
         b.counts(buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
         b.layouts(readLayout(buf), readLayout(buf)).selectedSlot(buf.readInt()).destination(buf.readInt());
         b.slotHints(readStrings(buf, 10)).profileIds(readStrings(buf, 128));
+        b.environment(buf.readEnumConstant(TrainingEnvironment.class));
+        if (buf.isReadable()) throw new IllegalArgumentException("Trailing view data");
         return b.build();
     }
 

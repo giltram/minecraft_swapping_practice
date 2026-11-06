@@ -3,6 +3,7 @@ package dev.hotbarswaptrainer.network;
 import dev.hotbarswaptrainer.profile.StackValue;
 import dev.hotbarswaptrainer.task.InventoryLayout;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -14,6 +15,24 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 public class TrainerProtocolTest {
+    @Test public void environmentRoundTripsForBothModesAndViews() {
+        for (TrainingMode mode : TrainingMode.values()) for (TrainingEnvironment environment : TrainingEnvironment.values()) {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            try {
+                TrainerProtocol.writeRequest(buf, TrainerProtocol.Request.start(mode, "default", 0, true, environment));
+                TrainerProtocol.Request request = TrainerProtocol.readRequest(buf);
+                assertEquals(mode, request.mode); assertEquals(environment, request.environment);
+                buf.clear();
+                TrainerProtocol.View original = new TrainerProtocol.View.Builder().mode(mode).environment(environment).build();
+                TrainerProtocol.writeView(buf, original);
+                TrainerProtocol.View view = TrainerProtocol.readView(buf);
+                assertEquals(environment, view.environment);
+                TrainerProtocol.Request signal = TrainerProtocol.Request.signal(TrainerProtocol.Action.STOP, view, "");
+                assertEquals(environment, signal.environment);
+            } finally { buf.release(); }
+        }
+    }
+
     @Test
     public void declaredHintsAreBoundedFrozenStartValuesAndTrailingDataIsRejected() {
         for (boolean hints : new boolean[]{false,true}) {

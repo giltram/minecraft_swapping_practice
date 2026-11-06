@@ -1,6 +1,7 @@
 package dev.hotbarswaptrainer.stats;
 
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 
 import java.util.*;
 
@@ -16,12 +17,18 @@ public final class PersonalBests {
 
     /** Fastest successful task for one mode, across profiles, hints and session lengths. */
     public static Optional<Best> fastestTaskForMode(HistorySnapshot history, TrainingMode mode) {
+        return fastestTaskForMode(history, mode, TrainingEnvironment.STATIONARY);
+    }
+
+    /** Environment is explicit; profiles, hints and session lengths retain mode-PB merging. */
+    public static Optional<Best> fastestTaskForMode(HistorySnapshot history, TrainingMode mode, TrainingEnvironment environment) {
         Objects.requireNonNull(mode, "Training mode is required");
+        Objects.requireNonNull(environment, "Training environment is required");
         Best best = null;
         for (SessionResult result : chronological(history)) {
             SessionMetadata metadata = result.getMetadata();
             if (metadata == null || !metadata.comparable() || !history.playerId.equals(metadata.playerId)
-                    || result.getMode() != mode) continue;
+                    || result.getMode() != mode || !environment.historyId.equals(metadata.environment)) continue;
             for (TaskResult task : result.getTasks()) if (task.getOutcome() == TaskResult.Outcome.SUCCESS)
                 best = better(best, task.getElapsedNanos(), result, task.getTaskId());
         }

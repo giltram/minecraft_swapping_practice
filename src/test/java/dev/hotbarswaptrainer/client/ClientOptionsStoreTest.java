@@ -3,6 +3,7 @@ package dev.hotbarswaptrainer.client;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -17,6 +18,21 @@ import static org.junit.Assert.*;
 
 public class ClientOptionsStoreTest {
     @Rule public TemporaryFolder temporary = new TemporaryFolder();
+
+    @Test public void legacyEnvironmentDefaultsWithoutRewritingAndMovingRoundTrips() throws Exception {
+        Path file = file();
+        ClientOptionsStore initial = new ClientOptionsStore(file); initial.load(); initial.save(ClientOptions.defaults());
+        JsonObject legacy = new JsonParser().parse(read(file)).getAsJsonObject();
+        legacy.remove("environment");
+        byte[] original = legacy.toString().getBytes(StandardCharsets.UTF_8); Files.write(file, original);
+        ClientOptionsStore store = new ClientOptionsStore(file);
+        ClientOptions loaded = store.load();
+        assertEquals(TrainingEnvironment.STATIONARY, loaded.environment);
+        assertArrayEquals(original, Files.readAllBytes(file));
+        store.save(new ClientOptions(loaded.mode, loaded.profile, loaded.goal, loaded.showHints,
+                loaded.showSwapCounts, TrainingEnvironment.MOVING));
+        assertEquals(TrainingEnvironment.MOVING, new ClientOptionsStore(file).load().environment);
+    }
 
     @Test
     public void missingFileUsesExistingDefaultsWithoutWriting() throws Exception {
@@ -59,7 +75,8 @@ public class ClientOptionsStoreTest {
                 {"profile", "\"../custom\""}, {"profile", "42"}, {"goal", "-1"},
                 {"goal", "2147483648"}, {"goal", "1.5"}, {"goal", "\"10\""},
                 {"goal", "null"}, {"showHints", "\"false\""}, {"showHints", "0"}, {"showSwapCounts", "null"}, {"showSwapCounts", "1"},
-                {"showSwapCounts", "\"false\""}, {"extra", "true"}
+                {"showSwapCounts", "\"false\""}, {"extra", "true"},
+                {"environment", "\"PARKOUR\""}, {"environment", "null"}, {"environment", "1"}
         };
         for (String[] invalid : invalidFields) {
             JsonObject json = new JsonParser().parse(valid).getAsJsonObject();

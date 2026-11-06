@@ -1,6 +1,7 @@
 package dev.hotbarswaptrainer.session;
 
-import dev.hotbarswaptrainer.environment.StationaryEnvironment;
+import dev.hotbarswaptrainer.environment.SessionEnvironment;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import dev.hotbarswaptrainer.input.PlayerActionTracker;
 import dev.hotbarswaptrainer.profile.LoadoutProfile;
 import dev.hotbarswaptrainer.stats.TaskResult;
@@ -25,7 +26,8 @@ final class TrainingSession {
     final long startedAtMillis = System.currentTimeMillis();
     long endedAtMillis;
     SessionMetadata.EndState endState;
-    final StationaryEnvironment environment;
+    final TrainingEnvironment environmentType;
+    final SessionEnvironment environment;
     final Random random = new Random();
     final List<TaskResult> results = new ArrayList<>();
     InventoryTask task;
@@ -35,11 +37,13 @@ final class TrainingSession {
     int deadlineTick, completed;
     String message = "";
 
-    TrainingSession(ServerPlayerEntity player, LoadoutProfile profile, TrainingMode mode, int goal, boolean hints) {
+    TrainingSession(ServerPlayerEntity player, LoadoutProfile profile, TrainingMode mode, int goal, boolean hints,
+                    TrainingEnvironment environmentType) {
         this.targetHints = hints;
         this.profile = profile;
         this.mode = mode;
         this.goal = goal;
-        this.environment = new StationaryEnvironment(player);
+        this.environmentType = environmentType;
+        this.environment = SessionEnvironment.create(environmentType, player);
     }
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch opt-in real-screen M2-C automation in a fresh, explicitly owned isolated instance.
+"""Launch the current unified real-screen editor/PB/safety automation in a fresh, explicitly owned isolated instance.
 
 Copies only the previously owned, inactive layout-UI disposable world. Never uses
 user configurations/saves. Original JDK8/x86 LWJGL baseline and production mod.
@@ -26,17 +26,17 @@ def load(name, filename):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--launch", action="store_true")
-    parser.add_argument("--usability", action="store_true", help="Run the item-first M2 usability workflow")
+    parser.add_argument("--usability", action="store_true", help="Compatibility alias for the default current-UI workflow")
     parser.add_argument("--pb-hud", action="store_true", help="Extend usability checks with simplified PB/HUD screens")
-    parser.add_argument("--history", action="store_true", help="Extend the workflow with history/PB checks")
+    parser.add_argument("--history", action="store_true", help="Compatibility alias; PB/history and safety gates are always checked")
     parser.add_argument("--refresh-smoke", action="store_true", help="On owned reopen, archive and replace only the excluded acceptance driver")
-    parser.add_argument("--reopen", action="store_true", help="Reopen a completed owned history UI run")
+    parser.add_argument("--reopen", action="store_true", help="Reopen a completed owned current-UI run")
     parser.add_argument("--run-name", default="run-profile-editor-ui")
     args = parser.parse_args()
     if args.pb_hud:
         args.usability = True
-        if args.reopen:
-            parser.error("PB/HUD acceptance requires a fresh owned instance")
+    if args.refresh_smoke and not args.reopen:
+        parser.error("--refresh-smoke requires --reopen")
     if args.run_name != "run-profile-editor-ui" and not args.run_name.startswith("run-m2-ui-"):
         parser.error("Only an explicit isolated UI run name is allowed")
     if Path(args.run_name).name != args.run_name:
@@ -64,6 +64,8 @@ def main():
         if run.resolve() != run or (run / ".hst-production-owned").read_text().strip() != production.OWNED:
             raise ValueError("Refusing unowned reopen")
         manifest = json.loads((run / "launch-manifest.json").read_text())
+        if "-Dhotbarswaptrainer.usabilityUi=true" not in manifest["command"]:
+            raise ValueError("Historical UI manifests use retired screens; create a fresh owned run")
         for mod in manifest["mods"]:
             if production.digest(Path(mod["path"])) != mod["sha256"]:
                 raise ValueError("Artifact changed since UI run")
@@ -84,12 +86,12 @@ def main():
             manifest["mods"] = [{"path": str(path), "sha256": production.digest(path)} for path in sorted((run / "mods").glob("*.jar"))]
             (run / "launch-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
         command = list(manifest["command"])
-        command.insert(1,"-Dhotbarswaptrainer.usabilityReopen=true" if args.usability else "-Dhotbarswaptrainer.historyReopen=true")
+        command.insert(1,"-Dhotbarswaptrainer.usabilityReopen=true")
         java = Path(command[0])
         (run / "smoke").mkdir(exist_ok=True)
         restart_manifest = dict(manifest)
         restart_manifest["command"] = command
-        restart_manifest["mode"] = "usability-ui-reopen" if args.usability else "history-ui-reopen"
+        restart_manifest["mode"] = "current-ui-reopen"
         (run / "smoke/reopen-launch-manifest.json").write_text(json.dumps(restart_manifest, indent=2) + "\n")
         if args.launch:
             environment = dict(os.environ)
@@ -113,12 +115,10 @@ def main():
     manifest_path = run / "launch-manifest.json"
     manifest = json.loads(manifest_path.read_text())
     command = manifest["command"]
-    command.insert(1, "-Dhotbarswaptrainer.usabilityUi=true" if args.usability else "-Dhotbarswaptrainer.editorSmoke=true")
+    command.insert(1, "-Dhotbarswaptrainer.usabilityUi=true")
     if args.pb_hud:
         command.insert(1,"-Dhotbarswaptrainer.pbHudUi=true")
-    if args.history:
-        command.insert(1,"-Dhotbarswaptrainer.historyUi=true")
-    manifest["mode"] = "usability-ui" if args.usability else ("history-ui" if args.history else "editor-ui")
+    manifest["mode"] = "current-ui"
     manifest["mods"] = [{"path": str(path), "sha256": production.digest(path)} for path in sorted((run / "mods").glob("*.jar"))]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
     (run / "launch-command.txt").write_text("cd " + shlex.quote(str(run)) + " && " + shlex.join(command) + "\n")

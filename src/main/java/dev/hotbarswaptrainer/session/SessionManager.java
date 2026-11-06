@@ -109,7 +109,7 @@ public final class SessionManager {
         LoadoutProfile selected = null;
         for (LoadoutProfile profile : loaded.getProfiles()) if (profile.getId().equals(request.profileId)) selected = profile;
         if (selected == null) { error(player, "Profile unavailable: " + String.join("; ", loaded.getErrors())); return; }
-        TrainingSession session = new TrainingSession(player, selected, request.mode, request.goal, request.targetHints);
+        TrainingSession session = new TrainingSession(player, selected, request.mode, request.goal, request.targetHints, request.environment);
         sessions.put(player.getUuid(), session);
         try {
             inventory.backup(player, session.id);
@@ -240,8 +240,18 @@ public final class SessionManager {
     public boolean guardMovement(ServerPlayerEntity player, PlayerMoveC2SPacket packet) {
         if (!InventoryService.isProtected(player)) return false;
         TrainingSession session = sessions.get(player.getUuid());
-        if (session != null) session.environment.observeMovement(player, packet);
-        return true;
+        return session == null || session.environment.interceptMovement(player, packet);
+    }
+
+    /** Called only at vanilla's accepted-position boundary, never with raw packet coordinates. */
+    public void acceptedMovement(ServerPlayerEntity player, double beforeX, double beforeZ) {
+        TrainingSession session = sessions.get(player.getUuid());
+        if (session != null) session.environment.acceptedMovement(beforeX, beforeZ, player.getX(), player.getZ());
+    }
+
+    public void positionCorrected(ServerPlayerEntity player) {
+        TrainingSession session = sessions.get(player.getUuid());
+        if (session != null) session.environment.positionCorrected();
     }
 
     private void invalidate(ServerPlayerEntity player, TrainingSession session, String reason) {
@@ -295,7 +305,7 @@ public final class SessionManager {
             if (session != null) {
                 SessionMetadata metadata = new SessionMetadata(player.getUuid(), session.startedAtMillis, session.endedAtMillis,
                         session.profile.getId(), session.profile.getName(), session.targetHints, SessionMetadata.TIMING,
-                        SessionMetadata.SCORING, SessionMetadata.ENVIRONMENT, session.endState);
+                        SessionMetadata.SCORING, session.environmentType.historyId, session.endState);
                 SessionResult summary = new SessionResult(session.id, session.mode, session.profile.getHash(), session.goal, session.results, metadata);
                 if ("Session complete".equals(reason)) reason = "";
                 try { results.save(player.getUuid(), summary); }
@@ -346,7 +356,8 @@ public final class SessionManager {
     private boolean publish(ServerPlayerEntity player, TrainingSession s) {
         s.revision = ++revision;
         TrainerProtocol.View.Builder view = new TrainerProtocol.View.Builder().session(s.id).revision(s.revision)
-                .phase(s.phase.name()).message(limit(s.message)).profile(s.profile.getId()).mode(s.mode).progress(s.completed, s.goal)
+                .phase(s.phase.name()).message(limit(s.message)).profile(s.profile.getId()).mode(s.mode)
+                .environment(s.environmentType).progress(s.completed, s.goal)
                 .countdown(s.phase == TrainingSession.Phase.COUNTDOWN ? Math.max(0, s.deadlineTick - tick(player)) : 0)
                 .elapsed(s.phase == TrainingSession.Phase.RUNNING ? System.nanoTime() - s.startedNanos : s.elapsedNanos)
                 .counts(s.actions.getAttempts(), s.actions.getEffective(), s.actions.getSelections(), s.actions.getNoOps(), s.actions.getForbidden());

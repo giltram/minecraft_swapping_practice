@@ -2,6 +2,7 @@ package dev.hotbarswaptrainer.client;
 
 import dev.hotbarswaptrainer.stats.PersonalBests;
 import dev.hotbarswaptrainer.task.TrainingMode;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -12,11 +13,16 @@ import static dev.hotbarswaptrainer.client.EditorText.text;
 final class TrainerHistoryScreen extends EditorFormScreen {
     private final Screen parent;
     private final HistoryBrowser browser;
+    private final TrainingEnvironment environment;
     private final String[] times = new String[2];
     private int tableTop;
 
     TrainerHistoryScreen(Screen parent, HistoryBrowser browser) {
-        super(text("personalBests")); this.parent = parent; this.browser = browser;
+        this(parent, browser, TrainingEnvironment.STATIONARY);
+    }
+    TrainerHistoryScreen(Screen parent, HistoryBrowser browser, TrainingEnvironment environment) {
+        super(text("personalBests") + " · " + environment.displayName);
+        this.parent = parent; this.browser = browser; this.environment = environment;
     }
     @Override protected void buildForm() {
         if (!browser.allowed()) { paragraph(text("gate"), 0xFFAA88); footer(text("back")); return; }
@@ -29,7 +35,7 @@ final class TrainerHistoryScreen extends EditorFormScreen {
         footer(text("back"));
     }
     private String best(TrainingMode mode) {
-        return PersonalBests.fastestTaskForMode(browser.snapshot, mode)
+        return PersonalBests.fastestTaskForMode(browser.snapshot, mode, environment)
                 .map(best -> "PB " + TrainerHud.formatSeconds(best.nanos) + " s").orElse("PB —");
     }
     @Override protected ItemStack renderContents(MatrixStack matrices, int x, int y, float delta) {

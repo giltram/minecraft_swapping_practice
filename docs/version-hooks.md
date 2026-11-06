@@ -330,3 +330,44 @@ any destination generation. The start gate rejects a player currently standing
 in a Nether/End portal; StationaryEnvironment also retains its original
 ServerWorld as a defensive invariant. Checking dimension only after transition
 would be too late to prevent terrain effects.
+
+## M3-A accepted horizontal movement audit (2026-10-31)
+
+The exact pinned generated onPlayerMove source was additionally inspected for
+Moving. Capture server X/Z after forceMainThread, then read server X/Z at the
+INVOKE of ServerPlayerEntity.increaseTravelMotionStats(DDD)V. That invocation
+occurs only after the accepted collision branch updates authoritative position;
+rejected motion and teleport-pending paths skip it. Observe actual positions,
+not packet coordinates or the statistic arguments. The last horizontal segment
+is hypot(dx,dz) blocks, diagnostic only. No key/speed/window/clock gates outcomes.
+
+teleportRequest(double,double,double,float,float,Set) clears diagnostic evidence
+at HEAD. Confirmation cannot contribute a segment, and each movement packet has
+its own server-position baseline, excluding resets between packets. Required
+Mixin matching remains fail-closed. Moving passes movement packets through and
+its environment tick never changes position/velocity/grounded state/fall distance.
+Stationary's original movement behavior is retained.
+
+The excluded production acceptance driver audits pending teleport position/ID
+through 1.16.1 intermediary field_14119 / field_14123, then invokes the real
+onTeleportConfirm. No test accessor or fault command is added to production.
+See [M3-A acceptance](m3-a-moving-inventory.md) for executed versus pending checks.
+
+## Pending block breaking protection (2026-11-01)
+
+The pinned source declares `ServerPlayerInteractionManager.update()`
+(`class_3225.method_14264`) and `tryBreakBlock(BlockPos)`
+(`method_14266`, boolean). A pre-START STOP with progress below 0.7 sets
+`failedToMine`; later updates call `continueMining` and `tryBreakBlock` without a
+network packet. Packet guards alone therefore do not own the removal boundary.
+
+`BlockBreakingProtectionMixin` returns false at tryBreakBlock HEAD for any
+`InventoryService.isProtected(player)`, before onBreak/removeBlock/postMine. It
+sends an authoritative block update. `InventoryService.backup` invokes the
+`PendingBlockBreaking` adapter as soon as protection is attached, including when
+START and STOP share a tick. A protected update also clears `mining`,
+`failedToMine`, both relevant crack overlays and `blockBreakingProgress`, then
+cancels the mining update. This discards pending work rather than deferring it
+until restoration. Stale pre-START work is not scored as a new forbidden action.
+Required injections and remapped Shadows remain fail-closed. Actual verification
+is recorded in [code-review-fixes.md](code-review-fixes.md).

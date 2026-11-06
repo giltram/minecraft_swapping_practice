@@ -95,5 +95,6 @@
   "trainer.config.selectedLayout": "Selected for training",
   "trainer.config.editLayout": "Edit",
   "trainer.config.layoutUnavailable": "This layout is no longer available. Refresh and choose again.",
-  "trainer.config.duplicateLayout": "Duplicate profile ID; this file cannot be selected for training."
+  "trainer.config.duplicateLayout": "Duplicate profile ID; this file cannot be selected for training.",
+  "trainer.config.environment": "Environment: %s"
 }

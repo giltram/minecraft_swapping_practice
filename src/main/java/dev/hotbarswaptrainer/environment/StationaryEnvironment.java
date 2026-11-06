@@ -6,11 +6,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 /** A stationary session has one position anchor; camera rotation remains under vanilla control. */
-public final class StationaryEnvironment {
+public final class StationaryEnvironment implements SessionEnvironment {
     private final Vec3d anchor;
     private final ServerWorld world;
     public StationaryEnvironment(ServerPlayerEntity player) { anchor = player.getPos(); world = player.getServerWorld(); }
-    public void tick(ServerPlayerEntity player) {
+    @Override public void tick(ServerPlayerEntity player) {
         if (player.getServerWorld() != world) throw new IllegalStateException("Training dimension changed unexpectedly");
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0;
@@ -33,5 +33,9 @@ public final class StationaryEnvironment {
         if (dx * dx + dy * dy + dz * dz > 0.000001) {
             player.networkHandler.requestTeleport(anchor.x, anchor.y, anchor.z, player.yaw, player.pitch);
         }
+    }
+    @Override public boolean interceptMovement(ServerPlayerEntity player, PlayerMoveC2SPacket packet) {
+        observeMovement(player, packet);
+        return true;
     }
 }

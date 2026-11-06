@@ -32,9 +32,18 @@ smoke launcher installs the complete checksum-verified POM dependency set.
 
 1. Create a new ordinary test world with cheats enabled. No map download, datapack or command blocks are needed.
 2. Stand safely on dry solid ground, close inventory screens, and run `/swaptrainer enable-test-world`. This creates only a marker in that save's root directory.
-3. Press **O** to choose Single Item / Full Inventory and a custom successful-task count. Use the input labelled **Number of successful training tasks (0=unlimited)**. Empty/out-of-range input disables Start; Enter in the input starts when valid. **Target hints: ON/OFF** shows or hides the target icons, destination and slot rules; timing/progress/countdown/GO stay visible. Accepted choices persist in `config/hotbar-swap-trainer/client-options.json` (defaults: Single Item, default profile, 10 successes, hints OFF). A damaged configuration is preserved with an error and saving disabled until repair and restart. Press **P** to start or stop. Both mod keys can be rebound in vanilla Controls.
+3. Press **O** to choose Single Item / Full Inventory, Stationary / Moving, and a custom successful-task count. Use the input labelled **Number of successful training tasks (0=unlimited)**. Empty/out-of-range input disables Start; Enter in the input starts when valid. **Target hints: ON/OFF** shows or hides the target icons, destination and slot rules; timing/progress/countdown/GO stay visible. Accepted choices persist in `config/hotbar-swap-trainer/client-options.json` (defaults: Single Item, Stationary, default profile, 10 successes, hints OFF). A damaged configuration is preserved with an error and saving disabled until repair and restart. Press **P** to start or stop. Both mod keys can be rebound in vanilla Controls.
 4. Use your vanilla **Swap Hands** key, number keys and scroll wheel. The trainer observes the vanilla swaps and never solves tasks for you. In Single Item the HUD names the destination; Full Inventory shows one legal target and the selected slot's allowed alternatives.
 5. Stop restores all 41 inventory positions and the original selected hotbar slot. Opening options stops first. Opening inventory, pausing or losing focus invalidates the active task; preparation waits for the game to be ready again.
+
+Stationary retains your position while allowing camera rotation. Moving allows
+vanilla walking, sprinting and jumping throughout training; stopping never makes
+a task invalid and there is no minimum-speed or first-movement requirement. Start
+from safe dry ground. Later tasks may start in the air; stopping or completing
+restores inventory immediately where you are, without teleporting or clearing
+velocity. Normal landing damage may follow restoration. Environment is frozen
+for the session; change it from O after stopping. No terrain/world is prepared
+by the mod.
 
 Profiles are JSON files in `config/hotbar-swap-trainer/profiles/`. The bundled `default.json` is installed only when missing; corrupt files are preserved and reported. See [domain contracts](domain.md) for the schema. Profiles are frozen for each session.
 
@@ -74,7 +83,8 @@ An `ERROR_LOCKED` recovery message means the backup is retained and interactions
 
 After stopping and confirmed inventory restoration, open O → PB in local
 single-player with LAN closed. The 2×2 table shows Single Item and Full Inventory
-with each mode's fastest successful task time. Reopening the page loads the latest saved history.
+with each mode's fastest successful task time for the environment selected in O.
+The title labels Stationary or Moving; their PBs are separate. Reopening the page loads the latest saved history.
 PB — means no eligible score. Profile configurations, hint settings and requested
 session lengths are combined. Invalid/stopped attempts and unknown timing metadata
 do not score. Damaged/unreadable history produces an incomplete-history warning.

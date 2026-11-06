@@ -1,0 +1,255 @@
+{
+  "date": "2026-11-01",
+  "scope": "Targeted fixes for docs/code-review.md; pre-existing M3-A changes retained",
+  "productionJar": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "827c339f99a25b55caaa5f5b7c45f3abbe4b8bfc04463e90e2eff17a066e7e49",
+    "java8Classes": 124
+  },
+  "build": {
+    "command": "scripts/gradle-jdk8.sh --offline test build smokeJar --rerun-tasks",
+    "status": "passed",
+    "executedTasks": 11,
+    "testClasses": 23,
+    "tests": 131,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "command": "python3 scripts/check-boundaries.py",
+    "status": "passed",
+    "javaFiles": 86,
+    "packages": 12,
+    "edges": 31
+  },
+  "mining": {
+    "command": "python3 scripts/run-m2-runtime.py --mode accept-pending-mining --run-name run-m2-runtime-review-mining-final-20261101 --launch",
+    "result": {
+      "mode": "accept-pending-mining",
+      "status": "passed",
+      "detail": "8 pending-mining protection checks across both environments/modes",
+      "elapsedSeconds": 18.232638334
+    },
+    "checks": [
+      "STATIONARY / SINGLE_ITEM / active: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "STATIONARY / SINGLE_ITEM / delayed: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "STATIONARY / FULL_INVENTORY / active: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "STATIONARY / FULL_INVENTORY / delayed: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "MOVING / SINGLE_ITEM / active: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "MOVING / SINGLE_ITEM / delayed: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "MOVING / FULL_INVENTORY / active: block/NBT intact, queue discarded, fresh ordinary mining works",
+      "MOVING / FULL_INVENTORY / delayed: block/NBT intact, queue discarded, fresh ordinary mining works"
+    ],
+    "postExitReadback": [
+      {
+        "path": "run-m2-runtime-review-mining-final-20261101/saves/hst-smoke/level.dat",
+        "sha256": "b717c9cf914a0732333ca5fe8074381fa123b56ecfc65f8b0aa3133a8ecf7159",
+        "inventoryPositions": 41,
+        "recoveryPresent": false
+      },
+      {
+        "path": "run-m2-runtime-review-mining-final-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+        "sha256": "8c1fe2b3117081d574a87a0e9166ba580a6dbd4ea032325868e01e360862e63d",
+        "inventoryPositions": 41,
+        "recoveryPresent": false
+      }
+    ]
+  },
+  "ui": [
+    {
+      "entrypoint": "default",
+      "command": [
+        "--run-name",
+        "run-m2-ui-review-final-default-20261101",
+        "--launch"
+      ],
+      "result": "passed\nCurrent layout/count/multiselect workflow, finite/unlimited training, PB/history, preserved corrupt history/options, duplicate ID, actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN gates passed. Programmatic input only; physical acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-default-20261101/saves/hst-smoke/level.dat",
+          "sha256": "c9308d5577707d1221ad2bb9c7bab1c9a442ef27bb9480f3d1321e7ef1979bef",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-default-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "08b9b34a2d372d82028d5ccf1fa354a858ceb3cb23d386c8e8babf29e25939d7",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-default-20261101.log"
+    },
+    {
+      "entrypoint": "history",
+      "command": [
+        "--history",
+        "--run-name",
+        "run-m2-ui-review-final-history-20261101",
+        "--launch"
+      ],
+      "result": "passed\nCurrent layout/count/multiselect workflow, finite/unlimited training, PB/history, preserved corrupt history/options, duplicate ID, actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN gates passed. Programmatic input only; physical acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-history-20261101/saves/hst-smoke/level.dat",
+          "sha256": "dbcc40e53cc8e2d94c097f65e685267bb186e4e9d5b3179a01017d57d373ddf8",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-history-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "54805619a47b492f4a8d3b0301d1908f2984343e4bd4974eb00aacfc83ad8f92",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-history-20261101.log"
+    },
+    {
+      "entrypoint": "history reopen",
+      "command": [
+        "--history",
+        "--run-name",
+        "run-m2-ui-review-final-history-20261101",
+        "--reopen",
+        "--launch"
+      ],
+      "result": "passed\nFresh production process: selected profile/unlimited, stone32+dirt7 and three-item OPTIONAL/custom NBT profile and training/gate histories, PBs and damaged-history warnings survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-history-20261101/saves/hst-smoke/level.dat",
+          "sha256": "ee4583baf4ada01bdfa33d208d932613e48863b4036a939e413ae55dd7709922",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-history-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "0cf807cfb11b85fb69b1aa0394d6dcfe5cfb9b3c352499cb41f5ca76f16c4c94",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-history-reopen-20261101.log"
+    },
+    {
+      "entrypoint": "usability",
+      "command": [
+        "--usability",
+        "--run-name",
+        "run-m2-ui-review-final-usability-20261101",
+        "--launch"
+      ],
+      "result": "passed\nCurrent layout/count/multiselect workflow, finite/unlimited training, PB/history, preserved corrupt history/options, duplicate ID, actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN gates passed. Programmatic input only; physical acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-usability-20261101/saves/hst-smoke/level.dat",
+          "sha256": "71ee94a06bddb05f13b59ed35b33e553fb8da440c078b67438208a7116c68392",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-usability-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "54805619a47b492f4a8d3b0301d1908f2984343e4bd4974eb00aacfc83ad8f92",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-usability-20261101.log"
+    },
+    {
+      "entrypoint": "pb-hud",
+      "command": [
+        "--pb-hud",
+        "--run-name",
+        "run-m2-ui-review-final-pb-hud-20261101",
+        "--launch"
+      ],
+      "result": "passed\nCurrent layout/count/multiselect workflow, finite/unlimited training, PB/history, preserved corrupt history/options, duplicate ID, actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN gates passed. Full mode and HUD count extension passed. Programmatic input only; physical acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-pb-hud-20261101/saves/hst-smoke/level.dat",
+          "sha256": "9838dcf0927132bf67e01730131c2d5eafcbfd8e99be7695409d8d93de49c903",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-pb-hud-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "54805619a47b492f4a8d3b0301d1908f2984343e4bd4974eb00aacfc83ad8f92",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-pb-hud-20261101.log"
+    },
+    {
+      "entrypoint": "pb-hud reopen",
+      "command": [
+        "--pb-hud",
+        "--run-name",
+        "run-m2-ui-review-final-pb-hud-20261101",
+        "--reopen",
+        "--launch"
+      ],
+      "result": "passed\nFresh production process: selected profile/unlimited, stone32+dirt7 and three-item OPTIONAL/custom NBT profile and training/gate histories, PBs and damaged-history warnings survive restart. Actual en_us→zh_cn resource reload and Chinese options/main/picker rendered. Programmatic input, human experience acceptance remains pending.\n",
+      "readback": [
+        {
+          "path": "run-m2-ui-review-final-pb-hud-20261101/saves/hst-smoke/level.dat",
+          "sha256": "17270d29e399735ea19054a21cba910cf5ba012724e1008b0721747ec64096d8",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-ui-review-final-pb-hud-20261101/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "0cf807cfb11b85fb69b1aa0394d6dcfe5cfb9b3c352499cb41f5ca76f16c4c94",
+          "inventoryPositions": 41,
+          "recoveryPresent": false
+        }
+      ],
+      "log": "/tmp/hst-review-final-pb-hud-reopen-20261101.log"
+    }
+  ],
+  "otherChecks": [
+    "All 8 Python scripts parsed with ast.parse",
+    "en_us and zh_cn language key sets match",
+    "124 production classes have major version 52 and exclude smoke code",
+    "Retired ProfileEditorUiSmoke/ProfileTrainingAcceptance classes absent from smoke JAR",
+    "git diff --check passed"
+  ],
+  "limitations": [
+    "Physical input, focus, subjective gameplay and complete crash/persistence fault matrix not rerun",
+    "All game runs use fresh marked disposable instances and the pinned Intel JDK8/original LWJGL production baseline"
+  ],
+  "status": "passed",
+  "smokeJar": {
+    "path": "build/smoke/hotbar-swap-trainer-smoke.jar",
+    "sha256": "4811eef9f559ff772da856bea35a7ca8571ad83575db15145fedd84e2ef4321d"
+  },
+  "artifactManifests": [
+    {
+      "path": "run-m2-ui-review-final-default-20261101/launch-manifest.json",
+      "sha256": "240e4733d262a844d0154f29612a03efce2c7301e89a0bff5eb1683d2891233f",
+      "productionSha256": "827c339f99a25b55caaa5f5b7c45f3abbe4b8bfc04463e90e2eff17a066e7e49"
+    },
+    {
+      "path": "run-m2-ui-review-final-history-20261101/launch-manifest.json",
+      "sha256": "48b64d3a615c3e11e6e273425e08a7bb760d4f706e39e4bb60ffe90d0072d864",
+      "productionSha256": "827c339f99a25b55caaa5f5b7c45f3abbe4b8bfc04463e90e2eff17a066e7e49"
+    },
+    {
+      "path": "run-m2-ui-review-final-usability-20261101/launch-manifest.json",
+      "sha256": "3c4c96be769bc1d8ac149cdee1af4f2383933f7d281cc8909201f8a8a071f0a5",
+      "productionSha256": "827c339f99a25b55caaa5f5b7c45f3abbe4b8bfc04463e90e2eff17a066e7e49"
+    },
+    {
+      "path": "run-m2-ui-review-final-pb-hud-20261101/launch-manifest.json",
+      "sha256": "b0ef44739db15272b192f196a0ea7ee94602c4c9310565accf0718f70704f375",
+      "productionSha256": "827c339f99a25b55caaa5f5b7c45f3abbe4b8bfc04463e90e2eff17a066e7e49"
+    }
+  ],
+  "inspectedScreenshots": [
+    "pb-incomplete.png",
+    "chinese-options.png",
+    "both-mode-pbs.png"
+  ]
+}

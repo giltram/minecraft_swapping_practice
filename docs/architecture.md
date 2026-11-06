@@ -1,12 +1,18 @@
 # Hotbar Swap Trainer — architecture
 
-Updated 2026-10-30. Target: Minecraft Java **1.16.1**, Fabric, local integrated server.
+Updated 2026-11-01. Target: Minecraft Java **1.16.1**, Fabric, local integrated server.
 
 ## Implementation and safety status
 
 Milestone 1 now has source implementations for profiles/tasks, inventory recovery, stationary sessions, input observation, versioned networking and client controls/HUD. Build and game acceptance results live in [testing.md](testing.md); implementation does not imply those checks passed. Ordinary-world training remains gated: the local owner must explicitly mark a disposable test world with `/swaptrainer enable-test-world`. No terrain is generated or modified.
 
-[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3 moving/parkour environments remain unimplemented.
+[The original design proposal](design-proposal-2026-10-28.md) is historical rationale, not the implementation entry point. The [execution record](milestone1-plan.md) tracks remaining acceptance. M2 includes the [slot-order editor](layout-customization.md), [M2-A client options](m2-a-client-options.md), [M2-B profile editing backend](m2-b-profile-editing.md) and the [M2-C visual profile editor](m2-c-profile-editor.md). M2-D/E now add [durable history](m2-d-history.md) and [history/PB browsing](m2-e-history-pb.md); [M2-F acceptance](m2-acceptance.md) separates executed checks from pending physical input. M3-A adds Moving; Parkour and later M3 milestones remain unimplemented.
+
+[M3-A moving inventory training](m3-a-moving-inventory.md) supports both inventory
+modes with a frozen Stationary / Moving option. The user explicitly chose free
+movement: stopping never invalidates a task, and no grace/first-movement gate is
+present. Accepted horizontal displacement is diagnostic only. The acceptance
+record distinguishes build, programmatic runtime and pending human checks.
 
 The remaining automatable M1 acceptance now passed 25 production scenarios with
 fresh reopens, including actual stop/mid-write cuts and corrupt-record loads.
@@ -37,9 +43,9 @@ All production packages begin with `dev.hotbarswaptrainer`.
 | root | `TrainerMod` assembles services; no gameplay logic |
 | profile | Immutable stack/rule/profile snapshots; mutable `ProfileDraft` and structural `ProfileDraftValidation`; private `ProfileJson` shares schema/default/NBT validation; `ProfileRepository(Path, ItemCatalog)` alone owns I/O, file-bound edits and backed-up atomic saving/reordering |
 | task | Immutable ten-position layouts/tasks, exact `ProfileApplicability` mode preconditions, deterministic Single/Full generators, typed generation failures and `TaskValidator` completion/conservation results |
-| inventory | `InventorySnapshot`, versioned `RecoveryRecord`, `ConfirmedPlayerSave`, `InventoryService`; snapshot/setup/sync/recovery, runtime stack adapters and `MinecraftItemCatalog` template normalization |
+| inventory | `InventorySnapshot`, versioned `RecoveryRecord`, `ConfirmedPlayerSave`, `InventoryService`, `PendingBlockBreaking` vanilla adapter; snapshot/setup/sync/recovery, runtime stack adapters and `MinecraftItemCatalog` template normalization |
 | input | `PlayerActionTracker` records actual vanilla swaps and changed selections; no score/state decisions |
-| environment | `StationaryEnvironment` owns the position anchor and allows camera rotation; no terrain lifecycle |
+| environment | `TrainingEnvironment` owns independent environment IDs; `SessionEnvironment` selects the original stationary anchor or vanilla Moving with accepted-horizontal-movement observation; no terrain lifecycle or outcome decisions |
 | session | `SessionManager` owns all state transitions, timing, invalidation and frozen results; package-private `TrainingSession` is server-thread mutable state |
 | stats | Immutable results/frozen SessionMetadata, strict bounded HistoryJson codec, injected HistoryStore I/O, immutable HistorySnapshot queries and pure PersonalBests derivation |
 | network | `TrainerProtocol` bounded DTO encoding and `ServerPackets` decode/queue/send adapter; no client imports |
@@ -61,13 +67,17 @@ flowchart TD
   Inventory --> Profiles
   Tasks --> Profiles
   Stats --> Tasks
+  Stats --> Environment
+  Stats --> Profiles
   Network --> Tasks
   Network --> Profiles
+  Network --> Environment
   Client[client] --> Network
   Client --> Inventory
   Client --> Profiles
   Client --> Tasks
   Client --> Stats
+  Client --> Environment
 ```
 
 The graph must remain acyclic. Common packages cannot import `net.minecraft.client` or our client packages. `task` has no file, player, network, session or HUD access; `profile` uses immutable Minecraft NBT values for loaded snapshots and separate mutable editor input, and only `ProfileRepository` owns file I/O. `ProfileJson` is a memory-only codec, with no dependency on repository services or task. `inventory` never calls `SessionManager`. Mixins call services assembled by the composition root. `scripts/check-boundaries.py` checks these boundaries and cycles.
@@ -82,6 +92,9 @@ See [domain.md](domain.md) for JSON schema, classes and test locations.
 - Default: eight REQUIRED, one OPTIONAL and one FLEXIBLE filler permits 8/9/10 stacks. The generator samples only feasible counts.
 - Full Inventory constructs a legal target, scrambles through hotbar↔offhand exchanges, and retains a reverse witness. Validator rejects already-solved initial layouts. Bounded retries have a deterministic at-most-100-pair fallback and a clear nontrivial-generation error.
 - `TaskValidator` alone owns completion/conservation decisions. It checks actual slots and the complete whole-stack multiset, accepting equivalent duplicate stacks and all configured alternatives.
+- Profile display names are nonblank and at most `LoadoutProfile.MAX_NAME_LENGTH`
+  (256 Java characters). Profile load/draft validation, editor input, metadata and
+  history decoding share this domain contract; invalid existing files stay intact.
 - Session profile objects are immutable snapshots. File edits affect a later session. Invalid JSON is preserved and reported, never silently replaced.
 - Full profile editing uses a client draft coordinator over the backend: `beginEdit(selectedFile, expected)` binds exact source bytes and ID to an isolated raw-schema draft. `validateDraft` freezes a new structural snapshot without I/O; `save(Edit)` reparses serialized output and the same-directory temporary file, compares normalized semantic hashes, backs up exact bytes and atomically replaces only the selected source. Implicit EXACT defaults remain implicit in drafts/files. Failed validation/saving cannot mutate an existing profile/task snapshot.
 - `task.ProfileApplicability` separately reports Single trainability and exact feasible Full counts in 8..10. Full count feasibility does not guarantee a nontrivial sampled task. `TaskGenerationException.Reason` distinguishes mode preconditions from bounded-search exhaustion; saving never requires sampled generation success. The dependency stays task → profile.
@@ -119,7 +132,11 @@ The host loads `level.dat/Data/Player` before UUID playerdata. IntegratedPlayerM
 
 Recovery uses full replacement of 36 main + four armor + offhand + selected slot, never give/merge/drop logic. Replaying an active snapshot is idempotent. The active record is cleared only in a save containing the restored inventory. It is reattached in memory if confirmation fails.
 
-Protection covers the complete transaction, not just RUNNING. Exact hooks guard inventory/crafting/creative transfer, drop/break/place/use/entity actions and commands; item/experience/projectile pickup; damage, hunger, healing and status effects. Stationary movement retains the anchor while allowing rotation. Ordinary play has no protection or swap interception after recovery.
+Protection covers the complete transaction, not just RUNNING.
+`BlockBreakingProtectionMixin` guards `ServerPlayerInteractionManager.tryBreakBlock`
+before any block/tool mutation. `InventoryService.backup` immediately discards active/delayed mining through
+the `PendingBlockBreaking` adapter after attaching protection; protected updates
+also discard it. Even a START/STOP within one tick cannot replay pending work; ordinary updates resume once recovery protection clears. Exact hooks guard inventory/crafting/creative transfer, drop/break/place/use/entity actions and commands; item/experience/projectile pickup; damage, hunger, healing and status effects. Stationary movement retains the anchor while allowing rotation. Moving passes vanilla locomotion through in every phase and never zeroes velocity/fall distance or forces grounding. Airborne task replacement and in-place restoration need no landing wait; ordinary landing damage can follow confirmed restore/release. Ordinary play has no protection or swap interception after recovery.
 
 Readback verifies process-visible files. Arbitrary power loss, filesystem damage, malicious other mods and inconsistent manual rollback are outside the claim. Ordinary saves remain gated until complete M1 acceptance, including physical input and visual checks, passes.
 
@@ -133,9 +150,9 @@ physical input/visual acceptance is pending.
 
 See [client.md](client.md). P toggles start/stop; O opens mode/custom-success-count and target-hint options after stop. Goals are nonnegative signed integers: 0 means unlimited, positive goals count successes only. The UI labels one input Number of successful training tasks (0=unlimited); both protocol decoding and server START reject negative goals. Original swap/number/scroll bindings remain vanilla-owned. Enabled target hints show one legal Full witness/predicates or the Single destination. Hiding those hints preserves rendered GO and GO_ACK; hiding the whole vanilla HUD still safely times out. O → Edit item layout opens the sole training-profile selector; clicking a layout name persists its ID for START, and the adjacent Edit action opens the item-first grid for that exact source after a stopped/restored client acknowledgement (IDLE/ERROR), with LAN closed. `ProfileEditorSession` owns the exact path/expected snapshot/Edit, raw per-item quantity text; screens never own persistence or read server sessions. Nullable draft SNBT/matching fields remain raw. Save rechecks the same gate; failures retain drafts and lock persistence until explicit reload. Successful save loads/begins a new edit on the same path. `ProfileItemCatalog` alone owns editor registry search/previews. `ProfileApplicability` is the explicit client → task assessment boundary; no reverse domain dependency is introduced. Slot clicks open a multi-select catalogue with all selected icons/quantities and marked registry items; `SlotCandidateLayout` owns geometry and clipped hit testing, without changing domain or protocol contracts.
 
-M2-A persists mode, profile, requested successes, Target hints and Show swap counts in local
+M2-A persists mode, environment, profile, requested successes, Target hints and Show swap counts in local
 `config/hotbar-swap-trainer/client-options.json` (schemaVersion 1). Missing files
-use SINGLE_ITEM/default/10/OFF/OFF. Legacy schema-1 files without
+use SINGLE_ITEM/STATIONARY/default/10/OFF/OFF. Legacy schema-1 files without environment default to STATIONARY without rewriting. Legacy schema-1 files without
 showSwapCounts default to false without a load-time rewrite. `TrainerClient` assembles the store, validates
 profile availability and owns accepted in-memory options; `ClientOptionsStore`
 depends on the option value, TrainingMode, Gson and Java I/O, never on screens,
@@ -164,7 +181,10 @@ introduced. `stats → task`, `client → stats`; no upward dependency or cycle.
 HistorySnapshot retains its stable filter/page query API. The PB screen renders a
 2×2 table: Single Item / Full Inventory headings, then each mode's fastest positive
 SUCCESS duration. PersonalBests.fastestTaskForMode derives these from current-player
-records across profile hashes, target hints, success goals and session end states.
+records for the explicitly selected environment across profile hashes, target hints,
+success goals and session end states. The PB title labels the existing options
+environment; no second selector is added. Its old two-argument query stays
+Stationary, and condition-specific queries continue to separate environments.
 Unknown metadata or unsupported timing/scoring/environment versions remain excluded.
 PersonalBests.forConditions retains its stricter task/finite-total/average API for
 existing consumers; stored metadata is unchanged. There is no persisted PB file or
@@ -197,3 +217,33 @@ The configuration copy/layout follow-up puts that explanation above the goal
 input, keeps slot headers to position/count, and places a labelled item-quantity
 field plus Delete on the left. Advanced remains secondary for complete existing
 rule/NBT editing. No state ownership or dependency direction changes.
+
+## M3-A environment boundary
+
+TrainingSession freezes the environment ID/instance at START. SessionManager
+passes movement through that boundary and publishes/saves the actual environment.
+The movement Mixin captures server position after the main-thread fence, then
+observes position only at vanilla's accepted increaseTravelMotionStats branch.
+teleportRequest clears diagnostic evidence; per-packet before/after positions
+avoid counting cross-packet resets. Environment observations have no clock,
+speed threshold, scoring, HUD or recovery dependency. Only the last accepted X/Z
+segment in blocks is retained; camera/vertical-only/blocked movement contributes
+zero. Low TPS and missing observations cannot invalidate a task.
+
+Protocol 3 adds the environment enum to START/views; existing Java factories
+default to Stationary and old wire versions fail explicitly. History schema 1
+already stores versioned environment text, so its shape is unchanged. Both
+stationary-v1 and moving-v1 are supported, but PBs never merge them. No stop-grace
+configuration remains after the user's simplified product decision. See the
+[M3-A record](m3-a-moving-inventory.md) for verification and manual limitations.
+
+## Current UI acceptance ownership
+
+`scripts/run-profile-editor-ui.py` always selects `client.UsabilityUiSmoke`;
+`--usability` and `--history` are compatibility aliases. `UiSmokeControls` owns
+current-screen navigation and `ProfileUiSafetyChecks` owns duplicate/corrupt-file
+and actual PREPARING/RESTORING/ERROR_LOCKED/retry/LAN checks.
+`smoke.ProfileGateAcceptance` owns their server-thread restore fixture; the
+bounded restore-observation Mixin applies only to this opt-in production driver.
+The obsolete ProfileEditorUiSmoke and its removed-screen workflow are retired.
+All these classes remain outside the production mod. See [targeted fixes](code-review-fixes.md).

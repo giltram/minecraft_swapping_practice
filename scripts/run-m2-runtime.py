@@ -22,7 +22,7 @@ def load(name, file):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-name", default="run-m2-runtime-20261030")
-    parser.add_argument("--mode", choices=("accept-history", "normal-crash", "normal", "recover"), required=True)
+    parser.add_argument("--mode", choices=("accept-pending-mining", "accept-moving", "accept-moving-disconnect", "accept-history", "normal-crash", "normal", "recover"), required=True)
     parser.add_argument("--launch", action="store_true")
     args = parser.parse_args()
     if Path(args.run_name).name != args.run_name or not args.run_name.startswith("run-m2-runtime-"):

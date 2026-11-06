@@ -16,6 +16,7 @@ public final class LoadoutProfile {
     public static final int SCHEMA_VERSION = 1;
     public static final int SLOT_COUNT = 10;
     public static final int MAX_ID_LENGTH = 128;
+    public static final int MAX_NAME_LENGTH = 256;
 
     private final String id;
     private final String name;
@@ -27,6 +28,7 @@ public final class LoadoutProfile {
             throw new IllegalArgumentException("Profile id must be 1..128 lowercase letters, digits, dots, dashes, or underscores");
         }
         if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("Profile name is empty");
+        if (name.length() > MAX_NAME_LENGTH) throw new IllegalArgumentException("Profile name exceeds " + MAX_NAME_LENGTH + " characters");
         if (slots.size() != SLOT_COUNT) throw new IllegalArgumentException("Profile must have exactly ten positions");
         boolean trainable = false;
         for (SlotRule slot : slots) {

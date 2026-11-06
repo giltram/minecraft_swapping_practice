@@ -1,0 +1,242 @@
+{
+  "date": "2026-10-31",
+  "productRule": "Moving is free practice; no stop timeout, speed threshold or first-movement gate.",
+  "artifact": {
+    "path": "build/libs/hotbar-swap-trainer-0.1.0.jar",
+    "sha256": "9cccfbbf73e16306658a266f37218e3e528fcb13b57e807d9c4a36f4a8cfe162",
+    "classVersions": [
+      52
+    ],
+    "smokeEntries": []
+  },
+  "unitTests": {
+    "tests": 129,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "boundaries": {
+    "status": "passed",
+    "javaFiles": 84,
+    "packages": 12,
+    "directedDependencies": 30
+  },
+  "build": "scripts/gradle-jdk8.sh --offline test build smokeJar; passed",
+  "runtime": {
+    "game": "1.16.1",
+    "loader": "net.fabricmc:fabric-loader:0.9.3+build.207",
+    "java": "openjdk version \"1.8.0_512\"\nOpenJDK Runtime Environment Corretto-8.512.09.1 (build 1.8.0_512-b09)\nOpenJDK 64-Bit Server VM Corretto-8.512.09.1 (build 25.512-b09, mixed mode)",
+    "javaArchitecture": "Mach-O 64-bit executable x86_64 (Intel JDK 8 under Rosetta)",
+    "development": false
+  },
+  "movingAcceptance": {
+    "command": "python3 scripts/run-m2-runtime.py --mode accept-moving --run-name run-m2-runtime-m3-a-20261031 --launch",
+    "result": {
+      "mode": "accept-moving",
+      "status": "passed",
+      "detail": "13 M3-A programmatic production checks; physical input/focus/feel remain manual",
+      "elapsedSeconds": 16.17492675
+    },
+    "checks": [
+      {
+        "name": "STATIONARY-SINGLE_ITEM-finite",
+        "status": "passed",
+        "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+      },
+      {
+        "name": "STATIONARY-FULL_INVENTORY-finite",
+        "status": "passed",
+        "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+      },
+      {
+        "name": "MOVING-SINGLE_ITEM-finite",
+        "status": "passed",
+        "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+      },
+      {
+        "name": "MOVING-FULL_INVENTORY-finite",
+        "status": "passed",
+        "detail": "Two actual vanilla solutions, frozen environment/goal, airborne replacement for Moving, exact two-file restore/history"
+      },
+      {
+        "name": "stationary-regression",
+        "status": "passed",
+        "detail": "Anchor, rotation packet, zero velocity/fall distance, grounded flag and restore"
+      },
+      {
+        "name": "accepted-movement-and-relaxed-stops",
+        "status": "passed",
+        "detail": "Actual accepted walking/jump, rotation/vertical zero, collision rejection, teleport reset, repeated stationary callbacks, untouched velocity and counters"
+      },
+      {
+        "name": "SINGLE_ITEM-unlimited-airborne-protection-stop",
+        "status": "passed",
+        "detail": "Unlimited replacement/invalid retry; pickup/use/drop/transfer/block-use/lethal damage guards; immediate restore in place with velocity/fall distance intact"
+      },
+      {
+        "name": "FULL_INVENTORY-unlimited-airborne-protection-stop",
+        "status": "passed",
+        "detail": "Unlimited replacement/invalid retry; pickup/use/drop/transfer/block-use/lethal damage guards; immediate restore in place with velocity/fall distance intact"
+      },
+      {
+        "name": "interrupt-PREPARING",
+        "status": "passed",
+        "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+      },
+      {
+        "name": "interrupt-COUNTDOWN",
+        "status": "passed",
+        "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+      },
+      {
+        "name": "interrupt-GO",
+        "status": "passed",
+        "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+      },
+      {
+        "name": "interrupt-RUNNING",
+        "status": "passed",
+        "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+      },
+      {
+        "name": "interrupt-SUCCESS",
+        "status": "passed",
+        "detail": "Existing interruption protocol retained; exact inventory restore (not physical focus/pause acceptance)"
+      }
+    ],
+    "manifestSha256": "f88f94e23113c748e1d84596b2ab75b88476e412dd58a8579669fc51051876d0",
+    "postExitReadback": {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-m2-runtime-m3-a-20261031/smoke/baseline.nbt",
+      "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+      "checks": [
+        {
+          "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/level.dat",
+          "sha256": "a926986e491173ae3223b5088399e7f2093cb6e91706ce5312c6ee8dd35bce39",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "c2fa580622dc9714badb4f7629fc96eb13da1d16ced5209b93f69d60073db3b1",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-runtime-m3-a-20261031/saves/hst-smoke": "0o755",
+        "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata": "0o755"
+      }
+    }
+  },
+  "notExecuted": [
+    "physical keyboard/mouse and rebound-key input",
+    "subjective movement feel",
+    "real inventory/pause/focus/options GUI interactions",
+    "wall pushing against an existing wall",
+    "fresh M3-A full recovery fault matrix",
+    "full GUI resize/localization visual acceptance"
+  ],
+  "disconnectSetupFailure": {
+    "status": "failed",
+    "reason": "Excluded driver attempted movement before completing login teleport; no airborne/moving evidence was established.",
+    "ownedJvmTerminated": 95258,
+    "archive": "run-m2-runtime-m3-a-20261031/smoke/failed-moving-disconnect-login-setup",
+    "recoveryOnlyReopen": {
+      "result": {
+        "mode": "recover",
+        "status": "passed",
+        "detail": "Crash-saved training inventory restored all41 slots/selection and active marker cleared in both authoritative files",
+        "elapsedSeconds": 14.611923459
+      },
+      "postExitReadback": {
+        "status": "passed",
+        "method": "Independent standard-library typed NBT decoding after process exit",
+        "baseline": "run-m2-runtime-m3-a-20261031/smoke/baseline.nbt",
+        "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+        "checks": [
+          {
+            "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/level.dat",
+            "sha256": "4f4068312fe7639c027e5a74b76fe8cebe2db3bc80f29a903343985fbee9b68e",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+            "recoveryPresent": false
+          },
+          {
+            "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+            "sha256": "3957d2d07e41ba2dc3acf40c388919b036bfb9914b8c514f3bff4b45877648b3",
+            "inventoryPositions": 41,
+            "selectedSlot": 6,
+            "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+            "recoveryPresent": false
+          }
+        ],
+        "permissions": {
+          "run-m2-runtime-m3-a-20261031/saves/hst-smoke": "0o755",
+          "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata": "0o755"
+        }
+      }
+    }
+  },
+  "airborneDisconnect": {
+    "command": "python3 scripts/run-m2-runtime.py --mode accept-moving-disconnect --run-name run-m2-runtime-m3-a-20261031 --launch",
+    "requested": {
+      "name": "disconnect from RUNNING",
+      "status": "passed",
+      "detail": "Server confirmed the request phase and active recovery before queueing the real client exit"
+    },
+    "observed": {
+      "name": "disconnect at RUNNING",
+      "status": "passed",
+      "detail": "Real client exit requested in the stated phase; vanilla may READY/interrupt before player removal",
+      "expectedPhase": "RUNNING",
+      "actualPhase": "RUNNING",
+      "requestPhase": "RUNNING",
+      "requestedExit": "disconnect",
+      "actualLifecycleHook": "disconnect",
+      "protected": true,
+      "onGroundAtLifecycle": false,
+      "environment": "MOVING"
+    },
+    "manifestSha256": "ba0896dc5f0f681cf58c723481d8d463fd9e6a6903374eaf1e4a64e7ffd1d25b",
+    "postExitReadback": {
+      "status": "passed",
+      "method": "Independent standard-library typed NBT decoding after process exit",
+      "baseline": "run-m2-runtime-m3-a-20261031/smoke/baseline.nbt",
+      "baselineSha256": "7539403cd2627511655d2820730d384f2a51404e49280d89ae2a57bfdcb42cb7",
+      "checks": [
+        {
+          "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/level.dat",
+          "sha256": "7f8ea55a489dcf200409d79bd5a989f39241c287406a69e43154a327ca87e43a",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        },
+        {
+          "path": "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata/84b9cedd-49cf-3500-8cca-e5a8f276d1e7.dat",
+          "sha256": "c86cf9e344e793ca59db4b86eeed90578a8039c225d27f633a8d0c47c36ff607",
+          "inventoryPositions": 41,
+          "selectedSlot": 6,
+          "uuid": "84b9cedd-49cf-3500-8cca-e5a8f276d1e7",
+          "recoveryPresent": false
+        }
+      ],
+      "permissions": {
+        "run-m2-runtime-m3-a-20261031/saves/hst-smoke": "0o755",
+        "run-m2-runtime-m3-a-20261031/saves/hst-smoke/playerdata": "0o755"
+      }
+    },
+    "latestHistory": {
+      "mode": "FULL_INVENTORY",
+      "environment": "moving-v1",
+      "endState": "DISCONNECTED"
+    }
+  }
+}

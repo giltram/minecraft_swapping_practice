@@ -32,6 +32,8 @@ public final class ExitObservation {
             result.put("requestPhase", expected);
             result.put("requestedExit", kind); result.put("actualLifecycleHook", hook);
             result.put("protected", InventoryService.isProtected(player));
+            result.put("onGroundAtLifecycle", player.isOnGround());
+            result.put("environment", AcceptanceSupport.field(AcceptanceSupport.session(player), "environmentType").toString());
             boolean allowed = actual.equals(expected) || actual.equals("INVALID")
                     || (expected.equals("PREPARING") && actual.equals("COUNTDOWN"));
             if (!allowed || !InventoryService.isProtected(player)) result.put("status", "failed");

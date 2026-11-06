@@ -2,12 +2,14 @@ package dev.hotbarswaptrainer.stats;
 
 import java.util.Objects;
 import java.util.UUID;
+import dev.hotbarswaptrainer.environment.TrainingEnvironment;
+import dev.hotbarswaptrainer.profile.LoadoutProfile;
 
 /** Frozen at START, completed once after confirmed restoration. Hints are a client declaration. */
 public final class SessionMetadata {
     public static final String TIMING = "server-go-ack-to-action-v1";
     public static final String SCORING = "success-only-v1";
-    public static final String ENVIRONMENT = "stationary-v1";
+    public static final String ENVIRONMENT = "stationary-v1"; // Retain the legacy compile-time constant.
     public enum EndState { COMPLETED, STOPPED, DISCONNECTED, SHUTDOWN, ABORTED }
     public final UUID playerId;
     public final long startedAtMillis, endedAtMillis;
@@ -20,7 +22,8 @@ public final class SessionMetadata {
         this.playerId = Objects.requireNonNull(playerId);
         if (started < 0 || ended < started) throw new IllegalArgumentException("Invalid session dates");
         this.startedAtMillis = started; this.endedAtMillis = ended;
-        this.profileId = text(profileId, 128); this.profileName = text(profileName, 256);
+        this.profileId = text(profileId, LoadoutProfile.MAX_ID_LENGTH);
+        this.profileName = text(profileName, LoadoutProfile.MAX_NAME_LENGTH);
         this.timingVersion = text(timing, 128); this.scoringVersion = text(scoring, 128);
         this.environment = text(environment, 128); this.targetHints = hints;
         this.endState = Objects.requireNonNull(endState);
@@ -30,6 +33,6 @@ public final class SessionMetadata {
         return value;
     }
     public boolean comparable() {
-        return TIMING.equals(timingVersion) && SCORING.equals(scoringVersion) && ENVIRONMENT.equals(environment);
+        return TIMING.equals(timingVersion) && SCORING.equals(scoringVersion) && TrainingEnvironment.supported(environment);
     }
 }
